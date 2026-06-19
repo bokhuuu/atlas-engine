@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -----------------------------------------------------------------------
-# Atlas Setup Script
+# LaraKit Setup Script
 # Runs inside the app container after first "docker compose up".
 # Usage: docker compose exec app bash scripts/setup.sh
 # -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ set -e  # Stop immediately if any command fails
 
 echo ""
 echo "========================================"
-echo "  Atlas - Fresh Install Setup"
+echo "  LaraKit - Fresh Install Setup"
 echo "========================================"
 echo ""
 
@@ -70,7 +70,8 @@ echo "[6/7] Skipping npm build - run 'npm install && npm run build' on your mach
 # -----------------------------------------------------------------------
 echo "[7/8] Fixing permissions..."
 chmod -R 777 /tmp
-chown -R www-data:www-data /var/www/storage
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # -----------------------------------------------------------------------
 # Step 8 - Cache
