@@ -1,0 +1,346 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Browser;
+
+use App\Modules\Scraper\Auth\Contracts\AuthStrategyInterface;
+use App\Modules\Scraper\Contracts\ScraperProfileInterface;
+use Closure;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Support\Facades\Cache;
+use Laravel\Dusk\Browser;
+use Throwable;
+
+/**
+ * Abstract base class for all site-specific scrapers.
+ *
+ * Owns the Dusk browser instance and centralizes every browser interaction:
+ * navigation, element reading, clicking, waiting and retry logic.
+ *
+ * Every new scraping target extends this class and implements
+ * crawlIndexPage() and crawlDetailPage(). Nothing else changes.
+ *
+ * Configuration is pulled entirely from config/scraper.php -
+ * no hardcoded values anywhere in this class.
+ */
+abstract class BaseScraper
+{
+    protected Browser $browser;
+
+    protected ?AuthStrategyInterface $authStrategy = null;
+
+    /**
+     * Inject the site profile so child scrapers can access
+     * URLs, selectors and delays without hardcoding them.
+     */
+    public function __construct(
+        protected readonly ScraperProfileInterface $profile,
+        protected readonly ProxyResolver $proxyResolver,
+        ?Browser $browser = null,
+    ) {
+        $this->browser = $browser ?? $this->createBrowser();
+    }
+
+    /**
+     * Crawl one index page (the listing grid) and return
+     * an array of detail-page URLs found on that page.
+     */
+    abstract public function crawlIndexPage(int $page): array;
+
+    /**
+     * Crawl one detail page (a single listing) and return
+     * a raw key-value array of all extracted fields.
+     */
+    abstract public function crawlDetailPage(string $url): array;
+
+    /**
+     * Spin up a real Chrome browser via ChromeDriver.
+     *
+     * All Chrome arguments come from chromeArguments() so subclasses
+     * can override them (e.g. StealthConfig adds extra stealth flags).
+     */
+    protected function createBrowser(): Browser
+    {
+        $options = new ChromeOptions;
+        $options->addArguments($this->chromeArguments());
+
+        $capabilities = DesiredCapabilities::chrome();
+        $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+
+        $driver = RemoteWebDriver::create(
+            config('scraper.chromedriver_url'),
+            $capabilities,
+            (int) config('scraper.browser_connect_timeout_ms'),
+            (int) config('scraper.browser_request_timeout_ms'),
+        );
+
+        return new Browser($driver);
+    }
+
+    /**
+     * Chrome flags used for every browser instance.
+     *
+     * Subclasses can override this to add stealth flags,
+     * proxy settings, or custom window sizes.
+     */
+    protected function chromeArguments(): array
+    {
+        $args = [
+            '--headless',
+            '--no-sandbox',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--window-size=' . config('scraper.browser_window_size'),
+        ];
+
+        $proxy = $this->proxyResolver->resolve();
+
+        if ($proxy !== null) {
+            $args[] = '--proxy-server=' . $this->proxyResolver->withCredentials($proxy);
+        }
+
+        return $args;
+    }
+
+    /**
+     * Attach an authentication strategy to this scraper.
+     *
+     * Auth is optional - sites without login requirements pass nothing.
+     * Called by ScraperManager before crawling begins.
+     */
+    public function setAuthStrategy(AuthStrategyInterface $authStrategy): void
+    {
+        $this->authStrategy = $authStrategy;
+    }
+
+    /**
+     * Ensure the browser session is authenticated before performing
+     * an action that requires login (e.g. revealing a phone number).
+     *
+     * If no auth strategy is set - no-op, safe to call anywhere.
+     * If strategy is set and session is stale - re-authenticates.
+     */
+    protected function ensureAuthenticated(): void
+    {
+        if ($this->authStrategy === null) {
+            return;
+        }
+
+        if (! $this->authStrategy->isAuthenticated()) {
+            $this->authStrategy->authenticate();
+        }
+    }
+
+    /**
+     * Explicitly close the browser and release the ChromeDriver session.
+     * Call this when the scrape run is finished.
+     */
+    public function closeBrowser(): void
+    {
+        $this->browser->quit();
+    }
+
+    /**
+     * Safety net - if closeBrowser() was never called explicitly,
+     * PHP's destructor closes the session so ChromeDriver is never left hanging.
+     */
+    public function __destruct()
+    {
+        if (isset($this->browser)) {
+            try {
+                $this->browser->quit();
+            } catch (Throwable) {
+                // Browser may already be closed - nothing to do.
+            }
+        }
+    }
+
+    /**
+     * Navigate to a URL and pause briefly to simulate human reading speed.
+     * The pause also gives JS time to finish rendering before we read anything.
+     */
+    protected function navigate(string $url): void
+    {
+        $this->browser->visit($url);
+        $this->pauseForHuman();
+    }
+
+    /**
+     * Read the visible text content of an element.
+     */
+    protected function getText(string $selector): string
+    {
+        return $this->browser->text($selector);
+    }
+
+    /**
+     * Read an HTML attribute from an element (e.g. content, href, data-id).
+     */
+    protected function getAttribute(string $selector, string $attribute): string
+    {
+        return $this->browser->attribute($selector, $attribute);
+    }
+
+    /**
+     * Click an element. Does not wait afterward - pair with waitFor()
+     * or waitForText() if the click triggers something to load.
+     */
+    protected function click(string $selector): void
+    {
+        $this->browser->click($selector);
+    }
+
+    /**
+     * Wait until a CSS selector appears in the DOM.
+     * Times out after scraper.element_wait_timeout_s seconds.
+     */
+    protected function waitFor(string $selector, ?int $seconds = null): void
+    {
+        $this->browser->waitFor(
+            selector: $selector,
+            seconds: $seconds ?? config('scraper.element_wait_timeout_s'),
+        );
+    }
+
+    /**
+     * Wait until a specific string appears anywhere on the page.
+     */
+    protected function waitForText(string $text, ?int $seconds = null): void
+    {
+        $this->browser->waitForText(
+            text: $text,
+            seconds: $seconds ?? config('scraper.element_wait_timeout_s'),
+        );
+    }
+
+    /**
+     * Check whether an element exists in the DOM right now.
+     * Useful for optional fields (e.g. phone number, floor, area).
+     */
+    protected function isPresent(string $selector): bool
+    {
+        return $this->browser->element($selector) !== null;
+    }
+
+    /**
+     * Get the full raw HTML source of the current page.
+     * Useful for bulk parsing with DomDocument or regex fallback.
+     */
+    protected function getPageSource(): string
+    {
+        return $this->browser->driver->getPageSource();
+    }
+
+    /**
+     * Wrap any browser action in retry logic.
+     *
+     * If the action throws, it waits $delayMs milliseconds and tries again.
+     * After all attempts are exhausted, the last exception is re-thrown
+     * so the queue job can handle it (log, retry job, or fail).
+     *
+     * Usage:
+     *   $text = $this->retry(fn () => $this->getText('.price'));
+     */
+    protected function retry(Closure $action, ?int $attempts = null, ?int $delayMs = null): mixed
+    {
+        $resolvedAttempts = $attempts ?? (int) config('scraper.retry_attempts');
+        $resolvedDelay = $delayMs ?? (int) config('scraper.retry_delay_ms');
+
+        $lastException = new \RuntimeException('All retry attempts failed.');
+
+        for ($i = 0; $i < $resolvedAttempts; $i++) {
+            try {
+                return $action();
+            } catch (Throwable $e) {
+                $lastException = $e;
+
+                if ($i < $resolvedAttempts - 1) {
+                    usleep($resolvedDelay * 1000);
+                }
+            }
+        }
+
+        throw $lastException;
+    }
+
+    /**
+     * Safely extract text from a selector that may not exist.
+     * Inherited by all scrapers — optional fields never crash the scrape.
+     */
+    protected function safeExtract(string $selector): ?string
+    {
+        try {
+            return $this->isPresent($selector)
+                ? $this->getText($selector)
+                : null;
+        } catch (Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Pull the listing ID from the last segment of a URL.
+     * Works for any site that puts the ID at the end: /en/item/23222099
+     * Override in child scraper if the site uses a different URL pattern.
+     */
+    protected function extractSourceId(string $url): ?string
+    {
+        $parts = explode('/', rtrim($url, '/'));
+        $last = end($parts) ?: null;
+
+        return $last ? explode('?', $last)[0] : null;
+    }
+
+    /**
+     * Current timestamp for scraped_at field.
+     * Centralized so every scraper uses identical format.
+     */
+    protected function scrapedAt(): string
+    {
+        return now()->toDateTimeString();
+    }
+
+    /**
+     * Sleep for a random duration between requests.
+     *
+     * Base delay comes from the profile - each site defines its own pacing.
+     * Jitter (±30%) randomizes the exact timing so requests are harder to fingerprint.
+     * AbstractScraperProfile falls back to config/scraper.php default_request_delay_s.
+     */
+    protected function pauseForHuman(): void
+    {
+        $base = $this->profile->getRequestDelay() * 1000;
+        $jitter = (int) ($base * (float) config('scraper.request_delay_jitter'));
+
+        usleep(random_int($base - $jitter, $base + $jitter) * 1000);
+    }
+
+    /**
+     * Expose the underlying Dusk browser instance for direct interaction
+     * when none of the wrapper methods above fit (e.g. auth strategies).
+     */
+    public function getBrowser(): Browser
+    {
+        return $this->browser;
+    }
+
+    /**
+     * Checks Redis before opening a browser. On cache hit - returns stored
+     * result instantly with no browser interaction. On miss - delegates to
+     * crawlDetailPage(), caches the result for 24 hours, then returns it.
+     *
+     * CrawlDetailPageJob calls this instead of crawlDetailPage() directly.
+     * Child scrapers never need to know caching exists.
+     */
+    public function fetchDetailPage(string $url): array
+    {
+        return Cache::remember(
+            "scraper:page:{$url}",
+            now()->addHours(24),
+            fn() => $this->crawlDetailPage($url)
+        );
+    }
+}
