@@ -5,7 +5,6 @@ import {
     LayoutGrid,
     Activity,
     ShieldCheck,
-    FileText,
     KeyRound,
     HeartPulse,
 } from 'lucide-react';
@@ -72,12 +71,6 @@ export function AppSidebar() {
             href: '/admin/activity-log',
             icon: Activity,
             roles: ['super_admin', 'admin'],
-        },
-        {
-            title: 'Posts',
-            href: '/admin/posts',
-            icon: FileText,
-            roles: ['super_admin', 'admin', 'editor'],
         },
         {
             title: 'API Tokens',
