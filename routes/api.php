@@ -10,7 +10,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('v1')->group(function () {
-    Route::get('/health', fn() => response()->json([
+    Route::get('/health', fn () => response()->json([
         'status' => 'ok',
         'version' => 'v1',
         'time' => now()->toDateTimeString(),

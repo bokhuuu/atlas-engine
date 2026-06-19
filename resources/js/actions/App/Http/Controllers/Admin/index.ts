@@ -6,7 +6,6 @@ import ActivityLogController from './ActivityLogController'
 import NotificationController from './NotificationController'
 import TokenController from './TokenController'
 import SystemHealthController from './SystemHealthController'
-import LocaleController from './LocaleController'
 
 const Admin = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -17,7 +16,6 @@ const Admin = {
     NotificationController: Object.assign(NotificationController, NotificationController),
     TokenController: Object.assign(TokenController, TokenController),
     SystemHealthController: Object.assign(SystemHealthController, SystemHealthController),
-    LocaleController: Object.assign(LocaleController, LocaleController),
 }
 
 export default Admin

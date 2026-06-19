@@ -6,7 +6,6 @@ import activityLog from './activity-log'
 import notifications from './notifications'
 import tokens from './tokens'
 import systemHealth from './system-health'
-import locale from './locale'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:24
@@ -97,7 +96,6 @@ const admin = {
     notifications: Object.assign(notifications, notifications),
     tokens: Object.assign(tokens, tokens),
     systemHealth: Object.assign(systemHealth, systemHealth),
-    locale: Object.assign(locale, locale),
 }
 
 export default admin

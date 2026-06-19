@@ -24,7 +24,6 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { dashboard } from '@/routes/admin';
 import type { NavItem } from '@/types';
-import { LocaleSwitcher } from './locale-switcher';
 
 interface NavItemWithRoles extends NavItem {
     roles: string[];
@@ -104,9 +103,7 @@ export function AppSidebar() {
 
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
-                <div className="px-2 py-1">
-                    <LocaleSwitcher />
-                </div>
+
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\LocaleController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -60,8 +59,6 @@ Route::middleware(['auth', 'admin'])
             Route::post('/cache', [SystemHealthController::class, 'clearCache'])->name('cache.clear');
             Route::post('/maintenance', [SystemHealthController::class, 'toggleMaintenance'])->name('maintenance.toggle');
         });
-
-        Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');
     });
 
 require __DIR__ . '/settings.php';
