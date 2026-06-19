@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: larakit_app
+    container_name: atlas_app
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -14,11 +14,11 @@ services:
       redis:
         condition: service_started
     networks:
-      - larakit
+      - atlas
 
   nginx:
     image: nginx:alpine
-    container_name: larakit_nginx
+    container_name: atlas_nginx
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -28,11 +28,11 @@ services:
     depends_on:
       - app
     networks:
-      - larakit
+      - atlas
 
   mysql:
     image: mysql:8.0
-    container_name: larakit_mysql
+    container_name: atlas_mysql
     restart: unless-stopped
     ports:
       - "3307:3306"
@@ -42,7 +42,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - larakit
+      - atlas
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -51,18 +51,18 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: larakit_redis
+    container_name: atlas_redis
     restart: unless-stopped
     volumes:
       - redis_data:/data
     networks:
-      - larakit
+      - atlas
 
   horizon:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: larakit_horizon
+    container_name: atlas_horizon
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -74,12 +74,12 @@ services:
       redis:
         condition: service_started
     networks:
-      - larakit
+      - atlas
 
 volumes:
   mysql_data:
   redis_data:
 
 networks:
-  larakit:
+  atlas:
     driver: bridge

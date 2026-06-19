@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # -----------------------------------------------------------------------
-# LaraKit Setup Script
+# Atlas Setup Script
 # Runs inside the app container after first "docker compose up".
 # Usage: docker compose exec app bash scripts/setup.sh
 # -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ set -e  # Stop immediately if any command fails
 
 echo ""
 echo "========================================"
-echo "  LaraKit - Fresh Install Setup"
+echo "  Atlas - Fresh Install Setup"
 echo "========================================"
 echo ""
 
