@@ -110,8 +110,30 @@ class ListAmScraper extends BaseScraper
             'phone' => $this->extractPhone($selectors),
             'image_urls' => $this->extractImageUrls($selectors),
             'listing_date' => $this->extractListingDate($selectors),
+            'extras' => $this->extractExtras($selectors),
             'scraped_at' => $this->scrapedAt(),
         ];
+    }
+
+    /**
+     * Category-specific fields that don't apply to every listing type -
+     * e.g. land_area only exists for houses, handover_date only for new
+     * developments. Stored in the extras JSON column instead of giving
+     * every category a column it mostly wouldn't use.
+     */
+    private function extractExtras(array $selectors): array
+    {
+        $extras = [];
+
+        if (isset($selectors['land_area'])) {
+            $extras['land_area'] = $this->extractSpecByLabel($selectors['land_area']);
+        }
+
+        if (isset($selectors['handover_date'])) {
+            $extras['handover_date'] = $this->extractSpecByLabel($selectors['handover_date']);
+        }
+
+        return $extras;
     }
 
     /**
