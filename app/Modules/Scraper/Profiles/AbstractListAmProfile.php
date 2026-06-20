@@ -155,7 +155,7 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
 
     public function getExports(): array
     {
-        return ['excel', 'json', 'real_estate_report'];
+        return ['excel', 'json'];
     }
 
     /**

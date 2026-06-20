@@ -32,4 +32,9 @@ class ApartmentsForSaleProfile extends AbstractListAmProfile
     {
         return 'apartment';
     }
+
+    public function getExports(): array
+    {
+        return ['excel', 'json', 'real_estate_report'];
+    }
 }
