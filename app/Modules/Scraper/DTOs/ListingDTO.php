@@ -76,7 +76,7 @@ final class ListingDTO
             currency: $data['currency'] ?? null,
             pricePerSqm: isset($data['price_per_sqm']) ? (float) $data['price_per_sqm'] : null,
 
-            area: isset($data['area']) ? (float) str_replace(',', '.', (string) $data['area']) : null,
+            area: isset($data['area']) ? self::parseNumeric($data['area']) : null,
 
             rooms: isset($data['rooms']) ? (int) $data['rooms'] : null,
             bathrooms: isset($data['bathrooms']) ? (int) $data['bathrooms'] : null,
@@ -149,5 +149,23 @@ final class ListingDTO
             'listing_date' => $this->listingDate?->toDateTimeString(),
             'scraped_at' => $this->scrapedAt->toDateTimeString(),
         ];
+    }
+
+    /**
+     * Strips thousands-separator commas and extracts the leading numeric
+     * value, ignoring unit abbreviations like "sq.m.". list.am uses commas
+     * as thousands separators, not decimal separators (confirmed: "5,412
+     * sq.m." means 5412, not 5.412) - mirrors CleanAreaStage's logic, since
+     * this needs to be correct even before the pipeline stage gets a turn.
+     */
+    private static function parseNumeric(mixed $value): ?float
+    {
+        $withoutThousandsSeparators = str_replace(',', '', (string) $value);
+
+        if (! preg_match('/\d+(\.\d+)?/', $withoutThousandsSeparators, $matches)) {
+            return null;
+        }
+
+        return (float) $matches[0];
     }
 }
