@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Modules\Scraper\Exports\CsvExporter;
+use App\Modules\Scraper\Exports\ExcelExporter;
+use App\Modules\Scraper\Exports\JsonExporter;
+use App\Modules\Scraper\Exports\RealEstateMarketReport;
 use App\Modules\Scraper\Profiles\ApartmentsForSaleProfile;
 use App\Modules\Scraper\Profiles\CommercialForRentProfile;
 use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
@@ -9,10 +13,6 @@ use App\Modules\Scraper\Profiles\HousesForSaleProfile;
 use App\Modules\Scraper\Profiles\LandForSaleProfile;
 use App\Modules\Scraper\Profiles\LongTermApartmentRentalsProfile;
 use App\Modules\Scraper\Profiles\NewDevelopmentApartmentsProfile;
-use App\Scrapers\Exports\CsvExporter;
-use App\Scrapers\Exports\ExcelExporter;
-use App\Scrapers\Exports\JsonExporter;
-use App\Scrapers\Profiles\Reports\RealEstateMarketReport;
 
 return [
 
@@ -361,4 +361,5 @@ return [
     */
     'drift_min_listings' => (int) env('SCRAPER_DRIFT_MIN_LISTINGS', 10),
     'drift_max_null_rate' => (float) env('SCRAPER_DRIFT_MAX_NULL_RATE', 0.5),
+
 ];
