@@ -1,0 +1,57 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Notifications;
+
+use App\Modules\Scraper\Notifications\Contracts\NotifierInterface;
+use Illuminate\Support\Facades\Mail;
+
+/**
+ * Sends scraper notifications via email.
+ *
+ * The message format is the same regardless of which event triggered it.
+ */
+class MailNotifier implements NotifierInterface
+{
+    /** Sends the built message as a plain-text email to the configured address. */
+    public function notify(array $payload): void
+    {
+        $to = config('services.mail.scraper_to');
+
+        Mail::raw(
+            $this->buildMessage($payload),
+            function ($message) use ($to): void {
+                $message
+                    ->to($to)
+                    ->subject('Atlas Alert — ' . ($payload['source'] ?? 'unknown'));
+            }
+        );
+    }
+
+    /** Turns the event payload into a readable plain-text email body. */
+    private function buildMessage(array $payload): string
+    {
+        $source = $payload['source'] ?? 'unknown';
+        $status = $payload['status'] ?? 'unknown';
+        $count = $payload['listing_count'] ?? null;
+        $error = $payload['error'] ?? null;
+        $date = now()->format('Y-m-d H:i');
+
+        $message = "Atlas Notification\n";
+        $message .= "=====================\n\n";
+        $message .= "Source:  {$source}\n";
+        $message .= "Status:  {$status}\n";
+        $message .= "Date:    {$date}\n";
+
+        if ($count !== null) {
+            $message .= "Listings saved: {$count}\n";
+        }
+
+        if ($error !== null) {
+            $message .= "\nError:\n{$error}\n";
+        }
+
+        return $message;
+    }
+}
