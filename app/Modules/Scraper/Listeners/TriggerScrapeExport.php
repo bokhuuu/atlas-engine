@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Listeners;
+
+use App\Modules\Scraper\Events\ScrapeCompleted;
+use App\Modules\Scraper\Exports\ExportManager;
+use Illuminate\Support\Facades\Log;
+
+/**
+ * Delegates entirely to ExportManager - this listener's only job is
+ * to bridge the event system and the export layer.
+ * Which formats run is declared in the profile's getExports().
+ */
+class TriggerScrapeExport
+{
+    /** Takes the export manager used to actually generate the export files. */
+    public function __construct(
+        private readonly ExportManager $exportManager,
+    ) {}
+
+    /**
+     * Trigger exports for the completed scrape run.
+     * Logs all generated file paths on success.
+     */
+    public function handle(ScrapeCompleted $event): void
+    {
+        $paths = $this->exportManager->run($event->source, $event->scraperRunId);
+
+        Log::info('TriggerScrapeExport: exports generated.', [
+            'source' => $event->source,
+            'run_id' => $event->scraperRunId,
+            'files' => $paths,
+        ]);
+    }
+}

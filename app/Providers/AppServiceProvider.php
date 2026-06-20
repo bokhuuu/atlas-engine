@@ -5,12 +5,20 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Listeners\TrackLastLogin;
+use App\Modules\Scraper\Events\ScrapeCompleted;
+use App\Modules\Scraper\Events\ScrapeFailed;
+use App\Modules\Scraper\Listeners\SendScrapeCompletedNotification;
+use App\Modules\Scraper\Listeners\SendScrapeFailedNotification;
+use App\Modules\Scraper\Listeners\TriggerScrapeExport;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -40,6 +48,13 @@ class AppServiceProvider extends ServiceProvider
         Model::preventLazyLoading(! app()->isProduction());
 
         Event::listen(Login::class, TrackLastLogin::class);
+
+        Event::listen(ScrapeCompleted::class, SendScrapeCompletedNotification::class);
+        Event::listen(ScrapeCompleted::class, TriggerScrapeExport::class);
+        Event::listen(ScrapeFailed::class, SendScrapeFailedNotification::class);
+
+        RateLimiter::for('api.global', fn () => Limit::perMinute(config('scraper.api_rate_limit', 60)));
+        RateLimiter::for('api.per_token', fn (Request $request) => Limit::perMinute(config('scraper.api_per_token_limit', 30))->by($request->user()?->id ?: $request->ip()));
     }
 
     /**
