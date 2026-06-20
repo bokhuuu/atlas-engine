@@ -14,14 +14,18 @@ use App\Modules\Scraper\Pipeline\PipelineStageInterface;
  * Also cleans extras['land_area'] when present (houses only) -
  * same kind of value, same cleaning logic.
  *
+ * list.am uses commas as thousands separators, not decimal separators
+ * (confirmed against a real listing: "5,412 sq.m." means 5412, not
+ * 5.412). Commas are stripped entirely rather than converted to decimal
+ * points. Unit abbreviations like "sq.m." contain periods that aren't
+ * decimal points either, so the real number is extracted via regex
+ * match rather than a strip-and-cast approach, which would otherwise
+ * absorb those stray periods into the parsed value.
+ *
  * Leaves area as null if no numeric value can be extracted.
  */
 final class CleanAreaStage implements PipelineStageInterface
 {
-    /**
-     * Strips unit symbols from the area so it's stored as a clean
-     * number instead of raw scraped text.
-     */
     public function handle(ListingDTO $dto): ListingDTO
     {
         $dto->area = $this->cleanArea($dto->area);
@@ -34,8 +38,9 @@ final class CleanAreaStage implements PipelineStageInterface
     }
 
     /**
-     * Remove non-numeric characters except decimal separators,
-     * normalize comma to period and return as float.
+     * Remove thousands-separator commas, then extract the leading
+     * numeric value (digits plus an optional decimal point) - ignoring
+     * anything after it, including unit abbreviations like "sq.m.".
      * Returns null if no valid numeric value can be extracted.
      */
     private function cleanArea(mixed $value): ?float
@@ -44,13 +49,14 @@ final class CleanAreaStage implements PipelineStageInterface
             return null;
         }
 
-        $cleaned = preg_replace('/[^0-9,.]/', '', (string) $value);
-        $normalized = str_replace(',', '.', $cleaned);
+        $withoutThousandsSeparators = str_replace(',', '', (string) $value);
 
-        if ($normalized === '' || (float) $normalized === 0.0) {
+        if (! preg_match('/\d+(\.\d+)?/', $withoutThousandsSeparators, $matches)) {
             return null;
         }
 
-        return (float) $normalized;
+        $area = (float) $matches[0];
+
+        return $area > 0 ? $area : null;
     }
 }

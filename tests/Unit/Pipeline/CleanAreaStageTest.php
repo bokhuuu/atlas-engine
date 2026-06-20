@@ -14,12 +14,20 @@ test('it cleans a formatted area string to a float', function () use ($stage) {
     expect($result->area)->toBe(75.5);
 });
 
-test('it normalizes comma decimal separator to period', function () use ($stage) {
-    $dto = makeListing(['area' => '75,5']);
+test('it strips thousands-separator commas instead of treating them as decimals', function () use ($stage) {
+    $dto = makeListing(['area' => '5,412 sq.m.']);
 
     $result = $stage->handle($dto);
 
-    expect($result->area)->toBe(75.5);
+    expect($result->area)->toBe(5412.0);
+});
+
+test('it ignores periods inside unit abbreviations like sq.m.', function () use ($stage) {
+    $dto = makeListing(['area' => '1,234 sq.m.']);
+
+    $result = $stage->handle($dto);
+
+    expect($result->area)->toBe(1234.0);
 });
 
 test('it returns null when area is null', function () use ($stage) {
@@ -39,11 +47,11 @@ test('it returns null when area is zero', function () use ($stage) {
 });
 
 test('it also cleans land_area in extras when present', function () use ($stage) {
-    $dto = makeListing(['extras' => ['land_area' => '350 m²']]);
+    $dto = makeListing(['extras' => ['land_area' => '1,800 sq.m.']]);
 
     $result = $stage->handle($dto);
 
-    expect($result->extras['land_area'])->toBe(350.0);
+    expect($result->extras['land_area'])->toBe(1800.0);
 });
 
 test('it leaves extras untouched when land_area is not present', function () use ($stage) {
