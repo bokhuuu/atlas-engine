@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Exports;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Facades\Excel;
@@ -54,7 +55,7 @@ class ExcelExporter implements ExporterInterface
             }
         }, $path, 'local');
 
-        return storage_path('app/'.$path);
+        return Storage::disk('local')->path($path);
     }
 
     /**
