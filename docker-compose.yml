@@ -8,10 +8,14 @@ services:
     working_dir: /var/www
     volumes:
       - .:/var/www
+    environment:
+      - CHROMEDRIVER_URL=http://chrome:4444/wd/hub
     depends_on:
       mysql:
         condition: service_healthy
       redis:
+        condition: service_started
+      chrome:
         condition: service_started
     networks:
       - atlas
@@ -58,6 +62,19 @@ services:
     networks:
       - atlas
 
+  chrome:
+    image: selenium/standalone-chrome
+    container_name: atlas_chrome
+    restart: unless-stopped
+    ports:
+      - "4444:4444"
+    shm_size: 4gb
+    environment:
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    networks:
+      - atlas
+
   horizon:
     build:
       context: .
@@ -67,11 +84,15 @@ services:
     working_dir: /var/www
     volumes:
       - .:/var/www
+    environment:
+      - CHROMEDRIVER_URL=http://chrome:4444/wd/hub
     command: php artisan horizon
     depends_on:
       mysql:
         condition: service_healthy
       redis:
+        condition: service_started
+      chrome:
         condition: service_started
     networks:
       - atlas
