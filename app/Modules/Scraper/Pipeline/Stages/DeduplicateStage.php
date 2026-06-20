@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Pipeline\Stages;
 
 use App\Modules\Scraper\DTOs\ListingDTO;
-use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Exceptions\DuplicateListingException;
 use App\Modules\Scraper\Pipeline\PipelineStageInterface;
+use App\Modules\Scraper\Repositories\ListingRepository;
 
 /**
  * Checks whether a listing already exists in the database

@@ -41,7 +41,7 @@ class ExcelExporter implements ExporterInterface
              */
             public function array(): array
             {
-                return array_map(fn($row) => array_values($row), $this->data);
+                return array_map(fn ($row) => array_values($row), $this->data);
             }
 
             /**
@@ -54,7 +54,7 @@ class ExcelExporter implements ExporterInterface
             }
         }, $path, 'local');
 
-        return storage_path('app/' . $path);
+        return storage_path('app/'.$path);
     }
 
     /**

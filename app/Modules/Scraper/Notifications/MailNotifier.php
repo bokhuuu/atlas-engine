@@ -24,7 +24,7 @@ class MailNotifier implements NotifierInterface
             function ($message) use ($to): void {
                 $message
                     ->to($to)
-                    ->subject('Atlas Alert — ' . ($payload['source'] ?? 'unknown'));
+                    ->subject('Atlas Alert — '.($payload['source'] ?? 'unknown'));
             }
         );
     }

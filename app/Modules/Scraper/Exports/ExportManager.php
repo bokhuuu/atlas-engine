@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Exports;
 
-use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use App\Modules\Scraper\Repositories\ListingRepository;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -36,7 +36,7 @@ class ExportManager
      */
     public function run(string $source, int $scraperRunId): array
     {
-        $profileClass = config('scraper.profiles.' . $source);
+        $profileClass = config('scraper.profiles.'.$source);
         $profile = app($profileClass);
 
         $listings = $this->repository->findByRun($scraperRunId);
@@ -50,11 +50,11 @@ class ExportManager
             return [];
         }
 
-        $data = $listings->map(fn($listing) => $listing->toArray())->toArray();
+        $data = $listings->map(fn ($listing) => $listing->toArray())->toArray();
         $paths = [];
 
         foreach ($profile->getExports() as $format) {
-            $exporterClass = config('scraper.exporters.' . $format);
+            $exporterClass = config('scraper.exporters.'.$format);
 
             if (! $exporterClass) {
                 Log::warning('ExportManager: unknown export format.', [
