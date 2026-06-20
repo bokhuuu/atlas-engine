@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Pipeline\Stages;
+
+use App\Modules\Scraper\DTOs\ListingDTO;
+use App\Modules\Scraper\Pipeline\PipelineStageInterface;
+
+/**
+ * Strips all non-numeric characters from the phone field,
+ * leaving only digits for consistent storage and deduplication.
+ *
+ * Leaves phone as null if no numeric value can be extracted.
+ */
+final class CleanPhoneStage implements PipelineStageInterface
+{
+    /**
+     * Strips everything except digits from the phone number so it's
+     * stored consistently regardless of how the site formatted it.
+     */
+    public function handle(ListingDTO $dto): ListingDTO
+    {
+        $dto->phone = $this->cleanPhone($dto->phone);
+
+        return $dto;
+    }
+
+    /**
+     * Remove all non-numeric characters and return digits only.
+     * Returns null if no digits found.
+     */
+    private function cleanPhone(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $cleaned = preg_replace('/[^0-9]/', '', $value);
+
+        return $cleaned === '' ? null : $cleaned;
+    }
+}

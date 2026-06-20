@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Pipeline\Stages;
+
+use App\Modules\Scraper\DTOs\ListingDTO;
+use App\Modules\Scraper\Pipeline\PipelineStageInterface;
+
+/**
+ * Strips currency symbols, spaces and formatting characters
+ * from the price field and converts it to a clean integer.
+ *
+ * Leaves price as null if no numeric value can be extracted.
+ */
+final class CleanPriceStage implements PipelineStageInterface
+{
+    /**
+     * Strips currency symbols and formatting from the price so it's
+     * stored as a clean number instead of raw scraped text.
+     */
+    public function handle(ListingDTO $dto): ListingDTO
+    {
+        $dto->price = $this->cleanPrice($dto->price);
+
+        return $dto;
+    }
+
+    /**
+     * Remove all non-numeric characters and return as float.
+     * Returns null if the cleaned value is empty or zero.
+     */
+    private function cleanPrice(mixed $value): ?float
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $cleaned = preg_replace('/[^0-9]/', '', (string) $value);
+
+        if ($cleaned === '' || $cleaned === '0') {
+            return null;
+        }
+
+        return (float) $cleaned;
+    }
+}
