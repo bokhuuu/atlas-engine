@@ -39,6 +39,11 @@ class ListingRepository
      */
     public function updateOrCreate(array $data): Listing
     {
+        if (isset($data['extras']['duplicate_group_id'])) {
+            $data['duplicate_group_id'] = $data['extras']['duplicate_group_id'];
+            unset($data['extras']['duplicate_group_id']);
+        }
+
         $listing = Listing::updateOrCreate(
             ['external_id' => $data['external_id'], 'source_profile_name' => $data['source_profile_name']],
             $data
@@ -158,5 +163,29 @@ class ListingRepository
         return Listing::where('source_profile_name', $source)
             ->whereNull($field)
             ->count();
+    }
+
+    /**
+     * Find listings sharing the same district/floor/rooms as a candidate,
+     * excluding the listing itself - used by FlagProbableDuplicatesStage
+     * to find probable cross-poster duplicates.
+     */
+    public function findPotentialDuplicates(string $source, string $district, int $floor, int $rooms, string $excludeExternalId): Collection
+    {
+        return Listing::where('source_profile_name', $source)
+            ->where('district', $district)
+            ->where('floor', $floor)
+            ->where('rooms', $rooms)
+            ->where('external_id', '!=', $excludeExternalId)
+            ->get();
+    }
+
+    /**
+     * Assign a duplicate group ID to an existing listing that doesn't
+     * have one yet.
+     */
+    public function assignDuplicateGroupId(int $listingId, int $groupId): void
+    {
+        Listing::where('id', $listingId)->update(['duplicate_group_id' => $groupId]);
     }
 }

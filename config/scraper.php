@@ -362,4 +362,21 @@ return [
     'drift_min_listings' => (int) env('SCRAPER_DRIFT_MIN_LISTINGS', 10),
     'drift_max_null_rate' => (float) env('SCRAPER_DRIFT_MAX_NULL_RATE', 0.5),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cross-Poster Duplicate Detection
+    |--------------------------------------------------------------------------
+    |
+    | Flags (does not delete) probable duplicate listings - the same physical
+    | property posted by different parties under different external_ids.
+    | District/floor/rooms must match exactly; area and price are checked
+    | within tolerance. Thresholds confirmed against real scraped data -
+    | see ATLAS.md for the actual analysis, not picked arbitrarily.
+    |
+    */
+    'duplicate_detection' => [
+        'enabled' => env('DUPLICATE_DETECTION_ENABLED', true),
+        'area_tolerance_percent' => env('DUPLICATE_AREA_TOLERANCE_PERCENT', 5.0),
+        'price_tolerance_percent' => env('DUPLICATE_PRICE_TOLERANCE_PERCENT', 10.0),
+    ],
 ];
