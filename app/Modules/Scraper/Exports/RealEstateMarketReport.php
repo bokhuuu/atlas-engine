@@ -455,8 +455,9 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
 
 /**
  * Sheet 6 - Floor and size analysis.
- * Price/sqm by floor range and size bracket.
- * Supports granular valuation - do higher floors or larger units command premium?
+ * Price/sqm broken down by floor range, size range, and ceiling height -
+ * descriptive groupings only, not a valuation recommendation. How these
+ * facts get applied to a specific property is Colliers' own methodology.
  */
 class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
 {
@@ -560,7 +561,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
         }
 
         $rows[] = ['', '', '', '', '', ''];
-        $rows[] = ['CEILING HEIGHT PREMIUM', '', '', '', '', ''];
+        $rows[] = ['CEILING HEIGHT', '', '', '', '', ''];
 
         $heightBrackets = [
             'Standard (under 2.8m)' => [0, 2.8],
