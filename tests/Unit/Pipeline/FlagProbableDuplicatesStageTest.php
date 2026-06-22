@@ -26,7 +26,7 @@ function makeCandidateListing(array $overrides = []): Listing
     return $listing;
 }
 
-test('it flags a listing within area and price tolerance, same floor', function () {
+test('it flags a listing within area and price tolerance, same floor and rooms', function () {
     $candidate = makeCandidateListing();
 
     $repository = Mockery::mock(ListingRepository::class);
@@ -68,6 +68,38 @@ test('it flags a match even when floors differ, as long as one side has no floor
 
     // dto has no floor at all - houses/land/commercial scenario.
     $dto = makeListing(['district' => 'Kentron', 'floor' => null, 'rooms' => 2, 'area' => 60.0, 'price' => 100000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBe(999);
+});
+
+test('it does not flag when rooms differ and both listings have a room count', function () {
+    $candidate = makeCandidateListing(['rooms' => 2]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$candidate]));
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    $dto = makeListing(['district' => 'Kentron', 'floor' => 3, 'rooms' => 5, 'area' => 60.0, 'price' => 100000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBeNull();
+});
+
+test('it flags a match even when room counts differ, as long as one side has no room count at all', function () {
+    $candidate = makeCandidateListing(['rooms' => 4]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$candidate]));
+    $repository->shouldReceive('assignDuplicateGroupId')->once();
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    // dto has no room count at all - commercial property scenario.
+    $dto = makeListing(['district' => 'Kentron', 'floor' => 3, 'rooms' => null, 'area' => 60.0, 'price' => 100000.0]);
 
     $result = $stage->handle($dto);
 

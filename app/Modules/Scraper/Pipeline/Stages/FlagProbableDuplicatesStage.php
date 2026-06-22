@@ -43,14 +43,13 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
             return $dto;
         }
 
-        if ($dto->district === null || $dto->area === null || $dto->price === null || $dto->rooms === null) {
+        if ($dto->district === null || $dto->area === null || $dto->price === null) {
             return $dto;
         }
 
         $candidates = $this->repository->findPotentialDuplicates(
             $dto->sourceProfileName,
             $dto->district,
-            $dto->rooms,
             $dto->externalId,
         );
 
@@ -81,6 +80,10 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
     private function isProbableMatch(ListingDTO $dto, Listing $candidate): bool
     {
         if ($dto->floor !== null && $candidate->floor !== null && $dto->floor !== $candidate->floor) {
+            return false;
+        }
+
+        if ($dto->rooms !== null && $candidate->rooms !== null && $dto->rooms !== $candidate->rooms) {
             return false;
         }
 
