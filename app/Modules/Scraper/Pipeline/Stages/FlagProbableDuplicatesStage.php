@@ -19,9 +19,10 @@ use App\Modules\Scraper\Repositories\ListingRepository;
  * through DeduplicateStage untouched.
  *
  * Rule-based by design, not AI-based - explainable to Colliers ("matched
- * on district/floor/rooms exactly, area within 5%, price within 10%")
- * and costs nothing in AI token budget. Thresholds confirmed against
- * real scraped data, not picked arbitrarily - see ATLAS.md.
+ * on district/rooms exactly, floor exactly when both have one, area
+ * within 5%, price within 10%") and costs nothing in AI token budget.
+ * Thresholds confirmed against real scraped data, not picked
+ * arbitrarily - see ATLAS.md.
  *
  * Flags, never deletes. duplicate_group_id links matched listings;
  * downstream reporting decides how to count a group.
@@ -42,14 +43,13 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
             return $dto;
         }
 
-        if ($dto->district === null || $dto->area === null || $dto->price === null || $dto->floor === null || $dto->rooms === null) {
+        if ($dto->district === null || $dto->area === null || $dto->price === null || $dto->rooms === null) {
             return $dto;
         }
 
         $candidates = $this->repository->findPotentialDuplicates(
             $dto->sourceProfileName,
             $dto->district,
-            $dto->floor,
             $dto->rooms,
             $dto->externalId,
         );
@@ -72,11 +72,18 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
     }
 
     /**
-     * Both area and price must be within tolerance, together - either
-     * alone is too weak a signal, confirmed against real listing data.
+     * District and rooms must match exactly (checked at the query level).
+     * Floor matches exactly only when both listings have one - apartments
+     * always do, but houses/land/commercial often don't, so floor is
+     * skipped rather than blocking a match for those categories. Area and
+     * price must both be within tolerance regardless.
      */
     private function isProbableMatch(ListingDTO $dto, Listing $candidate): bool
     {
+        if ($dto->floor !== null && $candidate->floor !== null && $dto->floor !== $candidate->floor) {
+            return false;
+        }
+
         $areaTolerance = (float) config('scraper.duplicate_detection.area_tolerance_percent', 5.0);
         $priceTolerance = (float) config('scraper.duplicate_detection.price_tolerance_percent', 10.0);
 

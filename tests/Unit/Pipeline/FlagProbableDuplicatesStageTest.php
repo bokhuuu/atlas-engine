@@ -26,7 +26,7 @@ function makeCandidateListing(array $overrides = []): Listing
     return $listing;
 }
 
-test('it flags a listing within area and price tolerance', function () {
+test('it flags a listing within area and price tolerance, same floor', function () {
     $candidate = makeCandidateListing();
 
     $repository = Mockery::mock(ListingRepository::class);
@@ -36,6 +36,38 @@ test('it flags a listing within area and price tolerance', function () {
     $stage = new FlagProbableDuplicatesStage($repository);
 
     $dto = makeListing(['district' => 'Kentron', 'floor' => 3, 'rooms' => 2, 'area' => 61.0, 'price' => 105000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBe(999);
+});
+
+test('it does not flag when floor differs and both listings have one', function () {
+    $candidate = makeCandidateListing(['floor' => 3]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$candidate]));
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    $dto = makeListing(['district' => 'Kentron', 'floor' => 7, 'rooms' => 2, 'area' => 60.0, 'price' => 100000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBeNull();
+});
+
+test('it flags a match even when floors differ, as long as one side has no floor at all', function () {
+    $candidate = makeCandidateListing(['floor' => 5]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$candidate]));
+    $repository->shouldReceive('assignDuplicateGroupId')->once();
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    // dto has no floor at all - houses/land/commercial scenario.
+    $dto = makeListing(['district' => 'Kentron', 'floor' => null, 'rooms' => 2, 'area' => 60.0, 'price' => 100000.0]);
 
     $result = $stage->handle($dto);
 

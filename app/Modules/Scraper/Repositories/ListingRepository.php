@@ -178,11 +178,10 @@ class ListingRepository
      * excluding the listing itself - used by FlagProbableDuplicatesStage
      * to find probable cross-poster duplicates.
      */
-    public function findPotentialDuplicates(string $source, string $district, int $floor, int $rooms, string $excludeExternalId): Collection
+    public function findPotentialDuplicates(string $source, string $district, int $rooms, string $excludeExternalId): Collection
     {
         return Listing::where('source_profile_name', $source)
             ->where('district', $district)
-            ->where('floor', $floor)
             ->where('rooms', $rooms)
             ->where('external_id', '!=', $excludeExternalId)
             ->get();

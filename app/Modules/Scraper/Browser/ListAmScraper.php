@@ -180,7 +180,7 @@ class ListAmScraper extends BaseScraper
     {
         try {
             $result = $this->browser->script("
-            const spans = document.querySelectorAll('span.ge5');
+            const spans = document.querySelectorAll('span.ge4');
             for (const span of spans) {
                 if (span.textContent.trim() === 'Agency') return 'Agency';
             }
