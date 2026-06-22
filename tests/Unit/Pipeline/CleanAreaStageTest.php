@@ -61,3 +61,11 @@ test('it leaves extras untouched when land_area is not present', function () use
 
     expect($result->extras)->toBe(['handover_date' => 'Q3 2027']);
 });
+
+test('it rejects implausibly large values as bad source data', function () use ($stage) {
+    $dto = makeListing(['area' => '1,234,556,677 sq.m.']);
+
+    $result = $stage->handle($dto);
+
+    expect($result->area)->toBeNull();
+});

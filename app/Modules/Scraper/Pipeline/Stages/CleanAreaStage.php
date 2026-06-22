@@ -26,6 +26,8 @@ use App\Modules\Scraper\Pipeline\PipelineStageInterface;
  */
 final class CleanAreaStage implements PipelineStageInterface
 {
+    private const MAX_PLAUSIBLE_AREA_SQM = 10_000_000.0;
+
     public function handle(ListingDTO $dto): ListingDTO
     {
         $dto->area = $this->cleanArea($dto->area);
@@ -57,6 +59,10 @@ final class CleanAreaStage implements PipelineStageInterface
 
         $area = (float) $matches[0];
 
-        return $area > 0 ? $area : null;
+        if ($area <= 0 || $area > self::MAX_PLAUSIBLE_AREA_SQM) {
+            return null;
+        }
+
+        return $area;
     }
 }

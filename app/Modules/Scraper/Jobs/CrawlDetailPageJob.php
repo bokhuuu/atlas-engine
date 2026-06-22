@@ -98,6 +98,13 @@ class CrawlDetailPageJob implements ShouldQueue
             }
 
             $repository->updateOrCreate($processed->toArray());
+        } catch (Throwable $e) {
+            Log::warning('Listing skipped - unexpected error processing this one listing', [
+                'source' => $this->profile->getName(),
+                'url' => $this->url,
+                'run_id' => $this->scraperRunId,
+                'error' => $e->getMessage(),
+            ]);
         } finally {
             $scraper->closeBrowser();
         }
