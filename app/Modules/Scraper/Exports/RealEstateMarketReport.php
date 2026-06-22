@@ -14,47 +14,47 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
- * Produces an eight-sheet workbook from scraped listing data.
+ * Produces a six-sheet workbook from scraped listing data.
  * Each sheet answers a specific question a market entry team needs:
  *
  *   Sheet 1 - All Listings       : full raw dataset for analyst use
  *   Sheet 2 - Market Overview    : executive headline statistics
  *   Sheet 3 - District Analysis  : pricing and supply by district
  *   Sheet 4 - Room Type Analysis : product mix and pricing by bedroom count
- *   Sheet 5 - Building Stock     : construction type and condition breakdown
- *   Sheet 6 - Price Distribution : market segmentation by price bracket
- *   Sheet 7 - Agency Intelligence: market participant map, owner vs agency split
- *   Sheet 8 - Floor & Size       : granular pricing factors for valuation
+ *   Sheet 5 - Price Distribution : market segmentation by price bracket
+ *   Sheet 6 - Floor & Size       : granular pricing factors for valuation
  *
  * Registered only in profiles where rooms/floor data genuinely applies -
  * ApartmentsForSaleProfile and LongTermApartmentRentalsProfile - not the
  * shared AbstractListAmProfile, since Land/Commercial/Houses don't have
- * the room-count or floor data Sheets 4 and 8 depend on.
+ * the room-count or floor data Sheets 4 and 6 depend on.
  */
 class RealEstateMarketReport implements ExporterInterface
 {
     /**
-     * Generate the eight-sheet market research report.
+     * Generate the six-sheet market research report.
      */
     public function export(array $data, ScraperProfileInterface $profile): string
     {
         $path = $this->buildPath();
+        $deduplicated = self::deduplicateForAggregation($data);
 
-        Excel::store(new class($data) implements WithMultipleSheets
+        Excel::store(new class($data, $deduplicated) implements WithMultipleSheets
         {
-            public function __construct(private readonly array $data) {}
+            public function __construct(
+                private readonly array $rawData,
+                private readonly array $deduplicatedData,
+            ) {}
 
             public function sheets(): array
             {
                 return [
-                    new AllListingsSheet($this->data),
-                    new MarketOverviewSheet($this->data),
-                    new DistrictAnalysisSheet($this->data),
-                    new RoomTypeAnalysisSheet($this->data),
-                    new BuildingStockSheet($this->data),
-                    new PriceDistributionSheet($this->data),
-                    new AgencyIntelligenceSheet($this->data),
-                    new FloorSizeAnalysisSheet($this->data),
+                    new AllListingsSheet($this->rawData),
+                    new MarketOverviewSheet($this->deduplicatedData),
+                    new DistrictAnalysisSheet($this->deduplicatedData),
+                    new RoomTypeAnalysisSheet($this->deduplicatedData),
+                    new PriceDistributionSheet($this->deduplicatedData),
+                    new FloorSizeAnalysisSheet($this->deduplicatedData),
                 ];
             }
         }, $path, 'local');
@@ -68,6 +68,38 @@ class RealEstateMarketReport implements ExporterInterface
     public function extension(): string
     {
         return 'xlsx';
+    }
+
+    /**
+     * Collapses duplicate groups into one averaged row before any
+     * aggregate sheet computes from this data - a flagged duplicate
+     * pair counts as one data point, not two. AllListingsSheet uses
+     * the raw $data directly instead, since it's the client-facing
+     * full dataset - every real row stays visible there.
+     */
+    public static function deduplicateForAggregation(array $data): array
+    {
+        $grouped = [];
+
+        foreach ($data as $row) {
+            $key = $row['duplicate_group_id'] ?? $row['id'];
+            $grouped[$key][] = $row;
+        }
+
+        return array_values(array_map(function ($group) {
+            if (count($group) === 1) {
+                return $group[0];
+            }
+
+            $averaged = $group[0];
+
+            foreach (['price', 'price_per_sqm', 'area'] as $field) {
+                $values = array_filter(array_column($group, $field));
+                $averaged[$field] = count($values) ? array_sum($values) / count($values) : null;
+            }
+
+            return $averaged;
+        }, $grouped));
     }
 
     /**
@@ -110,6 +142,7 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'is_new_building',
         'agency_name',
         'listing_date',
+        'duplicate_group_id',
     ];
 
     public function __construct(private readonly array $data) {}
@@ -353,82 +386,7 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
 }
 
 /**
- * Sheet 5 - Building stock composition.
- * Construction type and condition breakdown.
- * Informs on asset quality distribution
- */
-class BuildingStockSheet implements FromArray, WithHeadings, WithTitle
-{
-    public function __construct(private readonly array $data) {}
-
-    public function title(): string
-    {
-        return 'Building Stock';
-    }
-
-    public function headings(): array
-    {
-        return ['Category', 'Value', 'Listings', '% of Market', 'Avg Price/sqm (USD)'];
-    }
-
-    public function array(): array
-    {
-        $total = count($this->data);
-        $rows = [];
-
-        $rows[] = ['CONSTRUCTION TYPE', '', '', '', ''];
-        $byType = [];
-
-        foreach ($this->data as $row) {
-            $type = $row['building_type'] ?? 'Unknown';
-            $byType[$type][] = $row;
-        }
-
-        arsort($byType);
-
-        foreach ($byType as $type => $listings) {
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $count = count($listings);
-
-            $rows[] = [
-                '',
-                ucfirst($type),
-                $count,
-                round($count / $total * 100, 1).'%',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-            ];
-        }
-
-        $rows[] = ['', '', '', '', ''];
-        $rows[] = ['CONDITION / RENOVATION', '', '', '', ''];
-        $byCond = [];
-
-        foreach ($this->data as $row) {
-            $cond = $row['condition'] ?? 'Unknown';
-            $byCond[$cond][] = $row;
-        }
-
-        arsort($byCond);
-
-        foreach ($byCond as $cond => $listings) {
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $count = count($listings);
-
-            $rows[] = [
-                '',
-                $cond,
-                $count,
-                round($count / $total * 100, 1).'%',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-            ];
-        }
-
-        return $rows;
-    }
-}
-
-/**
- * Sheet 6 - Price distribution by bracket.
+ * Sheet 5 - Price distribution by bracket.
  * Shows market segmentation - affordable, mid-market, premium, luxury.
  * USD brackets calibrated to Yerevan market range.
  */
@@ -496,86 +454,7 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
 }
 
 /**
- * Sheet 7 - Market participant intelligence.
- * Top agencies by listing volume, owner vs agency split.
- * Shows who controls supply
- */
-class AgencyIntelligenceSheet implements FromArray, WithHeadings, WithTitle
-{
-    public function __construct(private readonly array $data) {}
-
-    public function title(): string
-    {
-        return 'Agency Intelligence';
-    }
-
-    public function headings(): array
-    {
-        return ['Participant', 'Listings', '% of Market', 'Avg Price (USD)', 'Avg Price/sqm (USD)'];
-    }
-
-    public function array(): array
-    {
-        $total = count($this->data);
-        $agencyData = [];
-        $ownerCount = 0;
-
-        foreach ($this->data as $row) {
-            $agency = $row['agency_name'] ?? null;
-
-            if ($agency) {
-                $agencyData[$agency][] = $row;
-            } else {
-                $ownerCount++;
-            }
-        }
-
-        uasort($agencyData, fn ($a, $b) => count($b) <=> count($a));
-
-        $rows = [];
-        $rows[] = ['MARKET SPLIT', '', '', '', ''];
-
-        $agencyTotal = array_sum(array_map('count', $agencyData));
-
-        $rows[] = [
-            'Agency Listings',
-            $agencyTotal,
-            round($agencyTotal / $total * 100, 1).'%',
-            '',
-            '',
-        ];
-
-        $rows[] = [
-            'Owner Listings',
-            $ownerCount,
-            round($ownerCount / $total * 100, 1).'%',
-            '',
-            '',
-        ];
-
-        $rows[] = ['', '', '', '', ''];
-        $rows[] = ['TOP AGENCIES', '', '', '', ''];
-
-        foreach (array_slice($agencyData, 0, 20, true) as $agency => $listings) {
-            $prices = array_filter(array_column($listings, 'price'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $count = count($listings);
-
-            $rows[] = [
-                $agency,
-                $count,
-                round($count / $total * 100, 1).'%',
-                count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-            ];
-        }
-
-        return $rows;
-    }
-}
-
-/**
- * Sheet 8 - Floor and size analysis.
+ * Sheet 6 - Floor and size analysis.
  * Price/sqm by floor range and size bracket.
  * Supports granular valuation - do higher floors or larger units command premium?
  */

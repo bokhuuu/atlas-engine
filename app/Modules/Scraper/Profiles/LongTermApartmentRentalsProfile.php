@@ -35,6 +35,6 @@ class LongTermApartmentRentalsProfile extends AbstractListAmProfile
 
     public function getExports(): array
     {
-        return ['excel', 'json', 'real_estate_report'];
+        return ['json', 'real_estate_report'];
     }
 }
