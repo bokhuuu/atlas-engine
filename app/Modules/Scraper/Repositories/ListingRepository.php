@@ -9,6 +9,7 @@ use App\Modules\Scraper\Models\Listing;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Handles all database interactions for the Listing model.
@@ -143,10 +144,17 @@ class ListingRepository
         $key = "scraper:stats:district_prices:{$source}";
 
         return Cache::remember($key, now()->addHour(), function () use ($source) {
-            return Listing::where('source_profile_name', $source)
+
+            $deduplicated = DB::table('listings')
+                ->where('source_profile_name', $source)
                 ->whereNotNull('district')
                 ->whereNotNull('price_per_sqm')
-                ->selectRaw('district, ROUND(AVG(price_per_sqm), 2) as avg_price_per_sqm, COUNT(*) as listing_count')
+                ->selectRaw('district, COALESCE(duplicate_group_id, id) as effective_group, AVG(price_per_sqm) as group_avg_price_per_sqm')
+                ->groupBy('district', 'effective_group');
+
+            return DB::query()
+                ->fromSub($deduplicated, 'deduplicated')
+                ->selectRaw('district, ROUND(AVG(group_avg_price_per_sqm), 2) as avg_price_per_sqm, COUNT(*) as listing_count')
                 ->groupBy('district')
                 ->orderByDesc('avg_price_per_sqm')
                 ->get();

@@ -69,3 +69,20 @@ test('it counts listings by source', function () use ($repository) {
 
     expect($repository->countBySource('listam'))->toBe(1);
 });
+
+test('it averages duplicate groups as one data point in district stats', function () {
+    $repository = new ListingRepository;
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-1', 'district' => 'Kentron', 'price_per_sqm' => 100, 'duplicate_group_id' => null]));
+    $listing = Listing::where('external_id', 'dup-1')->first();
+    $listing->update(['duplicate_group_id' => $listing->id]);
+
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-2', 'district' => 'Kentron', 'price_per_sqm' => 120, 'duplicate_group_id' => $listing->id]));
+
+    $repository->updateOrCreate(listingData(['external_id' => 'standalone', 'district' => 'Kentron', 'price_per_sqm' => 200]));
+
+    $stats = $repository->getDistrictPriceStats('listam');
+    $kentron = $stats->firstWhere('district', 'Kentron');
+
+    expect((float) $kentron->avg_price_per_sqm)->toBe(155.0);
+    expect((int) $kentron->listing_count)->toBe(2);
+});
