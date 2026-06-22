@@ -5,7 +5,7 @@ Atlas scrapes Armenian real estate listings, cleans the data automatically and t
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
 > **Project status:** active development, pre-launch. Not yet handed to the client.
-> **Full architecture, decisions, and current status:** see [`ATLAS.md`](./ATLAS.md) - read that file first, it's the living source of truth for this project.
+> **Full architecture, decisions, and current status:** see [`ATLAS.md`] - read that file first, it's the living source of truth for this project.
 
 ---
 
@@ -15,7 +15,7 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 - **Frontend:** Inertia.js + React + TypeScript, Tailwind
 - **Auth/permissions:** Fortify + Sanctum, Spatie roles/permissions
 - **AI layer:** Prism → OpenRouter
-- **Database:** MySQL 8.0
+- **Database:** MySQL
 - **Scraping:** Laravel Dusk + ChromeDriver (real headless browser - list.am's listings are JS-rendered)
 - **Monitoring:** Sentry
 - **DevOps:** Docker, GitHub Actions (CI)
