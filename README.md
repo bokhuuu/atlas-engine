@@ -4,7 +4,8 @@ Atlas scrapes Armenian real estate listings, cleans the data automatically and t
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
-> **Project status:** active development, pre-launch. Not yet handed to the client.
+> **Project status:** active development. Data layer complete, public market snapshot (Screen 0) live. Internal dashboard, valuation tool, AI assistant and automated reports still ahead.
+
 > **Full architecture, decisions, and current status:** see [`ATLAS.md`] - read that file first, it's the living source of truth for this project.
 
 ---

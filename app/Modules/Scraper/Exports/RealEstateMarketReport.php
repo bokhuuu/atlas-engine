@@ -15,20 +15,21 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
- * Produces a six-sheet workbook from scraped listing data.
- * Each sheet answers a specific question a market entry team needs:
+ * Produces a five-sheet workbook from scraped listing data.
+ * Every sheet sits on one principle: describe what list.am shows,
+ * sliced by fields that already exist in the data - no editorial
+ * bracketing, no imposed categories, no analytical judgment.
  *
  *   Sheet 1 - All Listings       : full raw dataset for analyst use
- *   Sheet 2 - Market Overview    : executive headline statistics
+ *   Sheet 2 - Market Overview    : aggregated headline statistics
  *   Sheet 3 - District Analysis  : pricing and supply by district
  *   Sheet 4 - Room Type Analysis : product mix and pricing by bedroom count
  *   Sheet 5 - Price Distribution : market segmentation by price bracket
- *   Sheet 6 - Floor & Size       : granular pricing factors for valuation
  *
- * Registered only in profiles where rooms/floor data genuinely applies -
- * ApartmentsForSaleProfile and LongTermApartmentRentalsProfile - not the
- * shared AbstractListAmProfile, since Land/Commercial/Houses don't have
- * the room-count or floor data Sheets 4 and 6 depend on.
+ * Registered only in profiles where rooms data genuinely applies -
+ * ApartmentsForSaleProfile and LongTermApartmentRentalsProfile - not
+ * the shared AbstractListAmProfile, since Land/Commercial/Houses don't
+ * have the room-count data Sheet 4 depends on.
  */
 class RealEstateMarketReport implements ExporterInterface
 {
@@ -55,7 +56,6 @@ class RealEstateMarketReport implements ExporterInterface
                     new DistrictAnalysisSheet($this->deduplicatedData),
                     new RoomTypeAnalysisSheet($this->deduplicatedData),
                     new PriceDistributionSheet($this->deduplicatedData),
-                    new FloorSizeAnalysisSheet($this->deduplicatedData),
                 ];
             }
         }, $path, 'local');
@@ -447,167 +447,6 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
                 $medianSqm ?? 'N/A',
-            ];
-        }
-
-        return $rows;
-    }
-}
-
-/**
- * Sheet 6 - Floor and size analysis.
- * Price/sqm broken down by floor range, size range, and ceiling height -
- * descriptive groupings only, not a valuation recommendation. How these
- * facts get applied to a specific property is Colliers' own methodology.
- */
-class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
-{
-    use CalculatesMedian;
-
-    public function __construct(private readonly array $data) {}
-
-    public function title(): string
-    {
-        return 'Floor & Size Analysis';
-    }
-
-    public function headings(): array
-    {
-        return ['Category', 'Value', 'Listings', 'Avg Price (USD)', 'Avg Price/sqm (USD)', 'Median Price/sqm (USD)', 'Avg Area (sqm)'];
-    }
-
-    public function array(): array
-    {
-        $rows = [];
-
-        $floorBrackets = [
-            'Ground Floor (1)' => [1, 1],
-            'Low Floors (2–3)' => [2, 3],
-            'Mid Floors (4–7)' => [4, 7],
-            'High Floors (8–12)' => [8, 12],
-            'Top Floors (13+)' => [13, PHP_INT_MAX],
-        ];
-
-        $rows[] = ['FLOOR ANALYSIS', '', '', '', '', '', ''];
-        $floorBuckets = array_fill_keys(array_keys($floorBrackets), []);
-
-        foreach ($this->data as $row) {
-            $floor = $row['floor'] ?? null;
-            if ($floor === null) {
-                continue;
-            }
-
-            foreach ($floorBrackets as $label => [$min, $max]) {
-                if ($floor >= $min && $floor <= $max) {
-                    $floorBuckets[$label][] = $row;
-                    break;
-                }
-            }
-        }
-
-        foreach ($floorBuckets as $label => $listings) {
-            $prices = array_filter(array_column($listings, 'price'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $areas = array_filter(array_column($listings, 'area'));
-            $count = count($listings);
-            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
-
-            $rows[] = [
-                '',
-                $label,
-                $count,
-                count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-                $medianSqm ?? 'N/A',
-                count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
-            ];
-        }
-
-        $sizeBrackets = [
-            'Studio / Micro (under 40sqm)' => [0, 40],
-            'Small (40–60 sqm)' => [40, 60],
-            'Medium (60–80 sqm)' => [60, 80],
-            'Large (80–120 sqm)' => [80, 120],
-            'Extra Large (120sqm+)' => [120, PHP_INT_MAX],
-        ];
-
-        $rows[] = ['', '', '', '', '', ''];
-        $rows[] = ['SIZE ANALYSIS', '', '', '', '', ''];
-        $sizeBuckets = array_fill_keys(array_keys($sizeBrackets), []);
-
-        foreach ($this->data as $row) {
-            $area = $row['area'] ?? null;
-            if ($area === null) {
-                continue;
-            }
-
-            foreach ($sizeBrackets as $label => [$min, $max]) {
-                if ($area >= $min && $area < $max) {
-                    $sizeBuckets[$label][] = $row;
-                    break;
-                }
-            }
-        }
-
-        foreach ($sizeBuckets as $label => $listings) {
-            $prices = array_filter(array_column($listings, 'price'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $areas = array_filter(array_column($listings, 'area'));
-            $count = count($listings);
-            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
-
-            $rows[] = [
-                '',
-                $label,
-                $count,
-                count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-                $medianSqm ?? 'N/A',
-                count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
-            ];
-        }
-
-        $rows[] = ['', '', '', '', '', ''];
-        $rows[] = ['CEILING HEIGHT', '', '', '', '', ''];
-
-        $heightBrackets = [
-            'Standard (under 2.8m)' => [0, 2.8],
-            'Comfortable (2.8–3.0m)' => [2.8, 3.0],
-            'High (3.0–3.5m)' => [3.0, 3.5],
-            'Loft / Premium (3.5m+)' => [3.5, PHP_INT_MAX],
-        ];
-
-        $heightBuckets = array_fill_keys(array_keys($heightBrackets), []);
-
-        foreach ($this->data as $row) {
-            $height = $row['ceiling_height'] ?? null;
-            if ($height === null) {
-                continue;
-            }
-
-            foreach ($heightBrackets as $label => [$min, $max]) {
-                if ($height >= $min && $height < $max) {
-                    $heightBuckets[$label][] = $row;
-                    break;
-                }
-            }
-        }
-
-        foreach ($heightBuckets as $label => $listings) {
-            $prices = array_filter(array_column($listings, 'price'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $areas = array_filter(array_column($listings, 'area'));
-            $count = count($listings);
-            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
-
-            $rows[] = [
-                '',
-                $label,
-                $count,
-                count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-                $medianSqm ?? 'N/A',
-                count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
             ];
         }
 
