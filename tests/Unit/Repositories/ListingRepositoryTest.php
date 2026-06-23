@@ -86,3 +86,47 @@ test('it averages duplicate groups as one data point in district stats', functio
     expect((float) $kentron->avg_price_per_sqm)->toBe(155.0);
     expect((int) $kentron->listing_count)->toBe(2);
 });
+
+test('it returns null median price per sqm when source has no data', function () use ($repository) {
+    expect($repository->getMedianPricePerSqm('listam'))->toBeNull();
+});
+
+test('it calculates median price per sqm for an odd number of listings', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'm-1', 'price_per_sqm' => 100]));
+    $repository->updateOrCreate(listingData(['external_id' => 'm-2', 'url' => 'https://list.am/en/item/m-2', 'price_per_sqm' => 200]));
+    $repository->updateOrCreate(listingData(['external_id' => 'm-3', 'url' => 'https://list.am/en/item/m-3', 'price_per_sqm' => 300]));
+
+    expect($repository->getMedianPricePerSqm('listam'))->toBe(200.0);
+});
+
+test('it calculates median price per sqm for an even number of listings by averaging the two middle values', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'm-1', 'price_per_sqm' => 100]));
+    $repository->updateOrCreate(listingData(['external_id' => 'm-2', 'url' => 'https://list.am/en/item/m-2', 'price_per_sqm' => 200]));
+    $repository->updateOrCreate(listingData(['external_id' => 'm-3', 'url' => 'https://list.am/en/item/m-3', 'price_per_sqm' => 300]));
+    $repository->updateOrCreate(listingData(['external_id' => 'm-4', 'url' => 'https://list.am/en/item/m-4', 'price_per_sqm' => 400]));
+
+    expect($repository->getMedianPricePerSqm('listam'))->toBe(250.0);
+});
+
+test('it treats a duplicate group as one data point when calculating median price per sqm', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-1', 'price_per_sqm' => 100]));
+    $listing = Listing::where('external_id', 'dup-1')->first();
+    $listing->update(['duplicate_group_id' => $listing->id]);
+
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-2', 'url' => 'https://list.am/en/item/dup-2', 'price_per_sqm' => 120, 'duplicate_group_id' => $listing->id]));
+    $repository->updateOrCreate(listingData(['external_id' => 'standalone', 'url' => 'https://list.am/en/item/standalone', 'price_per_sqm' => 200]));
+
+    expect($repository->getMedianPricePerSqm('listam'))->toBe(155.0);
+});
+
+test('it counts distinct properties by source, collapsing duplicate groups into one', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-1', 'price_per_sqm' => 100]));
+    $listing = Listing::where('external_id', 'dup-1')->first();
+    $listing->update(['duplicate_group_id' => $listing->id]);
+
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-2', 'url' => 'https://list.am/en/item/dup-2', 'price_per_sqm' => 120, 'duplicate_group_id' => $listing->id]));
+    $repository->updateOrCreate(listingData(['external_id' => 'standalone', 'url' => 'https://list.am/en/item/standalone', 'price_per_sqm' => 200]));
+
+    expect(Listing::count())->toBe(3);
+    expect($repository->countDistinctBySource('listam'))->toBe(2);
+});
