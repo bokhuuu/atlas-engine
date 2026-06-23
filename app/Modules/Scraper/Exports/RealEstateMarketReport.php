@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Exports;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
+use App\Modules\Scraper\Exports\Concerns\CalculatesMedian;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -172,6 +173,8 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
  */
 class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
 {
+    use CalculatesMedian;
+
     public function __construct(private readonly array $data) {}
 
     public function title(): string
@@ -196,6 +199,7 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
         $avgSqm = count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A';
         $avgArea = count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A';
         $medianPrice = count($prices) ? $this->median(array_values($prices)) : 'N/A';
+        $medianSqm = count($sqmPrices) ? $this->median(array_values($sqmPrices)) : 'N/A';
 
         $newBuildingCount = count(array_filter(
             array_column($this->data, 'is_new_building'),
@@ -214,6 +218,7 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['Average Price (USD)',        $avgPrice],
             ['Median Price (USD)',         $medianPrice],
             ['Average Price/sqm (USD)',    $avgSqm],
+            ['Median Price/sqm (USD)',     $medianSqm],
             ['Average Area (sqm)',         $avgArea],
             ['Min Price (USD)',            count($prices) ? min($prices) : 'N/A'],
             ['Max Price (USD)',            count($prices) ? max($prices) : 'N/A'],
@@ -225,17 +230,6 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['Owner Listings',             count($this->data) - count($agencies)],
         ];
     }
-
-    private function median(array $values): float
-    {
-        sort($values);
-        $count = count($values);
-        $mid = (int) floor($count / 2);
-
-        return $count % 2 === 0
-            ? round(($values[$mid - 1] + $values[$mid]) / 2, 2)
-            : round($values[$mid], 2);
-    }
 }
 
 /**
@@ -245,6 +239,8 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
  */
 class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
 {
+    use CalculatesMedian;
+
     public function __construct(private readonly array $data) {}
 
     public function title(): string
@@ -261,6 +257,7 @@ class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
             'Avg Price (USD)',
             'Median Price (USD)',
             'Avg Price/sqm (USD)',
+            'Median Price/sqm (USD)',
             'Avg Area (sqm)',
             'New Construction',
             'New Construction %',
@@ -288,14 +285,8 @@ class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 fn ($v) => $v === true || $v === 1
             ));
 
-            $sortedPrices = array_values($prices);
-            sort($sortedPrices);
-            $mid = (int) floor(count($sortedPrices) / 2);
-            $median = count($sortedPrices) > 0
-                ? (count($sortedPrices) % 2 === 0
-                    ? round(($sortedPrices[$mid - 1] + $sortedPrices[$mid]) / 2, 2)
-                    : round($sortedPrices[$mid], 2))
-                : null;
+            $median = count($prices) ? $this->median($prices) : null;
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
 
             $count = count($listings);
 
@@ -306,6 +297,7 @@ class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
                 $median ?? 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
                 $newCount,
                 $count > 0 ? round($newCount / $count * 100, 1).'%' : 'N/A',
@@ -325,6 +317,8 @@ class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
  */
 class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
 {
+    use CalculatesMedian;
+
     public function __construct(private readonly array $data) {}
 
     public function title(): string
@@ -340,6 +334,7 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
             '% of Market',
             'Avg Price (USD)',
             'Avg Price/sqm (USD)',
+            'Median Price/sqm (USD)',
             'Avg Area (sqm)',
             'New Construction %',
         ];
@@ -363,6 +358,7 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
         foreach ($grouped as $label => $listings) {
             $prices = array_filter(array_column($listings, 'price'));
             $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
             $areas = array_filter(array_column($listings, 'area'));
             $newCount = count(array_filter(
                 array_column($listings, 'is_new_building'),
@@ -376,6 +372,7 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 round($count / $total * 100, 1).'%',
                 count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
                 $count > 0 ? round($newCount / $count * 100, 1).'%' : 'N/A',
             ];
@@ -392,6 +389,8 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
  */
 class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
 {
+    use CalculatesMedian;
+
     public function __construct(private readonly array $data) {}
 
     public function title(): string
@@ -401,7 +400,7 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
 
     public function headings(): array
     {
-        return ['Price Bracket (USD)', 'Listings', '% of Market', 'Avg Area (sqm)', 'Avg Price/sqm (USD)'];
+        return ['Price Bracket (USD)', 'Listings', '% of Market', 'Avg Area (sqm)', 'Avg Price/sqm (USD)', 'Median Price/sqm (USD)'];
     }
 
     public function array(): array
@@ -439,6 +438,7 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
             $count = count($listings);
             $areas = array_filter(array_column($listings, 'area'));
             $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
 
             $rows[] = [
                 $label,
@@ -446,6 +446,7 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
                 $total > 0 ? round($count / $total * 100, 1).'%' : '0%',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
             ];
         }
 
@@ -461,6 +462,8 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
  */
 class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
 {
+    use CalculatesMedian;
+
     public function __construct(private readonly array $data) {}
 
     public function title(): string
@@ -470,7 +473,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
 
     public function headings(): array
     {
-        return ['Category', 'Value', 'Listings', 'Avg Price (USD)', 'Avg Price/sqm (USD)', 'Avg Area (sqm)'];
+        return ['Category', 'Value', 'Listings', 'Avg Price (USD)', 'Avg Price/sqm (USD)', 'Median Price/sqm (USD)', 'Avg Area (sqm)'];
     }
 
     public function array(): array
@@ -485,7 +488,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
             'Top Floors (13+)' => [13, PHP_INT_MAX],
         ];
 
-        $rows[] = ['FLOOR ANALYSIS', '', '', '', '', ''];
+        $rows[] = ['FLOOR ANALYSIS', '', '', '', '', '', ''];
         $floorBuckets = array_fill_keys(array_keys($floorBrackets), []);
 
         foreach ($this->data as $row) {
@@ -507,6 +510,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
             $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
             $areas = array_filter(array_column($listings, 'area'));
             $count = count($listings);
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
 
             $rows[] = [
                 '',
@@ -514,6 +518,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 $count,
                 count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
             ];
         }
@@ -549,6 +554,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
             $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
             $areas = array_filter(array_column($listings, 'area'));
             $count = count($listings);
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
 
             $rows[] = [
                 '',
@@ -556,6 +562,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 $count,
                 count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
             ];
         }
@@ -591,6 +598,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
             $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
             $areas = array_filter(array_column($listings, 'area'));
             $count = count($listings);
+            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
 
             $rows[] = [
                 '',
@@ -598,6 +606,7 @@ class FloorSizeAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 $count,
                 count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
+                $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
             ];
         }
