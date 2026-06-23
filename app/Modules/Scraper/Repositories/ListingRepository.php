@@ -109,6 +109,75 @@ class ListingRepository
     }
 
     /**
+     * Count distinct properties for a given source, collapsing
+     * probable cross-poster duplicates into one.
+     *
+     * Same dedup logic as getDistrictPriceStats() (COALESCE on
+     * duplicate_group_id), but returns a single total instead of
+     * a per-district breakdown. Used by the public Screen snapshot,
+     * where a raw row count would visibly disagree with the
+     * already-deduplicated district figures.
+     */
+    public function countDistinctBySource(string $source): int
+    {
+        return DB::table('listings')
+            ->where('source_profile_name', $source)
+            ->selectRaw('COUNT(DISTINCT COALESCE(duplicate_group_id, id)) as total')
+            ->value('total');
+    }
+
+    /**
+     * Median price per sqm for a given source, across all its
+     * deduplicated listings citywide.
+     *
+     * Unlike AVG(), median is resistant to a handful of genuinely
+     * real but extreme listings (e.g. a tiny premium-location kiosk
+     * priced in the millions) skewing the headline number - confirmed
+     * necessary after Commercial-for-Sale's average ($4,348/sqm) was
+     * found to sit well above real Yerevan market reports, traced to
+     * exactly this kind of extreme-but-real listing, not a scraping bug.
+     *
+     * MySQL 8.0 has no MEDIAN() function, so this is computed manually:
+     * dedup groups are ranked by price, then the middle-ranked row (or
+     * the average of the two middle rows, if the count is even) is
+     * selected. Cached for 1 hour, same pattern as getDistrictPriceStats().
+     */
+    public function getMedianPricePerSqm(string $source): ?float
+    {
+        $key = "scraper:stats:median_price:{$source}";
+
+        return Cache::remember($key, now()->addHour(), function () use ($source) {
+            $sql = <<<'SQL'
+            WITH deduplicated AS (
+                SELECT
+                    COALESCE(duplicate_group_id, id) AS effective_group,
+                    AVG(price_per_sqm) AS group_price_per_sqm
+                FROM listings
+                WHERE source_profile_name = ?
+                    AND price_per_sqm IS NOT NULL
+                GROUP BY effective_group
+            ),
+            ranked AS (
+                SELECT
+                    group_price_per_sqm,
+                    ROW_NUMBER() OVER (ORDER BY group_price_per_sqm) AS rn,
+                    COUNT(*) OVER () AS total
+                FROM deduplicated
+            )
+            SELECT AVG(group_price_per_sqm) AS median
+            FROM ranked
+            WHERE rn IN (FLOOR((total + 1) / 2), FLOOR((total + 2) / 2))
+        SQL;
+
+            $result = DB::select($sql, [$source]);
+
+            return $result[0]->median !== null
+                ? round((float) $result[0]->median, 2)
+                : null;
+        });
+    }
+
+    /**
      * Count listings saved by one specific scrape run.
      *
      * Used by ScrapeCompletedJob to report accurate per-run results,

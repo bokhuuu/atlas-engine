@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Public\SnapshotController;
 use App\Modules\Scraper\Api\HealthController;
 use App\Modules\Scraper\Api\ListingController;
 use App\Modules\Scraper\Api\ScrapeController;
@@ -14,6 +15,10 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::get('/health', HealthController::class);
+
+    Route::prefix('public')->group(function () {
+        Route::get('/snapshot', SnapshotController::class);
+    });
 
     Route::middleware(['auth:sanctum', 'throttle:api.per_token'])->group(function () {
         Route::post('/scrape/start', [ScrapeController::class, 'start']);
