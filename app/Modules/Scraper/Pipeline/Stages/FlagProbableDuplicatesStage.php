@@ -18,18 +18,27 @@ use App\Modules\Scraper\Repositories\ListingRepository;
  * same real apartment have different external_ids and pass straight
  * through DeduplicateStage untouched.
  *
- * Rule-based by design, not AI-based - explainable to Colliers ("matched
- * on district/rooms exactly, floor exactly when both have one, area
- * within 5%, price within 10%") and costs nothing in AI token budget.
- * Thresholds confirmed against real scraped data, not picked
- * arbitrarily - see ATLAS.md.
+ * Rule-based by design, not AI-based - explainable to Colliers and
+ * costs nothing in AI token budget. Thresholds confirmed against real
+ * scraped data, not picked arbitrarily - see ATLAS.md.
+ *
+ * A new listing only joins an existing group by matching that group's
+ * ANCHOR (the listing whose own id equals the group id) - never by
+ * matching any other member. Without this, transitive chaining can
+ * occur: A matches B, B matches C, so A and C end up grouped together
+ * even though A and C don't actually match each other. Confirmed as a
+ * real issue on Commercial Sale's real data, not theoretical.
+ *
+ * District must match exactly. Floor and room count match exactly only
+ * when both listings have a value - apartments always do; houses/land/
+ * commercial often don't, so these are skipped rather than blocking a
+ * match when missing. When either floor or rooms can't be checked,
+ * tolerance tightens (fewer confirmed signals = more coincidence risk
+ * at the same tolerance - confirmed by Commercial's real flag rate
+ * running 2-3x every other category's before this fix).
  *
  * Flags, never deletes. duplicate_group_id links matched listings;
  * downstream reporting decides how to count a group.
- *
- * Thresholds are config-driven (config/scraper.php), not hardcoded.
- * All database access goes through ListingRepository, not direct
- * Eloquent calls, matching every other stage in this pipeline.
  */
 final class FlagProbableDuplicatesStage implements PipelineStageInterface
 {
@@ -53,14 +62,16 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
             $dto->externalId,
         );
 
-        foreach ($candidates as $candidate) {
-            if ($this->isProbableMatch($dto, $candidate)) {
-                $groupId = $candidate->duplicate_group_id ?? $candidate->id;
+        $byGroup = $candidates->groupBy(fn (Listing $c) => $c->duplicate_group_id ?? $c->id);
 
+        foreach ($byGroup as $groupId => $members) {
+            $anchor = $members->firstWhere('id', $groupId) ?? $members->first();
+
+            if ($this->isProbableMatch($dto, $anchor)) {
                 $dto->extras['duplicate_group_id'] = $groupId;
 
-                if ($candidate->duplicate_group_id === null) {
-                    $this->repository->assignDuplicateGroupId($candidate->id, $groupId);
+                if ($anchor->duplicate_group_id === null) {
+                    $this->repository->assignDuplicateGroupId($anchor->id, $groupId);
                 }
 
                 return $dto;
@@ -70,25 +81,28 @@ final class FlagProbableDuplicatesStage implements PipelineStageInterface
         return $dto;
     }
 
-    /**
-     * District and rooms must match exactly (checked at the query level).
-     * Floor matches exactly only when both listings have one - apartments
-     * always do, but houses/land/commercial often don't, so floor is
-     * skipped rather than blocking a match for those categories. Area and
-     * price must both be within tolerance regardless.
-     */
     private function isProbableMatch(ListingDTO $dto, Listing $candidate): bool
     {
-        if ($dto->floor !== null && $candidate->floor !== null && $dto->floor !== $candidate->floor) {
+        $floorKnownBothSides = $dto->floor !== null && $candidate->floor !== null;
+        $roomsKnownBothSides = $dto->rooms !== null && $candidate->rooms !== null;
+
+        if ($floorKnownBothSides && $dto->floor !== $candidate->floor) {
             return false;
         }
 
-        if ($dto->rooms !== null && $candidate->rooms !== null && $dto->rooms !== $candidate->rooms) {
+        if ($roomsKnownBothSides && $dto->rooms !== $candidate->rooms) {
             return false;
         }
 
-        $areaTolerance = (float) config('scraper.duplicate_detection.area_tolerance_percent', 5.0);
-        $priceTolerance = (float) config('scraper.duplicate_detection.price_tolerance_percent', 10.0);
+        $bothSignalsConfirmed = $floorKnownBothSides && $roomsKnownBothSides;
+
+        $areaTolerance = $bothSignalsConfirmed
+            ? (float) config('scraper.duplicate_detection.area_tolerance_percent', 5.0)
+            : (float) config('scraper.duplicate_detection.area_tolerance_percent_strict', 3.0);
+
+        $priceTolerance = $bothSignalsConfirmed
+            ? (float) config('scraper.duplicate_detection.price_tolerance_percent', 10.0)
+            : (float) config('scraper.duplicate_detection.price_tolerance_percent_strict', 6.0);
 
         $areaDiff = $this->percentDifference($dto->area, (float) $candidate->area);
         $priceDiff = $this->percentDifference($dto->price, (float) $candidate->price);

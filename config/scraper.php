@@ -378,5 +378,7 @@ return [
         'enabled' => env('DUPLICATE_DETECTION_ENABLED', true),
         'area_tolerance_percent' => env('DUPLICATE_AREA_TOLERANCE_PERCENT', 5.0),
         'price_tolerance_percent' => env('DUPLICATE_PRICE_TOLERANCE_PERCENT', 10.0),
+        'area_tolerance_percent_strict' => env('DUPLICATE_AREA_TOLERANCE_PERCENT_STRICT', 3.0),
+        'price_tolerance_percent_strict' => env('DUPLICATE_PRICE_TOLERANCE_PERCENT_STRICT', 6.0),
     ],
 ];

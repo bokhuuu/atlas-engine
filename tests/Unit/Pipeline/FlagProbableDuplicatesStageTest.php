@@ -106,6 +106,48 @@ test('it flags a match even when room counts differ, as long as one side has no 
     expect($result->extras['duplicate_group_id'] ?? null)->toBe(999);
 });
 
+test('it uses stricter tolerance when floor or rooms cannot be confirmed on both sides', function () {
+    $candidate = makeCandidateListing(['floor' => null, 'rooms' => null, 'area' => 100.0, 'price' => 100000.0]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$candidate]));
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    // 3.85% area difference - would pass the normal 5% tolerance, but
+    // should fail the stricter 3% tolerance used when floor/rooms are
+    // unconfirmed (commercial/land scenario).
+    $dto = makeListing(['district' => 'Kentron', 'floor' => null, 'rooms' => null, 'area' => 104.0, 'price' => 100000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBeNull();
+});
+
+test('it only matches against a group anchor, not any member - prevents transitive chaining', function () {
+    // An existing group: anchor (id 500, its own duplicate_group_id)
+    // and a member (id 501) that drifted further from the anchor than
+    // the anchor's own tolerance allows - exactly the real scenario
+    // found in live Commercial Sale data.
+    $anchor = makeCandidateListing(['id' => 500, 'duplicate_group_id' => 500, 'floor' => null, 'rooms' => null, 'area' => 100.0, 'price' => 200000.0]);
+    $member = makeCandidateListing(['id' => 501, 'duplicate_group_id' => 500, 'floor' => null, 'rooms' => null, 'area' => 120.0, 'price' => 240000.0]);
+
+    $repository = Mockery::mock(ListingRepository::class);
+    $repository->shouldReceive('findPotentialDuplicates')->once()->andReturn(collect([$anchor, $member]));
+    $repository->shouldNotReceive('assignDuplicateGroupId');
+
+    $stage = new FlagProbableDuplicatesStage($repository);
+
+    // Close to member 501 (1.6% area, 2% price) but far from anchor 500
+    // (18% area, 18.4% price). Must NOT flag - matching the member
+    // alone is exactly the chaining bug this fix prevents.
+    $dto = makeListing(['district' => 'Kentron', 'floor' => null, 'rooms' => null, 'area' => 122.0, 'price' => 245000.0]);
+
+    $result = $stage->handle($dto);
+
+    expect($result->extras['duplicate_group_id'] ?? null)->toBeNull();
+});
+
 test('it does not flag when area exceeds tolerance', function () {
     $candidate = makeCandidateListing();
 
