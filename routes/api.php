@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Public\SnapshotController;
+use App\Modules\Scraper\Api\ExportController;
 use App\Modules\Scraper\Api\HealthController;
 use App\Modules\Scraper\Api\ListingController;
 use App\Modules\Scraper\Api\ScrapeController;
@@ -31,5 +32,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/listings', [ListingController::class, 'index']);
         Route::get('/listings/stats', [ListingController::class, 'stats']);
+
+        Route::get('/exports', [ExportController::class, 'downloadAll']);
+        Route::get('/exports/{source}', [ExportController::class, 'download']);
     });
 });

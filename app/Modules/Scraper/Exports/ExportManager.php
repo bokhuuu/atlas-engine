@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Exports;
 
-use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Repositories\ListingRepository;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -21,9 +22,6 @@ use Illuminate\Support\Facades\Log;
  */
 class ExportManager
 {
-    /**
-     * Takes the repository used to fetch the listings that need exporting.
-     */
     public function __construct(
         private readonly ListingRepository $repository,
     ) {}
@@ -50,10 +48,53 @@ class ExportManager
             return [];
         }
 
+        return $this->runExporters($profile, $source, $listings);
+    }
+
+    /**
+     * Run configured exporters for a category's full current dataset,
+     * not scoped to any one scrape run.
+     *
+     * Used for on-demand exports an admin generates from existing DB
+     * data, without re-scraping - the panel's "Download" buttons.
+     *
+     * onlySpreadsheets skips the 'json' format - JSON access is served
+     * via the REST API for machine consumers, not offered as a file
+     * download here.
+     */
+    public function runForSource(string $source, bool $onlySpreadsheets = false): array
+    {
+        $profileClass = config('scraper.profiles.'.$source);
+        $profile = app($profileClass);
+
+        $listings = $this->repository->findBySource($source);
+
+        if ($listings->isEmpty()) {
+            Log::warning('ExportManager: no listings found for source.', [
+                'source' => $source,
+            ]);
+
+            return [];
+        }
+
+        return $this->runExporters($profile, $source, $listings, $onlySpreadsheets);
+    }
+
+    /**
+     * Shared exporter loop used by both run() and runForSource() -
+     * the only real difference between the two is how listings get
+     * fetched, not what happens to them afterward.
+     */
+    private function runExporters(ScraperProfileInterface $profile, string $source, Collection $listings, bool $onlySpreadsheets = false): array
+    {
         $data = $listings->map(fn ($listing) => $listing->toArray())->toArray();
         $paths = [];
 
         foreach ($profile->getExports() as $format) {
+            if ($onlySpreadsheets && $format === 'json') {
+                continue;
+            }
+
             $exporterClass = config('scraper.exporters.'.$format);
 
             if (! $exporterClass) {
@@ -65,14 +106,12 @@ class ExportManager
                 continue;
             }
 
-            /** @var ExporterInterface $exporter */
             $exporter = app($exporterClass);
             $paths[] = $exporter->export($data, $profile);
 
             Log::info('ExportManager: export complete.', [
                 'format' => $format,
                 'source' => $source,
-                'run_id' => $scraperRunId,
             ]);
         }
 
