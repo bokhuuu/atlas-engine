@@ -25,6 +25,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/scrape/status', [ScrapeController::class, 'status']);
         Route::post('/scrape/cancel', [ScrapeController::class, 'cancel']);
 
+        Route::post('scrape/start-all', [ScrapeController::class, 'startAll']);
+        Route::get('scrape/status-all', [ScrapeController::class, 'statusAll']);
+        Route::post('scrape/cancel-all', [ScrapeController::class, 'cancelAll']);
+
         Route::get('/listings', [ListingController::class, 'index']);
         Route::get('/listings/stats', [ListingController::class, 'stats']);
     });
