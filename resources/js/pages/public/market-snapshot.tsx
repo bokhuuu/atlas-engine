@@ -42,17 +42,12 @@ interface SnapshotData {
  * priced in the millions) shouldn't be allowed to skew what looks
  * like the "typical" price for a category.
  */
-function formatPricePerSqm(
-    value: number | null,
-    dealType: 'sale' | 'rent',
-): string {
+function formatPricePerSqm(value: number | null): string {
     if (value === null) {
         return '—';
     }
 
-    const suffix = dealType === 'rent' ? '/sqm/mo' : '/sqm';
-
-    return `$${value.toLocaleString()}${suffix}`;
+    return `$${Math.round(value).toLocaleString()}`;
 }
 
 export default function MarketSnapshot() {
@@ -92,11 +87,11 @@ export default function MarketSnapshot() {
                 <main className="mx-auto flex max-w-5xl flex-1 flex-col gap-8 px-6 py-10 lg:px-0">
                     <div>
                         <h1 className="text-2xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">
-                            Yerevan Real Estate Market Snapshot
+                            Yerevan Real Estate Market Stats
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Live data across all tracked categories —
-                            apartments, houses, commercial, and land.
+                            Live data across all tracked categories -
+                            apartments, houses, commercial and land.
                         </p>
                     </div>
 
@@ -139,7 +134,6 @@ export default function MarketSnapshot() {
                                             <p className="text-2xl font-semibold">
                                                 {formatPricePerSqm(
                                                     cat.median_price_per_sqm,
-                                                    cat.deal_type,
                                                 )}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
@@ -158,7 +152,7 @@ export default function MarketSnapshot() {
                                             Want the full district breakdown?
                                         </p>
                                         <p className="text-sm text-muted-foreground">
-                                            This is an initial sample run — full
+                                            This is an initial sample run - full
                                             depth available on request.
                                         </p>
                                     </div>
