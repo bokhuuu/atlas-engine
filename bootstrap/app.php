@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../routes/console.php',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->statefulApi();
+
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [
