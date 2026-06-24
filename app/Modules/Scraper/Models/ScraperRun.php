@@ -20,6 +20,7 @@ class ScraperRun extends Model
         'state',
         'scraped_pages',
         'saved_listings',
+        'encountered_listings',
         'error',
         'started_at',
         'finished_at',

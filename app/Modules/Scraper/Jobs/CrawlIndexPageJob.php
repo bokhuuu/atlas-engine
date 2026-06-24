@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Jobs;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Jobs\Middleware\RateLimitedMiddleware;
 use App\Modules\Scraper\Jobs\Middleware\ThrottledRetryMiddleware;
+use App\Modules\Scraper\Repositories\ScraperRunRepository;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -69,23 +70,18 @@ class CrawlIndexPageJob implements ShouldQueue
      * per URL into the same batch, then always closes the browser
      * whether or not the crawl succeeded.
      */
-    public function handle(): void
+    public function handle(ScraperRunRepository $runRepository): void
     {
-        $scraper = app($this->profile->getScraperClass(), [
-            'profile' => $this->profile,
-        ]);
+        $scraper = app($this->profile->getScraperClass(), ['profile' => $this->profile]);
 
         try {
             $urls = $scraper->crawlIndexPage($this->page);
 
-            $jobs = [];
+            $runRepository->incrementEncountered($this->scraperRunId, count($urls));
 
+            $jobs = [];
             foreach ($urls as $url) {
-                $jobs[] = new CrawlDetailPageJob(
-                    profile: $this->profile,
-                    url: $url,
-                    scraperRunId: $this->scraperRunId,
-                );
+                $jobs[] = new CrawlDetailPageJob(profile: $this->profile, url: $url, scraperRunId: $this->scraperRunId);
             }
 
             if (! empty($jobs) && $this->batch()) {

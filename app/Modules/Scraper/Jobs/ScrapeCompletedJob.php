@@ -36,28 +36,15 @@ class ScrapeCompletedJob implements ShouldQueue
 
     public function handle(ScraperRunRepository $runRepository, ListingRepository $listingRepository, DriftDetector $driftDetector): void
     {
-        $listingCount = $listingRepository->countByRun($this->scraperRunId);
+        $savedCount = $listingRepository->countByRun($this->scraperRunId);
+        $run = $runRepository->findById($this->scraperRunId);
+        $encounteredCount = $run->encountered_listings ?? 0;
 
-        $runRepository->markAsCompleted(
-            id: $this->scraperRunId,
-            savedListings: $listingCount,
-            scrapedPages: $this->scrapedPages,
-        );
+        $runRepository->markAsCompleted(id: $this->scraperRunId, savedListings: $savedCount, scrapedPages: $this->scrapedPages);
 
-        $driftDetector->check($this->scraperRunId, $this->source, $listingCount);
+        $driftDetector->check($this->scraperRunId, $this->source, $encounteredCount);
 
-        event(new ScrapeCompleted(
-            scraperRunId: $this->scraperRunId,
-            source: $this->source,
-            listingCount: $listingCount,
-        ));
-
-        Log::info('Scrape run completed', [
-            'run_id' => $this->scraperRunId,
-            'source' => $this->source,
-            'listings' => $listingCount,
-            'pages' => $this->scrapedPages,
-        ]);
+        event(new ScrapeCompleted(scraperRunId: $this->scraperRunId, source: $this->source, listingCount: $savedCount));
     }
 
     public function failed(Throwable $exception): void

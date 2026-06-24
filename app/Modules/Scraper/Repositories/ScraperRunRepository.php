@@ -101,4 +101,19 @@ class ScraperRunRepository
     {
         return ScraperRun::where('source', $source)->latest()->first();
     }
+
+    /**
+     * Atomically increment the encountered-listings counter for a run.
+     *
+     * Called once per index page crawled, with the count of listing URLs
+     * found on that page - before dedup, unlike saved_listings. Used by
+     * DriftDetector to check scraper health independent of how many
+     * listings turned out to be already-known re-scrapes.
+     */
+    public function incrementEncountered(int $id, int $count): void
+    {
+        if ($count > 0) {
+            ScraperRun::where('id', $id)->increment('encountered_listings', $count);
+        }
+    }
 }
