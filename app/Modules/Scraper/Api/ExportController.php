@@ -57,7 +57,7 @@ class ExportController extends Controller
         }
 
         $zipPath = storage_path(
-            'app/'.config('scraper.export_path').'/atlas_export_'.now()->format('Y_m_d_His').'.zip'
+            'app/private/'.config('scraper.export_path').'/atlas_export_'.now()->format('Y_m_d_His').'.zip'
         );
 
         $zip = new ZipArchive;
