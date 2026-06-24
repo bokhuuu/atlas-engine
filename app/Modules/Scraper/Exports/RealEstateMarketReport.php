@@ -405,16 +405,8 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
 
     public function array(): array
     {
-        $brackets = [
-            'Under $50,000' => [0, 50000],
-            '$50,000 – $100,000' => [50000, 100000],
-            '$100,000 – $150,000' => [100000, 150000],
-            '$150,000 – $200,000' => [150000, 200000],
-            '$200,000 – $300,000' => [200000, 300000],
-            '$300,000 – $500,000' => [300000, 500000],
-            'Above $500,000' => [500000, PHP_INT_MAX],
-        ];
-
+        $dealType = $this->data[0]['listing_type'] ?? 'sale';
+        $brackets = $dealType === 'rent' ? $this->rentBrackets() : $this->saleBrackets();
         $buckets = array_fill_keys(array_keys($brackets), []);
 
         foreach ($this->data as $row) {
@@ -451,5 +443,31 @@ class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
         }
 
         return $rows;
+    }
+
+    private function saleBrackets(): array
+    {
+        return [
+            'Under $50,000' => [0, 50000],
+            '$50,000 – $100,000' => [50000, 100000],
+            '$100,000 – $150,000' => [100000, 150000],
+            '$150,000 – $200,000' => [150000, 200000],
+            '$200,000 – $300,000' => [200000, 300000],
+            '$300,000 – $500,000' => [300000, 500000],
+            'Above $500,000' => [500000, PHP_INT_MAX],
+        ];
+    }
+
+    private function rentBrackets(): array
+    {
+        return [
+            'Under $300' => [0, 300],
+            '$300 – $500' => [300, 500],
+            '$500 – $800' => [500, 800],
+            '$800 – $1,200' => [800, 1200],
+            '$1,200 – $2,000' => [1200, 2000],
+            '$2,000 – $3,000' => [2000, 3000],
+            'Above $3,000' => [3000, PHP_INT_MAX],
+        ];
     }
 }
