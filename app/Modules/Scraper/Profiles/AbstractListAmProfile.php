@@ -40,7 +40,9 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
      */
     public function getIndexUrlPattern(): string
     {
-        return "https://www.list.am/en/category/{$this->getCategoryId()}/{page}?n=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C13%2C11%2C12";
+        $sort = config('scraper.index_sort', 3);
+
+        return "https://www.list.am/en/category/{$this->getCategoryId()}/{page}?n=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C13%2C11%2C12&srt={$sort}";
     }
 
     /**

@@ -32,7 +32,7 @@ class StartScrapeRequest extends FormRequest
 
         return [
             'source' => ['required', 'string', 'in:'.implode(',', $validSources)],
-            'pages' => ['sometimes', 'integer', 'min:1', 'max:500'],
+            'pages' => ['sometimes', 'integer', 'min:1', 'max:'.config('scraper.absolute_max_pages')],
         ];
     }
 }

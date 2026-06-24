@@ -205,8 +205,34 @@ return [
     | Set to 2 locally for fast testing, 50+ in production for full runs.
     |
     */
-
     'default_max_pages' => (int) env('SCRAPER_MAX_PAGES', 50),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Absolute Max Pages (safety ceiling)
+    |--------------------------------------------------------------------------
+    |
+    | Hard upper limit on pages for any single scrape run, regardless of how
+    | pages were calculated (manual --pages, or converted from --listings).
+    | Protects against accidental huge runs (e.g. a typo'd listing count).
+    | This is a ceiling, not a target - normal runs should rarely approach it.
+    |
+    */
+    'absolute_max_pages' => (int) env('SCRAPER_ABSOLUTE_MAX_PAGES', 20),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Index Page Sort Order
+    |--------------------------------------------------------------------------
+    |
+    | Controls which order list.am returns index-page listings in, via the
+    | srt= query parameter. list.am's own values (confirmed against the
+    | real site's sort dropdown, not guessed):
+    |   0 = By default, 4 = Sort by relevancy, 1 = Cheapest first,
+    |   2 = Expensive first, 3 = By date (newest first).
+    |
+    */
+    'index_sort' => (int) env('SCRAPER_INDEX_SORT', 3),
 
     /*
     |--------------------------------------------------------------------------
@@ -222,31 +248,38 @@ return [
     'profile_config' => [
         'listam_apartments_sale' => [
             'request_delay' => env('LISTAM_APARTMENTS_SALE_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_APARTMENTS_SALE_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_APARTMENTS_SALE_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_APARTMENTS_SALE_LISTINGS_PER_PAGE', 97),
         ],
         'listam_apartments_rent' => [
             'request_delay' => env('LISTAM_APARTMENTS_RENT_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_APARTMENTS_RENT_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_APARTMENTS_RENT_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_APARTMENTS_RENT_LISTINGS_PER_PAGE', 38),
         ],
         'listam_houses_sale' => [
             'request_delay' => env('LISTAM_HOUSES_SALE_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_HOUSES_SALE_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_HOUSES_SALE_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_HOUSES_SALE_LISTINGS_PER_PAGE', 95),
         ],
         'listam_commercial_sale' => [
             'request_delay' => env('LISTAM_COMMERCIAL_SALE_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_COMMERCIAL_SALE_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_COMMERCIAL_SALE_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_COMMERCIAL_SALE_LISTINGS_PER_PAGE', 91),
         ],
         'listam_commercial_rent' => [
             'request_delay' => env('LISTAM_COMMERCIAL_RENT_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_COMMERCIAL_RENT_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_COMMERCIAL_RENT_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_COMMERCIAL_RENT_LISTINGS_PER_PAGE', 26),
         ],
         'listam_land_sale' => [
             'request_delay' => env('LISTAM_LAND_SALE_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_LAND_SALE_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_LAND_SALE_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_LAND_SALE_LISTINGS_PER_PAGE', 94),
         ],
         'listam_new_developments_sale' => [
             'request_delay' => env('LISTAM_NEW_DEVELOPMENTS_SALE_REQUEST_DELAY', 3),
-            'max_pages' => env('LISTAM_NEW_DEVELOPMENTS_SALE_MAX_PAGES', 3),
+            'max_pages' => env('LISTAM_NEW_DEVELOPMENTS_SALE_MAX_PAGES', 1),
+            'listings_per_page' => env('LISTAM_NEW_DEVELOPMENTS_SALE_LISTINGS_PER_PAGE', 39),
         ],
     ],
 
