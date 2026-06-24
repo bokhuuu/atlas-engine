@@ -49,11 +49,18 @@ class ListingController extends Controller
     {
         $source = $request->query('source', 'listam_apartments_sale');
 
-        $stats = $this->listingRepository->getDistrictPriceStats($source);
+        $avgStats = $this->listingRepository->getDistrictPriceStats($source);
+        $medianByDistrict = $this->listingRepository->getMedianPricePerSqmByDistrict($source);
+
+        $merged = $avgStats->map(function ($row) use ($medianByDistrict) {
+            $row->median_price_per_sqm = $medianByDistrict->get($row->district)?->median_price_per_sqm;
+
+            return $row;
+        });
 
         return response()->json([
             'source' => $source,
-            'data' => $stats,
+            'data' => $merged,
         ]);
     }
 }

@@ -178,6 +178,44 @@ class ListingRepository
     }
 
     /**
+     * Median price per sqm grouped by district for a given source.
+     *
+     * Companion to getDistrictPriceStats() (which provides AVG) - same
+     * window-function approach as getMedianPricePerSqm(), partitioned
+     * by district instead of computed citywide. Average alone is fragile
+     * against real-but-extreme listings; with smaller per-district sample
+     * sizes, that risk is even larger than the citywide case.
+     */
+    public function getMedianPricePerSqmByDistrict(string $source): Collection
+    {
+        $key = "scraper:stats:median_district_prices:{$source}";
+
+        return Cache::remember($key, now()->addHour(), function () use ($source) {
+            $sql = <<<'SQL'
+        WITH deduplicated AS (
+            SELECT district, COALESCE(duplicate_group_id, id) AS effective_group,
+                   AVG(price_per_sqm) AS group_price_per_sqm
+            FROM listings
+            WHERE source_profile_name = ? AND district IS NOT NULL AND price_per_sqm IS NOT NULL
+            GROUP BY district, effective_group
+        ),
+        ranked AS (
+            SELECT district, group_price_per_sqm,
+                   ROW_NUMBER() OVER (PARTITION BY district ORDER BY group_price_per_sqm) AS rn,
+                   COUNT(*) OVER (PARTITION BY district) AS total
+            FROM deduplicated
+        )
+        SELECT district, ROUND(AVG(group_price_per_sqm), 2) AS median_price_per_sqm
+        FROM ranked
+        WHERE rn IN (FLOOR((total + 1) / 2), FLOOR((total + 2) / 2))
+        GROUP BY district
+        SQL;
+
+            return collect(DB::select($sql, [$source]))->keyBy('district');
+        });
+    }
+
+    /**
      * Count listings saved by one specific scrape run.
      *
      * Used by ScrapeCompletedJob to report accurate per-run results,
