@@ -39,7 +39,7 @@ export default function Dashboard({
     const [statuses, setStatuses] = useState<Record<string, ScraperRunStatus>>(
         {},
     );
-    const [sharedPages, setSharedPages] = useState(3);
+    const [sharedPages, setSharedPages] = useState(1);
     const [isBusy, setIsBusy] = useState(false);
 
     const statusesRef = useRef(statuses);
@@ -115,11 +115,8 @@ export default function Dashboard({
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold">
-                            Morning Dashboard
+                            Scraper Panel
                         </h1>
-                        <p className="text-sm text-muted-foreground">
-                            Market data and scraper control.
-                        </p>
                     </div>
                     <div className="text-right">
                         <p className="text-2xl leading-none font-bold">
@@ -133,7 +130,7 @@ export default function Dashboard({
 
                 <div className="mb-6 flex items-center gap-3 rounded-lg border p-4">
                     <label className="text-sm text-muted-foreground">
-                        Shared pages for &quot;Start All&quot;:
+                        All Categories
                     </label>
                     <input
                         type="number"
@@ -149,6 +146,13 @@ export default function Dashboard({
                     >
                         Start All
                     </button>
+
+                    <a
+                        href="/api/v1/exports"
+                        className="rounded border px-3 py-1 text-sm"
+                    >
+                        Download All
+                    </a>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

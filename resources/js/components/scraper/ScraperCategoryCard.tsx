@@ -85,6 +85,13 @@ export default function ScraperCategoryCard({
                     >
                         Start
                     </button>
+
+                    <a
+                        href={`/api/v1/exports/${category.source}`}
+                        className="rounded border px-3 py-1 text-sm"
+                    >
+                        Download
+                    </a>
                 </div>
 
                 {status.finished_at && (
