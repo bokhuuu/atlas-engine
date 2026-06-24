@@ -130,3 +130,30 @@ test('it counts distinct properties by source, collapsing duplicate groups into 
     expect(Listing::count())->toBe(3);
     expect($repository->countDistinctBySource('listam'))->toBe(2);
 });
+
+test('it returns median price per sqm grouped by district', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'k-1', 'district' => 'Kentron', 'price_per_sqm' => 100]));
+    $repository->updateOrCreate(listingData(['external_id' => 'k-2', 'url' => 'https://list.am/en/item/k-2', 'district' => 'Kentron', 'price_per_sqm' => 200]));
+    $repository->updateOrCreate(listingData(['external_id' => 'k-3', 'url' => 'https://list.am/en/item/k-3', 'district' => 'Kentron', 'price_per_sqm' => 300]));
+
+    $repository->updateOrCreate(listingData(['external_id' => 'a-1', 'url' => 'https://list.am/en/item/a-1', 'district' => 'Arabkir', 'price_per_sqm' => 1000]));
+    $repository->updateOrCreate(listingData(['external_id' => 'a-2', 'url' => 'https://list.am/en/item/a-2', 'district' => 'Arabkir', 'price_per_sqm' => 3000]));
+
+    $byDistrict = $repository->getMedianPricePerSqmByDistrict('listam');
+
+    expect((float) $byDistrict->get('Kentron')->median_price_per_sqm)->toBe(200.0);
+    expect((float) $byDistrict->get('Arabkir')->median_price_per_sqm)->toBe(2000.0);
+});
+
+test('it treats a duplicate group as one data point in per-district median', function () use ($repository) {
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-1', 'district' => 'Kentron', 'price_per_sqm' => 100]));
+    $listing = Listing::where('external_id', 'dup-1')->first();
+    $listing->update(['duplicate_group_id' => $listing->id]);
+
+    $repository->updateOrCreate(listingData(['external_id' => 'dup-2', 'url' => 'https://list.am/en/item/dup-2', 'district' => 'Kentron', 'price_per_sqm' => 120, 'duplicate_group_id' => $listing->id]));
+    $repository->updateOrCreate(listingData(['external_id' => 'standalone', 'url' => 'https://list.am/en/item/standalone', 'district' => 'Kentron', 'price_per_sqm' => 200]));
+
+    $byDistrict = $repository->getMedianPricePerSqmByDistrict('listam');
+
+    expect((float) $byDistrict->get('Kentron')->median_price_per_sqm)->toBe(155.0);
+});
