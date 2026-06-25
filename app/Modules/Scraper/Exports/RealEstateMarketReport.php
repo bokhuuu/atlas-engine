@@ -38,7 +38,7 @@ class RealEstateMarketReport implements ExporterInterface
      */
     public function export(array $data, ScraperProfileInterface $profile): string
     {
-        $path = $this->buildPath();
+        $path = $this->buildPath($profile->getName());
         $deduplicated = self::deduplicateForAggregation($data);
 
         Excel::store(new class($data, $deduplicated) implements WithMultipleSheets
@@ -107,12 +107,13 @@ class RealEstateMarketReport implements ExporterInterface
      * Fixed filename - this is a client deliverable, not a rolling export.
      * Date suffix ensures each run produces a distinct versioned file.
      */
-    private function buildPath(): string
+    private function buildPath(string $source = ''): string
     {
         $dir = config('scraper.export_path');
         $date = now()->format('d_m_Y');
+        $suffix = $source ? "_{$source}" : '';
 
-        return "{$dir}/real_estate_market_report_{$date}.xlsx";
+        return "{$dir}/real_estate_market_report{$suffix}_{$date}.xlsx";
     }
 }
 
