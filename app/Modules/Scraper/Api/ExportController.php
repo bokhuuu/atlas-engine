@@ -46,7 +46,7 @@ class ExportController extends Controller
      * Generate a fresh export for every category and bundle the
      * results into a single zip for one-click download.
      */
-    public function downloadAll(): BinaryFileResponse
+    public function downloadAll(): BinaryFileResponse|Response
     {
         $sources = array_keys(config('scraper.profiles', []));
         $allPaths = [];
@@ -56,8 +56,12 @@ class ExportController extends Controller
             $allPaths = [...$allPaths, ...$paths];
         }
 
+        if (empty($allPaths)) {
+            return response('No data available to export yet.', 404);
+        }
+
         $zipPath = storage_path(
-            'app/private/'.config('scraper.export_path').'/atlas_export_'.now()->format('Y_m_d_His').'.zip'
+            'app/private/' . config('scraper.export_path') . '/atlas_export_' . now()->format('Y_m_d_His') . '.zip'
         );
 
         $zip = new ZipArchive;
