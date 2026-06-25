@@ -10,6 +10,7 @@ use App\Modules\Scraper\Repositories\ListingRepository;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Activitylog\Models\Activity;
+use App\Modules\Scraper\Support\CategoryLabels;
 
 /**
  * Handles the admin dashboard page.
@@ -20,21 +21,6 @@ use Spatie\Activitylog\Models\Activity;
  */
 class DashboardController extends Controller
 {
-    /**
-     * Human-readable display labels per scraper source key.
-     *
-     * Display copy only - not a threshold or setting, so it stays here
-     * rather than in config/scraper.php.
-     */
-    private const CATEGORY_LABELS = [
-        'listam_apartments_sale' => 'Apartments for Sale',
-        'listam_apartments_rent' => 'Long Term Apartment Rentals',
-        'listam_houses_sale' => 'Houses for Sale',
-        'listam_commercial_sale' => 'Commercial for Sale',
-        'listam_commercial_rent' => 'Commercial for Rent',
-        'listam_land_sale' => 'Land for Sale',
-        'listam_new_developments_sale' => 'New Development Apartments',
-    ];
 
     public function __construct(
         private readonly ListingRepository $listingRepository,
@@ -65,7 +51,7 @@ class DashboardController extends Controller
 
             $scraperCategories[] = [
                 'source' => $source,
-                'label' => self::CATEGORY_LABELS[$source] ?? $source,
+                'label' => CategoryLabels::forSource($source),
                 'default_pages' => config("scraper.profile_config.{$source}.max_pages"),
                 'total_listings' => $totalListings,
             ];

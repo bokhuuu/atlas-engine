@@ -8,7 +8,7 @@ import tokens from './tokens'
 import systemHealth from './system-health'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -23,7 +23,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -32,7 +32,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -42,7 +42,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -52,7 +52,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -62,7 +62,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -72,7 +72,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:48
+* @see app/Http/Controllers/Admin/DashboardController.php:34
 * @route '/admin/dashboard'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -87,8 +87,90 @@ dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 dashboard.form = dashboardForm
 
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+marketStats.definition = {
+    methods: ["get","head"],
+    url: '/admin/market-stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+marketStats.url = (options?: RouteQueryOptions) => {
+    return marketStats.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: marketStats.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/admin/market-stats'
+*/
+marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+marketStats.form = marketStatsForm
+
 const admin = {
     dashboard: Object.assign(dashboard, dashboard),
+    marketStats: Object.assign(marketStats, marketStats),
     users: Object.assign(users, users),
     settings: Object.assign(settings, settings),
     roles: Object.assign(roles, roles),

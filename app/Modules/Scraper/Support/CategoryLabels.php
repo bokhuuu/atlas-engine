@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Scraper\Support;
+
+/**
+ * Human-readable display labels per scraper source key.
+ *
+ * Display copy only - not a threshold or setting, so it lives here
+ * rather than in config/scraper.php. Single source of truth so the
+ * dashboard, market stats page, and any future screen never drift
+ * on what a category is called.
+ */
+class CategoryLabels
+{
+    private const LABELS = [
+        'listam_apartments_sale' => 'Apartments for Sale',
+        'listam_apartments_rent' => 'Long Term Apartment Rentals',
+        'listam_houses_sale' => 'Houses for Sale',
+        'listam_commercial_sale' => 'Commercial for Sale',
+        'listam_commercial_rent' => 'Commercial for Rent',
+        'listam_land_sale' => 'Land for Sale',
+        'listam_new_developments_sale' => 'New Development Apartments',
+    ];
+
+    public static function forSource(string $source): string
+    {
+        return self::LABELS[$source] ?? $source;
+    }
+
+    public static function all(): array
+    {
+        return self::LABELS;
+    }
+}

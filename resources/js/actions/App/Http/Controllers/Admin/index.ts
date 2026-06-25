@@ -1,4 +1,5 @@
 import DashboardController from './DashboardController'
+import MarketStatsController from './MarketStatsController'
 import UserController from './UserController'
 import SettingController from './SettingController'
 import RoleController from './RoleController'
@@ -9,6 +10,7 @@ import SystemHealthController from './SystemHealthController'
 
 const Admin = {
     DashboardController: Object.assign(DashboardController, DashboardController),
+    MarketStatsController: Object.assign(MarketStatsController, MarketStatsController),
     UserController: Object.assign(UserController, UserController),
     SettingController: Object.assign(SettingController, SettingController),
     RoleController: Object.assign(RoleController, RoleController),

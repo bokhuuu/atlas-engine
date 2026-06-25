@@ -7,6 +7,7 @@ import {
     ShieldCheck,
     KeyRound,
     HeartPulse,
+    ChartNoAxesColumn,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -39,6 +40,12 @@ export function AppSidebar() {
             title: 'Dashboard',
             href: dashboard(),
             icon: LayoutGrid,
+            roles: ['super_admin', 'admin', 'editor'],
+        },
+        {
+            title: 'Market Stats',
+            href: '/admin/market-stats',
+            icon: ChartNoAxesColumn,
             roles: ['super_admin', 'admin', 'editor'],
         },
         {
