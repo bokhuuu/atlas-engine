@@ -116,10 +116,10 @@ export default function MarketStats({ categories }: Props) {
             <Head title="Market Stats" />
             <div className="p-6">
                 <div className="mb-6">
-                    <h1 className="text-2xl font-semibold">Market Stats</h1>
-                    <p className="text-sm text-muted-foreground">
-                        District-level pricing breakdown by category.
-                    </p>
+                    <h1 className="text-2xl font-semibold">
+                        Pricing Breakdown
+                    </h1>
+                    <p className="text-sm text-muted-foreground">by category</p>
                 </div>
 
                 <div className="mb-6">
@@ -158,8 +158,8 @@ export default function MarketStats({ categories }: Props) {
                 )}
 
                 {!error && rows !== null && rows.length > 0 && (
-                    <div className="overflow-hidden rounded-lg border">
-                        <table className="w-full text-sm">
+                    <div className="overflow-x-auto rounded-lg border">
+                        <table className="w-full min-w-150 text-sm">
                             <thead className="border-b bg-muted/50 text-left">
                                 <tr>
                                     <th className="px-4 py-2">District</th>
