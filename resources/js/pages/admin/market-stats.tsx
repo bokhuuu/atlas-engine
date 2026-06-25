@@ -40,28 +40,28 @@ const breadcrumbs: BreadcrumbItem[] = [
  */
 function intensityClass(rank: number, total: number): string {
     if (total <= 1) {
-        return 'bg-blue-50';
+        return 'bg-primary/10';
     }
 
     const pct = rank / (total - 1);
 
     if (pct <= 0.2) {
-        return 'bg-blue-50';
+        return 'bg-primary/10';
     }
 
     if (pct <= 0.4) {
-        return 'bg-blue-100';
+        return 'bg-primary/20';
     }
 
     if (pct <= 0.6) {
-        return 'bg-blue-200';
+        return 'bg-primary/30';
     }
 
     if (pct <= 0.8) {
-        return 'bg-blue-300';
+        return 'bg-primary/40';
     }
 
-    return 'bg-blue-400';
+    return 'bg-primary/50';
 }
 
 export default function MarketStats({ categories }: Props) {
