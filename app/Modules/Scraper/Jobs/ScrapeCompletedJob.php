@@ -42,6 +42,8 @@ class ScrapeCompletedJob implements ShouldQueue
 
         $runRepository->markAsCompleted(id: $this->scraperRunId, savedListings: $savedCount, scrapedPages: $this->scrapedPages);
 
+        $listingRepository->clearStatsCache($this->source);
+
         $driftDetector->check($this->scraperRunId, $this->source, $encounteredCount);
 
         event(new ScrapeCompleted(scraperRunId: $this->scraperRunId, source: $this->source, listingCount: $savedCount));

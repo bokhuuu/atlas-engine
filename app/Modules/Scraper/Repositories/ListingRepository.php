@@ -301,4 +301,16 @@ class ListingRepository
     {
         Listing::where('id', $listingId)->update(['duplicate_group_id' => $groupId]);
     }
+
+    /**
+     * Clear cached district/citywide price stats for a source, after a
+     * scrape run finishes. Called once, by
+     * ScrapeCompletedJob, right after the whole batch settles.
+     */
+    public function clearStatsCache(string $source): void
+    {
+        Cache::forget("scraper:stats:district_prices:{$source}");
+        Cache::forget("scraper:stats:median_price:{$source}");
+        Cache::forget("scraper:stats:median_district_prices:{$source}");
+    }
 }

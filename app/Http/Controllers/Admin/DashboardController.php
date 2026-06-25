@@ -7,10 +7,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Scraper\Repositories\ListingRepository;
+use App\Modules\Scraper\Support\CategoryLabels;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Activitylog\Models\Activity;
-use App\Modules\Scraper\Support\CategoryLabels;
 
 /**
  * Handles the admin dashboard page.
@@ -21,7 +21,6 @@ use App\Modules\Scraper\Support\CategoryLabels;
  */
 class DashboardController extends Controller
 {
-
     public function __construct(
         private readonly ListingRepository $listingRepository,
     ) {}

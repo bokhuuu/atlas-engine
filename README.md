@@ -1,10 +1,10 @@
 # 🗺️ Atlas - Colliers Yerevan Market Intelligence Platform
 
-Atlas scrapes Armenian real estate listings, cleans the data automatically and turns it into things a Colliers analyst can use: a public market snapshot, an internal dashboard, a price-estimate tool, an AI assistant that answers questions from real data and automated reports.
+Atlas scrapes Armenian real estate listings, cleans the data automatically and turns it into things a Colliers analyst can use: a public market snapshot, an internal dashboard, an AI assistant that answers questions from real data (now also covering comparable-listing lookup, what was originally planned as a separate valuation tool) and automated reports.
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
-> **Project status:** active development. Data layer complete, public market snapshot (Screen 0) live. Internal dashboard, valuation tool, AI assistant and automated reports still ahead.
+> **Project status:** active development. Data layer complete, public market snapshot (Screen 0) live, internal dashboard and scraper control panel (Screen 1) live, district-level market stats live. AI assistant and automated reports still ahead.
 
 > **Full architecture, decisions, and current status:** see [`ATLAS.md`] - read that file first, it's the living source of truth for this project.
 
@@ -13,8 +13,8 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 ## Tech Stack
 
 - **Backend:** Laravel (PHP), layered architecture (Controller → Service → Repository → Model)
-- **Frontend:** Inertia.js + React + TypeScript, Tailwind
-- **Auth/permissions:** Fortify + Sanctum, Spatie roles/permissions
+- **Frontend:** Inertia.js + React + TypeScript, Tailwind, shadcn/Radix UI components
+- **Auth/permissions:** Fortify + Sanctum (including stateful API auth for first-party dashboard requests), Spatie roles/permissions
 - **AI layer:** Prism → OpenRouter
 - **Database:** MySQL
 - **Scraping:** Laravel Dusk + ChromeDriver (real headless browser - list.am's listings are JS-rendered)
