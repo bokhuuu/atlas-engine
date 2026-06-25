@@ -13,8 +13,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Uses Maatwebsite Excel which wraps PHPSpreadsheet internally.
- * Column headers are derived automatically from the data keys -
- * no changes needed here when new fields are added to a scraper.
+ * Outputs a fixed set of client-facing columns only - internal DB
+ * fields (id, scraper_run_id, source_profile_name, etc.) are
+ * deliberately excluded since they have no meaning outside the app.
  *
  * Intended for human consumers: clients, analysts, reports.
  * For machine consumption (pipelines, databases) use CsvExporter.
@@ -33,25 +34,48 @@ class ExcelExporter implements ExporterInterface
 
         Excel::store(new class($data) implements FromArray, WithHeadings
         {
+            /**
+             * Client-facing columns only - excludes internal DB fields
+             * (id, scraper_run_id, external_id, source_profile_name,
+             * created_at, updated_at, images, extras) that have no
+             * meaning outside the application.
+             */
+            private array $clientColumns = [
+                'url',
+                'listing_type',
+                'property_type',
+                'district',
+                'address',
+                'price',
+                'currency',
+                'price_per_sqm',
+                'area',
+                'rooms',
+                'bathrooms',
+                'floor',
+                'total_floors',
+                'ceiling_height',
+                'building_type',
+                'condition',
+                'is_new_building',
+                'agency_name',
+                'listing_date',
+                'duplicate_group_id',
+            ];
+
             public function __construct(private readonly array $data) {}
 
-            /**
-             * Data rows passed to Maatwebsite.
-             * array_values() strips associative keys - Maatwebsite
-             * expects purely indexed arrays for each row.
-             */
             public function array(): array
             {
-                return array_map(fn ($row) => array_values($row), $this->data);
+                return array_map(
+                    fn ($row) => array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns),
+                    $this->data
+                );
             }
 
-            /**
-             * Header row derived from the first data row's keys.
-             * Automatically reflects whatever fields the scraper produces.
-             */
             public function headings(): array
             {
-                return array_keys($this->data[0] ?? []);
+                return $this->clientColumns;
             }
         }, $path, 'local');
 
