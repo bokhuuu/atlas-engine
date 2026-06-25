@@ -119,7 +119,9 @@ export default function MarketStats({ categories }: Props) {
                     <h1 className="text-2xl font-semibold">
                         Pricing Breakdown
                     </h1>
-                    <p className="text-sm text-muted-foreground">by category</p>
+                    <p className="text-sm text-muted-foreground">
+                        district-level pricing breakdown by category.
+                    </p>
                 </div>
 
                 <div className="mb-6">

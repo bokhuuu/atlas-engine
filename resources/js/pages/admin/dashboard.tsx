@@ -115,8 +115,11 @@ export default function Dashboard({
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold">
-                            Scraper Controls
+                            Scraper Control
                         </h1>
+                        <p className="text-sm text-muted-foreground">
+                            manage scrapes and download exports.
+                        </p>
                     </div>
                     <div className="text-right">
                         <p className="text-2xl leading-none font-bold">
