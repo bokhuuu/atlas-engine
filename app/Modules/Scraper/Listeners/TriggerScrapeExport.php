@@ -21,12 +21,15 @@ class TriggerScrapeExport
     ) {}
 
     /**
-     * Trigger exports for the completed scrape run.
+     * Trigger full-accumulation exports after a scrape completes.
+     * Exports everything currently in the DB for this source, not
+     * just the listings saved in this one run - so every auto-generated
+     * file always reflects the complete accumulated dataset.
      * Logs all generated file paths on success.
      */
     public function handle(ScrapeCompleted $event): void
     {
-        $paths = $this->exportManager->run($event->source, $event->scraperRunId);
+        $paths = $this->exportManager->runForSource($event->source, onlySpreadsheets: false);
 
         Log::info('TriggerScrapeExport: exports generated.', [
             'source' => $event->source,
