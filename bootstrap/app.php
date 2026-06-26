@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         __DIR__.'/../app/Modules/Scraper/Console/Commands',
         __DIR__.'/../routes/console.php',
+        __DIR__.'/../app/Modules/AI/Console/Commands',
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();

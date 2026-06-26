@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Public\SnapshotController;
+use App\Modules\AI\Api\FeedbackController;
+use App\Modules\AI\Api\HealthCheckController;
+use App\Modules\AI\Api\StreamingController;
+use App\Modules\AI\Api\WebhookController;
 use App\Modules\Scraper\Api\ExportController;
 use App\Modules\Scraper\Api\HealthController;
 use App\Modules\Scraper\Api\ListingController;
@@ -35,5 +39,12 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/exports', [ExportController::class, 'downloadAll']);
         Route::get('/exports/{source}', [ExportController::class, 'download']);
+
+        Route::get('/ai/health', [HealthCheckController::class, 'check']);
+        Route::post('/ai/feedback', [FeedbackController::class, 'store']);
+
+        Route::get('/ai/stream', [StreamingController::class, 'stream']);
     });
+
+    Route::post('/ai/webhook', [WebhookController::class, 'receive']);
 });
