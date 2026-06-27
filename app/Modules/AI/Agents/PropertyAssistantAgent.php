@@ -154,7 +154,7 @@ class PropertyAssistantAgent extends Agent
 
             return json_encode([
                 'message' => 'Export ready.',
-                'download_url' => url('/api/v1/exports/'.$source),
+                'download_url' => url('/admin/exports/'.$source),
                 'category' => $labels[$source],
             ]);
         } catch (\Throwable $e) {
@@ -176,6 +176,7 @@ Rules you must follow without exception:
 - Always state which category and district a figure applies to.
 - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
 - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
+- When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
