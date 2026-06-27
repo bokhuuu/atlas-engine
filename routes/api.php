@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Public\SnapshotController;
+use App\Modules\AI\Api\ChatController;
 use App\Modules\AI\Api\FeedbackController;
 use App\Modules\AI\Api\HealthCheckController;
-use App\Modules\AI\Api\StreamingController;
 use App\Modules\AI\Api\WebhookController;
 use App\Modules\Scraper\Api\ExportController;
 use App\Modules\Scraper\Api\HealthController;
@@ -43,7 +43,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/ai/health', [HealthCheckController::class, 'check']);
         Route::post('/ai/feedback', [FeedbackController::class, 'store']);
 
-        Route::get('/ai/stream', [StreamingController::class, 'stream']);
+        Route::post('/ai/chat', [ChatController::class, 'chat']);
     });
 
     Route::post('/ai/webhook', [WebhookController::class, 'receive']);
