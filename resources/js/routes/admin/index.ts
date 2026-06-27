@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import exports from './exports'
 import users from './users'
 import settings from './settings'
 import roles from './roles'
@@ -168,9 +169,92 @@ marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 
 marketStats.form = marketStatsForm
 
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+assistant.definition = {
+    methods: ["get","head"],
+    url: '/admin/assistant',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+assistant.url = (options?: RouteQueryOptions) => {
+    return assistant.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: assistant.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/admin/assistant'
+*/
+assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+assistant.form = assistantForm
+
 const admin = {
     dashboard: Object.assign(dashboard, dashboard),
     marketStats: Object.assign(marketStats, marketStats),
+    assistant: Object.assign(assistant, assistant),
+    exports: Object.assign(exports, exports),
     users: Object.assign(users, users),
     settings: Object.assign(settings, settings),
     roles: Object.assign(roles, roles),
