@@ -4,7 +4,7 @@ Atlas scrapes Armenian real estate listings, cleans the data automatically and t
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
-> **Project status:** active development. Data layer complete, public market snapshot (Screen 0) live, internal dashboard and scraper control panel (Screen 1) live, district-level market stats live. AI assistant and automated reports still ahead.
+> **Project status:** active development. Data layer complete, public market snapshot (Screen 0) live, internal dashboard and scraper control panel (Screen 1) live, district-level market stats live, AI Assistant (Screen 3) live. Automated reports still ahead.
 
 > **Full architecture, decisions, and current status:** see [`ATLAS.md`] - read that file first, it's the living source of truth for this project.
 
@@ -15,7 +15,7 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 - **Backend:** Laravel (PHP), layered architecture (Controller → Service → Repository → Model)
 - **Frontend:** Inertia.js + React + TypeScript, Tailwind, shadcn/Radix UI components
 - **Auth/permissions:** Fortify + Sanctum (including stateful API auth for first-party dashboard requests), Spatie roles/permissions
-- **AI layer:** Prism → OpenRouter
+- **AI layer:** Prism → OpenRouter, LarAgent (tool-calling agent framework), `anthropic/claude-haiku-4-5` for agent model
 - **Database:** MySQL
 - **Scraping:** Laravel Dusk + ChromeDriver (real headless browser - list.am's listings are JS-rendered)
 - **Monitoring:** Sentry
