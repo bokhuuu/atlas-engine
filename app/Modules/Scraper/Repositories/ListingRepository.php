@@ -95,6 +95,18 @@ class ListingRepository
             $query->where('price', '<=', $filters['max_price']);
         }
 
+        if (! empty($filters['rooms'])) {
+            $query->where('rooms', (int) $filters['rooms']);
+        }
+
+        if (! empty($filters['min_area'])) {
+            $query->where('area', '>=', (float) $filters['min_area']);
+        }
+
+        if (! empty($filters['max_area'])) {
+            $query->where('area', '<=', (float) $filters['max_area']);
+        }
+
         return $query->paginate($perPage);
     }
 

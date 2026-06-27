@@ -58,7 +58,8 @@ class PropertyAssistantAgent extends Agent
             'category' => $labels[$source],
             'source' => $source,
             'total_listings' => $repo->countDistinctBySource($source),
-            'median_price_per_sqm_usd' => $repo->getMedianPricePerSqm($source),
+            'median_price_per_sqm' => $repo->getMedianPricePerSqm($source),
+            'currency' => 'USD',
         ]);
     }
 
@@ -76,12 +77,12 @@ class PropertyAssistantAgent extends Agent
             return [
                 'district' => $row->district,
                 'listing_count' => $row->listing_count,
-                'avg_price_per_sqm_usd' => round((float) $row->avg_price_per_sqm, 2),
-                'median_price_per_sqm_usd' => round((float) ($median->get($row->district)?->median_price ?? 0), 2),
+                'avg_price_per_sqm' => round((float) $row->avg_price_per_sqm, 2),
+                'median_price_per_sqm' => round((float) ($median->get($row->district)?->median_price_per_sqm ?? 0), 2),
             ];
-        })->sortByDesc('median_price_per_sqm_usd')->values();
+        })->sortByDesc('median_price_per_sqm')->values();
 
-        return json_encode(['category' => $labels[$source], 'districts' => $districts]);
+        return json_encode(['category' => $labels[$source], 'currency' => 'USD', 'districts' => $districts]);
     }
 
     #[Tool('Find real listings matching given criteria. All parameters except source are optional — call immediately with whatever the user provided, never ask for missing ones. Returns up to 10 real listings with prices.')]
@@ -107,9 +108,10 @@ class PropertyAssistantAgent extends Agent
         $listings = collect($results->items())->map(fn ($l) => [
             'title' => $l->title,
             'district' => $l->district,
-            'price_usd' => $l->price_usd,
-            'price_per_sqm_usd' => $l->price_per_sqm_usd,
-            'area_sqm' => $l->area_sqm,
+            'price' => $l->price,
+            'currency' => $l->currency,
+            'price_per_sqm' => $l->price_per_sqm,
+            'area' => $l->area,
             'rooms' => $l->rooms,
             'floor' => $l->floor,
             'url' => $l->url,
@@ -172,8 +174,8 @@ Rules you must follow without exception:
 - If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
 - Never compare Yerevan data to other cities unless the user provides those figures themselves.
 - Always state which category and district a figure applies to.
-- If the user asks for a prediction or forecast, explain that Atlas reports current listed data only.
 - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
+- When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
