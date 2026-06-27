@@ -8,6 +8,7 @@ import {
     KeyRound,
     HeartPulse,
     ChartNoAxesColumn,
+    Bot,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -46,6 +47,12 @@ export function AppSidebar() {
             title: 'Market Stats',
             href: '/admin/market-stats',
             icon: ChartNoAxesColumn,
+            roles: ['super_admin', 'admin', 'editor'],
+        },
+        {
+            title: 'AI Assistant',
+            href: '/admin/assistant',
+            icon: Bot,
             roles: ['super_admin', 'admin', 'editor'],
         },
         {

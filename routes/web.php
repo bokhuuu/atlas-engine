@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AssistantController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MarketStatsController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SystemHealthController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
+use App\Modules\Scraper\Api\ExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'public/market-snapshot')
@@ -22,6 +24,9 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('market-stats', [MarketStatsController::class, 'index'])->name('market-stats');
+        Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
+        Route::get('exports/{source}', [ExportController::class, 'download'])->name('exports.download');
+
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::get('/create', [UserController::class, 'create'])->name('create');
