@@ -120,6 +120,10 @@ export default function Dashboard({
 
     useEffect(() => {
         const interval = setInterval(() => {
+            if (document.hidden) {
+                return;
+            }
+
             const anyRunning = Object.values(statusesRef.current).some(
                 (s) => s.state === 'running',
             );

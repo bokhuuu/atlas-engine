@@ -91,7 +91,7 @@ return [
             'decay_seconds' => env('LARAKIT_LOGIN_DECAY_SECONDS', 60),
         ],
         'api' => [
-            'max_attempts' => env('LARAKIT_API_MAX_ATTEMPTS', 60),
+            'max_attempts' => env('LARAKIT_API_MAX_ATTEMPTS', 300),
             'decay_seconds' => env('LARAKIT_API_DECAY_SECONDS', 60),
         ],
     ],
