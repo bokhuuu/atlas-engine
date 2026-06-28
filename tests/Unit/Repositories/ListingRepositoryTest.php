@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Modules\Scraper\Models\Listing;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 
 uses(RefreshDatabase::class);
 
@@ -156,4 +157,18 @@ test('it treats a duplicate group as one data point in per-district median', fun
     $byDistrict = $repository->getMedianPricePerSqmByDistrict('listam');
 
     expect((float) $byDistrict->get('Kentron')->median_price_per_sqm)->toBe(155.0);
+});
+
+test('clearStatsCache forgets all four cache keys for the source', function () use ($repository) {
+    Cache::put('scraper:stats:district_prices:listam', 'cached', 3600);
+    Cache::put('scraper:stats:median_price:listam', 'cached', 3600);
+    Cache::put('scraper:stats:median_district_prices:listam', 'cached', 3600);
+    Cache::put('ai:market_summary:listam', 'cached', 3600);
+
+    $repository->clearStatsCache('listam');
+
+    expect(Cache::has('scraper:stats:district_prices:listam'))->toBeFalse()
+        ->and(Cache::has('scraper:stats:median_price:listam'))->toBeFalse()
+        ->and(Cache::has('scraper:stats:median_district_prices:listam'))->toBeFalse()
+        ->and(Cache::has('ai:market_summary:listam'))->toBeFalse();
 });

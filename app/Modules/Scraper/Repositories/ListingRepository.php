@@ -324,5 +324,6 @@ class ListingRepository
         Cache::forget("scraper:stats:district_prices:{$source}");
         Cache::forget("scraper:stats:median_price:{$source}");
         Cache::forget("scraper:stats:median_district_prices:{$source}");
+        Cache::forget("ai:market_summary:{$source}");
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Api;
 
 use App\Http\Controllers\Controller;
+use App\Modules\AI\Services\MarketSummaryService;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class ListingController extends Controller
     /**
      * Return aggregated price statistics grouped by district.
      *
-     * Results are cached for 1 hour in Redis — see ListingRepository.
+     * Results are cached for 1 hour in Redis - see ListingRepository.
      */
     public function stats(Request $request): JsonResponse
     {
@@ -61,6 +62,22 @@ class ListingController extends Controller
         return response()->json([
             'source' => $source,
             'data' => $merged,
+        ]);
+    }
+
+    /**
+     * Generate an AI market summary for a given source.
+     * Cached per source - repeated calls return the cached paragraph.
+     */
+    public function summary(Request $request): JsonResponse
+    {
+        $source = $request->query('source', '');
+
+        $summary = app(MarketSummaryService::class)->summarize($source);
+
+        return response()->json([
+            'source' => $source,
+            'summary' => $summary,
         ]);
     }
 }

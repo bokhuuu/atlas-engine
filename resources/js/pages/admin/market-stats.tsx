@@ -73,6 +73,8 @@ export default function MarketStats({ categories }: Props) {
         rows: DistrictRow[];
     } | null>(null);
     const [errorSource, setErrorSource] = useState<string | null>(null);
+    const [summary, setSummary] = useState<string | null>(null);
+    const [summarySource, setSummarySource] = useState<string>('');
 
     useEffect(() => {
         if (!selectedSource) {
@@ -93,6 +95,34 @@ export default function MarketStats({ categories }: Props) {
             .catch(() => {
                 if (active) {
                     setErrorSource(selectedSource);
+                }
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [selectedSource]);
+
+    useEffect(() => {
+        if (!selectedSource) {
+            return;
+        }
+
+        let active = true;
+
+        fetchJson<{ summary: string | null }>(
+            `/api/v1/listings/summary?source=${selectedSource}`,
+        )
+            .then((res) => {
+                if (active) {
+                    setSummary(res.summary);
+                    setSummarySource(selectedSource);
+                }
+            })
+            .catch(() => {
+                if (active) {
+                    setSummary(null);
+                    setSummarySource(selectedSource);
                 }
             });
 
@@ -198,6 +228,17 @@ export default function MarketStats({ categories }: Props) {
                                 ))}
                             </tbody>
                         </table>
+
+                        {summary && summarySource === selectedSource && (
+                            <div className="mt-4 rounded-lg border p-4">
+                                <p className="mb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                                    AI Market Summary
+                                </p>
+                                <p className="text-sm leading-relaxed">
+                                    {summary}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
