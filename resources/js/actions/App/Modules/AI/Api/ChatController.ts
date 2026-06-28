@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Modules\AI\Api\ChatController::chat
-* @see app/Modules/AI/Api/ChatController.php:40
+* @see app/Modules/AI/Api/ChatController.php:41
 * @route '/api/v1/ai/chat'
 */
 export const chat = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ chat.definition = {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::chat
-* @see app/Modules/AI/Api/ChatController.php:40
+* @see app/Modules/AI/Api/ChatController.php:41
 * @route '/api/v1/ai/chat'
 */
 chat.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ chat.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::chat
-* @see app/Modules/AI/Api/ChatController.php:40
+* @see app/Modules/AI/Api/ChatController.php:41
 * @route '/api/v1/ai/chat'
 */
 chat.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ chat.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::chat
-* @see app/Modules/AI/Api/ChatController.php:40
+* @see app/Modules/AI/Api/ChatController.php:41
 * @route '/api/v1/ai/chat'
 */
 const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const chatForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 
 /**
 * @see \App\Modules\AI\Api\ChatController::chat
-* @see app/Modules/AI/Api/ChatController.php:40
+* @see app/Modules/AI/Api/ChatController.php:41
 * @route '/api/v1/ai/chat'
 */
 chatForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
