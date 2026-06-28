@@ -116,4 +116,19 @@ class ScraperRunRepository
             ScraperRun::where('id', $id)->increment('encountered_listings', $count);
         }
     }
+
+    /**
+     * Retrieve all completed scraper runs for a given source, oldest first.
+     *
+     * Used by the trend endpoint to build a time-series of listing volume
+     * per category. Only completed runs are included - failed, cancelled
+     * and still-running runs carry no reliable saved_listings count.
+     */
+    public function getTrend(string $source): Collection
+    {
+        return ScraperRun::forSource($source)
+            ->forState(ScraperState::Completed)
+            ->orderBy('started_at')
+            ->get(['id', 'source', 'started_at', 'saved_listings', 'encountered_listings']);
+    }
 }

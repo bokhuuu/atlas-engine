@@ -1,11 +1,27 @@
 import { Head } from '@inertiajs/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from 'recharts';
 import ScraperCategoryCard from '@/components/scraper/ScraperCategoryCard';
 import type {
     ScraperCategory,
     ScraperRunStatus,
 } from '@/components/scraper/ScraperCategoryCard';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson, postJson } from '@/lib/scraper-api';
 
@@ -26,6 +42,13 @@ interface Props {
     grandTotalListings: number;
 }
 
+interface TrendPoint {
+    date: string;
+    new_listings: number;
+    cumulative_listings: number;
+    encountered: number;
+}
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/admin/dashboard' },
 ];
@@ -41,6 +64,35 @@ export default function Dashboard({
     );
     const [sharedPages, setSharedPages] = useState(1);
     const [isBusy, setIsBusy] = useState(false);
+
+    const [trendSource, setTrendSource] = useState<string>(
+        scraperCategories[0]?.source ?? '',
+    );
+    const [trendData, setTrendData] = useState<TrendPoint[]>([]);
+    const [trendLoading, setTrendLoading] = useState(false);
+
+    const fetchTrend = useCallback(async (source: string) => {
+        if (!source) {
+            return;
+        }
+
+        setTrendLoading(true);
+
+        try {
+            const data = await fetchJson<{ series: TrendPoint[] }>(
+                `/api/v1/scrape/trend?source=${encodeURIComponent(source)}`,
+            );
+            setTrendData(data.series);
+        } catch {
+            setTrendData([]);
+        } finally {
+            setTrendLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchTrend(trendSource);
+    }, [trendSource, fetchTrend]);
 
     const statusesRef = useRef(statuses);
     statusesRef.current = statuses;
@@ -173,6 +225,106 @@ export default function Dashboard({
                             isBusy={isBusy}
                         />
                     ))}
+                </div>
+
+                {/* Trend Chart */}
+                <div className="mt-8">
+                    <div className="mb-4 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-lg font-semibold">
+                                Listing Volume Over Time
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                Cumulative listings and new additions per scrape
+                                run.
+                            </p>
+                        </div>
+                        <Select
+                            value={trendSource}
+                            onValueChange={setTrendSource}
+                        >
+                            <SelectTrigger className="w-56">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {scraperCategories.map((cat) => (
+                                    <SelectItem
+                                        key={cat.source}
+                                        value={cat.source}
+                                    >
+                                        {cat.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="rounded-lg border p-4">
+                        {trendLoading ? (
+                            <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                                Loading…
+                            </div>
+                        ) : trendData.length === 0 ? (
+                            <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                                No completed scrape runs yet for this category.
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height={280}>
+                                <LineChart
+                                    data={trendData}
+                                    margin={{
+                                        top: 4,
+                                        right: 16,
+                                        left: 24,
+                                        bottom: 4,
+                                    }}
+                                >
+                                    <CartesianGrid
+                                        strokeDasharray="3 3"
+                                        stroke="#333333"
+                                    />
+                                    <XAxis
+                                        dataKey="date"
+                                        tick={{ fontSize: 11, fill: '#888888' }}
+                                    />
+                                    <YAxis
+                                        tick={{ fontSize: 11, fill: '#888888' }}
+                                        width={55}
+                                    />
+                                    <Tooltip
+                                        contentStyle={{
+                                            background: '#1a1a1a',
+                                            border: '1px solid #333333',
+                                            borderRadius: '6px',
+                                            fontSize: '12px',
+                                            color: '#ffffff',
+                                        }}
+                                    />
+                                    <Legend
+                                        wrapperStyle={{ fontSize: '12px' }}
+                                    />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="cumulative_listings"
+                                        name="Total Listings"
+                                        stroke="hsl(var(--primary))"
+                                        strokeWidth={2}
+                                        dot={{ r: 3 }}
+                                        activeDot={{ r: 5 }}
+                                    />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="new_listings"
+                                        name="New Per Run"
+                                        stroke="hsl(var(--muted-foreground))"
+                                        strokeWidth={1.5}
+                                        strokeDasharray="4 2"
+                                        dot={{ r: 2 }}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
                 </div>
             </div>
         </AppLayout>

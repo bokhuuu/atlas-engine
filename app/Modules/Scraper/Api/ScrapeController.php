@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Api;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Enums\ScraperState;
+use App\Modules\Scraper\Models\ScraperRun;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Repositories\ScraperRunRepository;
 use App\Modules\Scraper\Requests\CancelScrapeRequest;
@@ -160,6 +161,42 @@ class ScrapeController extends Controller
         }, $sources);
 
         return response()->json(['statuses' => $statuses]);
+    }
+
+    /**
+     * Return a time-series of completed scrape runs for a given source.
+     *
+     * Each data point carries the run's own saved_listings count (new listings
+     * that run added after dedup) plus a cumulative_listings total (running sum
+     * up to and including that run), so the frontend can plot either without
+     * computing it client-side.
+     *
+     * Returns an empty series - not a 404 - when no completed runs exist yet,
+     * so the frontend can render an empty-state chart without special-casing
+     * the HTTP status.
+     */
+    public function trend(): JsonResponse
+    {
+        $source = request()->query('source', '');
+
+        $runs = $this->runRepository->getTrend($source);
+
+        $cumulative = 0;
+        $series = $runs->map(function (ScraperRun $run) use (&$cumulative): array {
+            $cumulative += $run->saved_listings;
+
+            return [
+                'date' => $run->started_at->toDateString(),
+                'new_listings' => $run->saved_listings,
+                'cumulative_listings' => $cumulative,
+                'encountered' => $run->encountered_listings,
+            ];
+        });
+
+        return response()->json([
+            'source' => $source,
+            'series' => $series,
+        ]);
     }
 
     /**

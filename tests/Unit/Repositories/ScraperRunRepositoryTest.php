@@ -84,3 +84,37 @@ test('it finds the latest run for a source', function () use ($repository) {
     expect($latest)->not->toBeNull()
         ->and(ScraperRun::where('source', 'listam')->count())->toBe(2);
 });
+
+test('getTrend returns only completed runs in ascending order', function () use ($repository) {
+    $repository->save(array_merge(runData(), [
+        'state' => ScraperState::Completed,
+        'saved_listings' => 50,
+        'started_at' => now()->subDays(2)->toDateTimeString(),
+    ]));
+
+    $repository->save(array_merge(runData(), [
+        'state' => ScraperState::Failed,
+        'saved_listings' => 0,
+        'started_at' => now()->subDay()->toDateTimeString(),
+    ]));
+
+    $repository->save(array_merge(runData(), [
+        'state' => ScraperState::Completed,
+        'saved_listings' => 30,
+        'started_at' => now()->toDateTimeString(),
+    ]));
+
+    $trend = $repository->getTrend('listam');
+
+    expect($trend)->toHaveCount(2)
+        ->and($trend->first()->saved_listings)->toBe(50)
+        ->and($trend->last()->saved_listings)->toBe(30);
+});
+
+test('getTrend returns empty collection when no completed runs exist', function () use ($repository) {
+    $repository->save(runData());
+
+    $trend = $repository->getTrend('listam');
+
+    expect($trend)->toBeEmpty();
+});

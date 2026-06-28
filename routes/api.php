@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
 
         Route::post('scrape/start-all', [ScrapeController::class, 'startAll']);
         Route::get('scrape/status-all', [ScrapeController::class, 'statusAll']);
+        Route::get('scrape/trend', [ScrapeController::class, 'trend']);
         Route::post('scrape/cancel-all', [ScrapeController::class, 'cancelAll']);
 
         Route::get('/listings', [ListingController::class, 'index']);

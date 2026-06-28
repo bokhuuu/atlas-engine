@@ -58,3 +58,36 @@ test('cancel returns success for active run', function () {
         ->assertOk()
         ->assertJsonPath('run_id', $run->id);
 });
+
+test('trend returns empty series when no completed runs exist', function () {
+    $this->getJson('/api/v1/scrape/trend?source=listam_apartments_sale')
+        ->assertOk()
+        ->assertJsonStructure(['source', 'series'])
+        ->assertJsonPath('series', []);
+});
+
+test('trend returns series with cumulative totals for completed runs', function () {
+    ScraperRun::create([
+        'source' => 'listam_apartments_sale',
+        'state' => ScraperState::Completed,
+        'saved_listings' => 40,
+        'started_at' => now()->subDay(),
+        'finished_at' => now()->subDay(),
+    ]);
+
+    ScraperRun::create([
+        'source' => 'listam_apartments_sale',
+        'state' => ScraperState::Completed,
+        'saved_listings' => 20,
+        'started_at' => now(),
+        'finished_at' => now(),
+    ]);
+
+    $this->getJson('/api/v1/scrape/trend?source=listam_apartments_sale')
+        ->assertOk()
+        ->assertJsonCount(2, 'series')
+        ->assertJsonPath('series.0.new_listings', 40)
+        ->assertJsonPath('series.0.cumulative_listings', 40)
+        ->assertJsonPath('series.1.new_listings', 20)
+        ->assertJsonPath('series.1.cumulative_listings', 60);
+});
