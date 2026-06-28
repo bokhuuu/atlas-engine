@@ -8,6 +8,7 @@ use App\Events\AiCallCompleted;
 use App\Http\Controllers\Controller;
 use App\Modules\AI\Agents\PropertyAssistantAgent;
 use App\Modules\AI\Requests\StreamPromptRequest;
+use App\Modules\AI\Services\AIFallbackService;
 use App\Modules\AI\Services\RateLimitingService;
 use App\Modules\AI\Services\TokenBudgetService;
 use Illuminate\Http\JsonResponse;
@@ -78,9 +79,26 @@ class ChatController extends Controller
                 'session' => $sessionKey,
             ]);
 
-            return response()->json([
-                'error' => 'An error occurred. Please try again.',
-            ], 500);
+            try {
+                $fallback = app(AIFallbackService::class);
+                $fallbackText = $fallback->generateText(
+                    prompt: $message,
+                    systemPrompt: 'You are a real estate market assistant for Yerevan, Armenia. '
+                        .'The primary AI system is temporarily unavailable. '
+                        .'Answer as helpfully as possible with general knowledge, '
+                        .'and note that live market data tools are currently unavailable.'
+                );
+
+                return response()->json(['text' => $fallbackText]);
+            } catch (\Throwable $fallbackException) {
+                Log::error('ChatController: fallback also failed', [
+                    'error' => $fallbackException->getMessage(),
+                ]);
+
+                return response()->json([
+                    'error' => 'An error occurred. Please try again.',
+                ], 500);
+            }
         }
     }
 }
