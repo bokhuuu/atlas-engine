@@ -9,6 +9,7 @@ import {
     HeartPulse,
     ChartNoAxesColumn,
     Bot,
+    Globe,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -33,7 +34,13 @@ interface NavItemWithRoles extends NavItem {
     roles: string[];
 }
 
-const footerNavItems: NavItem[] = [];
+const footerNavItems: NavItem[] = [
+    {
+        title: 'Public Site',
+        href: '/',
+        icon: Globe,
+    },
+];
 
 const intelligenceItems: NavItemWithRoles[] = [
     {

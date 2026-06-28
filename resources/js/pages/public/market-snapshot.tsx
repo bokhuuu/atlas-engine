@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -58,6 +58,9 @@ export default function MarketSnapshot() {
     const [data, setData] = useState<SnapshotData | null>(null);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    const { auth } = usePage().props as {
+        auth: { user: { name: string } | null };
+    };
 
     useEffect(() => {
         fetch('/api/v1/public/snapshot')
@@ -82,10 +85,10 @@ export default function MarketSnapshot() {
                         Atlas 🗺️
                     </span>
                     <Link
-                        href={login().url}
+                        href={auth.user ? '/admin/dashboard' : login().url}
                         className="rounded-sm border border-[#19140035] px-4 py-1.5 text-sm hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
                     >
-                        Log in
+                        {auth.user ? 'Go to Dashboard' : 'Log in'}
                     </Link>
                 </header>
 
