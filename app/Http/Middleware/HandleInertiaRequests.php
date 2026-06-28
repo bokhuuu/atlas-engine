@@ -92,9 +92,9 @@ class HandleInertiaRequests extends Middleware
                     ->get()
                     ->map(fn ($n) => [
                         'id' => $n->id,
-                        'message' => $n->data['message'],
-                        'user_id' => $n->data['user_id'],
-                        'event' => $n->data['event'],
+                        'message' => $n->data['message'] ?? '',
+                        'user_id' => $n->data['user_id'] ?? null,
+                        'event' => $n->data['event'] ?? null,
                         'created_at' => $n->created_at->diffForHumans(),
                     ]);
             },

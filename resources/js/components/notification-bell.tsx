@@ -62,9 +62,6 @@ export function NotificationBell() {
                                     className="flex cursor-pointer items-start justify-between gap-2 border-b px-3 py-2 last:border-0 hover:bg-muted"
                                     onClick={() => {
                                         markAsRead(notification.id);
-                                        router.visit(
-                                            `/admin/users/${notification.user_id}/edit`,
-                                        );
                                     }}
                                 >
                                     <div className="flex flex-col gap-0.5">
