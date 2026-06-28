@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Events\AiCallCompleted;
+use App\Models\User;
 use App\Modules\AI\Services\UsageTrackingService;
 use App\Modules\Scraper\Notifications\MailNotifier;
 use App\Modules\Scraper\Notifications\TelegramNotifier;
+use App\Notifications\AiCostAlertNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
@@ -74,5 +76,15 @@ class CostAlertListener implements ShouldQueue
         } catch (\Throwable $e) {
             Log::warning('CostAlertListener: Mail failed.', ['error' => $e->getMessage()]);
         }
+
+        $notification = new AiCostAlertNotification(
+            feature: $event->feature,
+            model: $event->model,
+            cost: $cost,
+        );
+
+        User::role(['admin', 'super_admin'])->each(
+            fn (User $user) => $user->notify($notification)
+        );
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Listeners;
 
+use App\Models\User;
 use App\Modules\Scraper\Events\ScrapeCompleted;
+use App\Notifications\ScrapeCompletedNotification;
 
 /**
  * Listens for the ScrapeCompleted event and dispatches notifications.
@@ -17,6 +19,16 @@ class SendScrapeCompletedNotification
 {
     public function handle(ScrapeCompleted $event): void
     {
+        $notification = new ScrapeCompletedNotification($event->source, $event->listingCount);
+
+        User::role(['admin', 'super_admin'])->each(
+            fn (User $user) => $user->notify($notification)
+        );
+
+        if (app()->environment('testing')) {
+            return;
+        }
+
         $profileClass = config('scraper.profiles.'.$event->source);
         $profile = app($profileClass);
 

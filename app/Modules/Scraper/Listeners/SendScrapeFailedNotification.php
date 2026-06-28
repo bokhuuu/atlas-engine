@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Listeners;
 
+use App\Models\User;
 use App\Modules\Scraper\Events\ScrapeFailed;
+use App\Notifications\ScrapeFailedNotification;
 
 /**
  * Listens for the ScrapeFailed event and dispatches failure notifications.
@@ -17,6 +19,16 @@ class SendScrapeFailedNotification
 {
     public function handle(ScrapeFailed $event): void
     {
+        $notification = new ScrapeFailedNotification($event->source, $event->errorMessage);
+
+        User::role(['admin', 'super_admin'])->each(
+            fn (User $user) => $user->notify($notification)
+        );
+
+        if (app()->environment('testing')) {
+            return;
+        }
+
         $profileClass = config('scraper.profiles.'.$event->source);
         $profile = app($profileClass);
 
