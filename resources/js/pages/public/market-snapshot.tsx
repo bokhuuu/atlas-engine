@@ -57,6 +57,7 @@ function formatPricePerSqm(
 export default function MarketSnapshot() {
     const [data, setData] = useState<SnapshotData | null>(null);
     const [error, setError] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         fetch('/api/v1/public/snapshot')
@@ -161,12 +162,23 @@ export default function MarketSnapshot() {
                                             depth available on request.
                                         </p>
                                     </div>
-                                    <Link
-                                        href={login().url}
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(
+                                                'zura.coding@gmail.com',
+                                            );
+                                            setCopied(true);
+                                            setTimeout(
+                                                () => setCopied(false),
+                                                2000,
+                                            );
+                                        }}
                                         className="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-2 text-sm text-white hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
                                     >
-                                        Request Full Access
-                                    </Link>
+                                        {copied
+                                            ? 'Email Copied!'
+                                            : 'Request Full Access'}
+                                    </button>
                                 </CardContent>
                             </Card>
                         </>
