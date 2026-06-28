@@ -42,14 +42,18 @@ interface SnapshotData {
  * priced in the millions) shouldn't be allowed to skew what looks
  * like the "typical" price for a category.
  */
-function formatPricePerSqm(value: number | null): string {
+function formatPricePerSqm(
+    value: number | null,
+    dealType: 'sale' | 'rent',
+): string {
     if (value === null) {
         return '—';
     }
 
-    return `$${Math.round(value).toLocaleString()}`;
-}
+    const formatted = `$${Math.round(value).toLocaleString()}`;
 
+    return dealType === 'rent' ? `${formatted}/mo` : formatted;
+}
 export default function MarketSnapshot() {
     const [data, setData] = useState<SnapshotData | null>(null);
     const [error, setError] = useState(false);
@@ -134,6 +138,7 @@ export default function MarketSnapshot() {
                                             <p className="text-2xl font-semibold">
                                                 {formatPricePerSqm(
                                                     cat.median_price_per_sqm,
+                                                    cat.deal_type,
                                                 )}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
