@@ -27,7 +27,7 @@ Route::middleware(['auth', 'admin'])
         Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
         Route::get('exports/{source}', [ExportController::class, 'download'])->name('exports.download');
 
-        Route::prefix('users')->name('users.')->group(function () {
+        Route::middleware(['role:super_admin|admin'])->prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::get('/create', [UserController::class, 'create'])->name('create');
             Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed');
@@ -38,7 +38,7 @@ Route::middleware(['auth', 'admin'])
             Route::patch('/{user}/restore', [UserController::class, 'restore'])->name('restore');
             Route::delete('/{user}/force-delete', [UserController::class, 'forceDelete'])->name('force-delete');
         });
-        Route::prefix('settings')->name('settings.')->group(function () {
+        Route::middleware(['role:super_admin|admin'])->prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingController::class, 'index'])->name('index');
             Route::put('/', [SettingController::class, 'update'])->name('update');
         });
