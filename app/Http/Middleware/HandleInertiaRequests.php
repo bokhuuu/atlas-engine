@@ -78,6 +78,9 @@ class HandleInertiaRequests extends Middleware
                 fn () => [
                     'logo' => Setting::where('key', 'site_logo')->first()?->getFirstMediaUrl(config('larakit.media.logo_collection')),
                     'favicon' => Setting::where('key', 'site_favicon')->first()?->getFirstMediaUrl(config('larakit.media.favicon_collection')),
+                    'site_name' => Setting::where('key', 'site_name')->value('value') ?? config('app.name'),
+                    'site_description' => Setting::where('key', 'site_description')->value('value') ?? '',
+                    'site_email' => Setting::where('key', 'site_email')->value('value') ?? '',
                 ]
             ),
             'notifications' => function () use ($request) {

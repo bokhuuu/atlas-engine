@@ -194,8 +194,14 @@ export default function MarketSnapshot() {
     const [copied, setCopied] = useState(false);
     const [entered, setEntered] = useState(false);
     const [progress, setProgress] = useState(0);
-    const { auth } = usePage().props as {
+    const { auth, siteSettings } = usePage().props as unknown as {
         auth: { user: { name: string } | null };
+        siteSettings: {
+            site_name: string;
+            site_description: string;
+            site_email: string;
+            logo: string | null;
+        };
     };
 
     useEffect(() => {
@@ -329,7 +335,7 @@ export default function MarketSnapshot() {
                                 color: '#fff',
                             }}
                         >
-                            Atlas
+                            {siteSettings.site_name || 'Atlas'}
                         </span>
                         <span style={{ fontSize: '17px' }}>🗺️</span>
                         <span
@@ -505,9 +511,8 @@ export default function MarketSnapshot() {
                                 maxWidth: '620px',
                             }}
                         >
-                            Live median pricing and active inventory across
-                            seven asset classes — the market view behind
-                            Colliers Armenia.
+                            {siteSettings.site_description ||
+                                'Live median pricing and active inventory across seven asset classes - the market view behind Colliers Armenia.'}
                         </p>
 
                         <div
@@ -787,12 +792,13 @@ export default function MarketSnapshot() {
                         }}
                     >
                         Request analyst access to live dashboards, historical
-                        trends, and neighbourhood-level intelligence.
+                        trends and neighbourhood-level intelligence.
                     </p>
                     <button
                         onClick={() => {
                             navigator.clipboard.writeText(
-                                'zura.coding@gmail.com',
+                                siteSettings.site_email ||
+                                    'zura.coding@gmail.com',
                             );
                             setCopied(true);
                             setTimeout(() => setCopied(false), 2000);
