@@ -74,7 +74,7 @@ function CategoryCard({
                     'linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012))',
                 border: '1px solid rgba(255,255,255,.07)',
                 borderRadius: '15px',
-                padding: '26px',
+                padding: '20px',
                 overflow: 'hidden',
                 boxShadow: '0 10px 30px rgba(0,0,0,.25)',
                 opacity: entered ? 1 : 0,
@@ -87,7 +87,7 @@ function CategoryCard({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '22px',
+                    marginBottom: '16px',
                 }}
             >
                 <span
@@ -95,10 +95,10 @@ function CategoryCard({
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '11px',
-                        fontSize: '22px',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '10px',
+                        fontSize: '20px',
                         background: accentSoft,
                     }}
                 >
@@ -110,7 +110,7 @@ function CategoryCard({
                         fontSize: '10px',
                         letterSpacing: '1.5px',
                         fontWeight: 600,
-                        padding: '5px 9px',
+                        padding: '4px 8px',
                         borderRadius: '6px',
                         color: accent,
                         background: accentSoft,
@@ -122,10 +122,10 @@ function CategoryCard({
 
             <div
                 style={{
-                    fontSize: '14px',
+                    fontSize: '13px',
                     color: '#a6adb8',
                     fontWeight: 500,
-                    marginBottom: '16px',
+                    marginBottom: '12px',
                     letterSpacing: '.2px',
                 }}
             >
@@ -136,17 +136,17 @@ function CategoryCard({
                 style={{
                     display: 'flex',
                     alignItems: 'baseline',
-                    gap: '6px',
-                    marginBottom: '16px',
+                    gap: '5px',
+                    marginBottom: '12px',
                 }}
             >
                 <span
                     style={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '38px',
+                        fontSize: 'clamp(24px, 5vw, 36px)',
                         fontWeight: 600,
                         color: accent,
-                        letterSpacing: '-1.5px',
+                        letterSpacing: '-1px',
                         lineHeight: 1,
                     }}
                 >
@@ -157,7 +157,7 @@ function CategoryCard({
                 <span
                     style={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '12px',
+                        fontSize: '11px',
                         color: '#6b7280',
                     }}
                 >
@@ -171,13 +171,13 @@ function CategoryCard({
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     borderTop: '1px solid rgba(255,255,255,.06)',
-                    paddingTop: '14px',
+                    paddingTop: '12px',
                 }}
             >
                 <span
                     style={{
                         fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '12px',
+                        fontSize: '11px',
                         color: '#858c97',
                     }}
                 >
@@ -278,6 +278,28 @@ export default function MarketSnapshot() {
                     70% { box-shadow: 0 0 0 9px rgba(70,192,138,0); }
                     100% { box-shadow: 0 0 0 0 rgba(70,192,138,0); }
                 }
+                .s0-header { padding: 20px 48px; }
+                .s0-hero { padding: 60px 48px 40px; }
+                .s0-grid-wrap { padding: 8px 48px 52px; }
+                .s0-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+                .s0-land { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+                .s0-land-price { font-size: 44px; }
+                .s0-cta { margin: 0 48px 48px; padding: 50px; }
+                .s0-footer { padding: 24px 48px; flex-direction: row; text-align: left; }
+                @media (max-width: 768px) {
+                    .s0-header { padding: 16px 20px; }
+                    .s0-hero { padding: 36px 20px 28px; }
+                    .s0-grid-wrap { padding: 8px 20px 36px; }
+                    .s0-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+                    .s0-land { flex-direction: column; align-items: flex-start; gap: 16px; }
+                    .s0-land-price { font-size: 32px; }
+                    .s0-cta { margin: 0 20px 36px; padding: 32px 24px; }
+                    .s0-footer { padding: 20px; flex-direction: column; gap: 6px; text-align: center; }
+                }
+                @media (max-width: 480px) {
+                    .s0-grid { grid-template-columns: 1fr; }
+                    .s0-header-yerevan { display: none; }
+                }
             `}</style>
 
             <div
@@ -302,12 +324,12 @@ export default function MarketSnapshot() {
 
                 {/* Header */}
                 <div
+                    className="s0-header"
                     style={{
                         position: 'relative',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '24px 48px',
                         borderBottom: '1px solid rgba(255,255,255,.05)',
                     }}
                 >
@@ -339,6 +361,7 @@ export default function MarketSnapshot() {
                         </span>
                         <span style={{ fontSize: '17px' }}>🗺️</span>
                         <span
+                            className="s0-header-yerevan"
                             style={{
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '10px',
@@ -396,11 +419,8 @@ export default function MarketSnapshot() {
 
                 {/* Hero */}
                 <div
-                    style={{
-                        position: 'relative',
-                        padding: '68px 48px 48px',
-                        overflow: 'hidden',
-                    }}
+                    className="s0-hero"
+                    style={{ position: 'relative', overflow: 'hidden' }}
                 >
                     <div
                         style={{
@@ -445,7 +465,7 @@ export default function MarketSnapshot() {
                                 border: '1px solid rgba(255,255,255,.09)',
                                 borderRadius: '30px',
                                 background: 'rgba(255,255,255,.03)',
-                                marginBottom: '28px',
+                                marginBottom: '24px',
                             }}
                         >
                             <span
@@ -490,12 +510,12 @@ export default function MarketSnapshot() {
 
                         <h1
                             style={{
-                                fontSize: 'clamp(36px, 4vw, 54px)',
-                                lineHeight: 1.04,
+                                fontSize: 'clamp(28px, 5vw, 54px)',
+                                lineHeight: 1.08,
                                 fontWeight: 600,
-                                letterSpacing: '-1.8px',
+                                letterSpacing: '-1.5px',
                                 color: '#fff',
-                                margin: '0 0 20px',
+                                margin: '0 0 16px',
                                 maxWidth: '820px',
                             }}
                         >
@@ -504,22 +524,22 @@ export default function MarketSnapshot() {
 
                         <p
                             style={{
-                                fontSize: '18px',
+                                fontSize: 'clamp(15px, 2vw, 18px)',
                                 lineHeight: 1.55,
                                 color: '#9aa1ad',
-                                margin: '0 0 28px',
+                                margin: '0 0 24px',
                                 maxWidth: '620px',
                             }}
                         >
                             {siteSettings.site_description ||
-                                'Live median pricing and active inventory across seven asset classes - the market view behind Colliers Armenia.'}
+                                'Live median pricing and active inventory across seven asset classes — the market view behind Colliers Armenia.'}
                         </p>
 
                         <div
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '24px',
+                                gap: '16px',
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: '12px',
                                 color: '#7c8390',
@@ -545,7 +565,7 @@ export default function MarketSnapshot() {
                 </div>
 
                 {/* Grid */}
-                <div style={{ position: 'relative', padding: '8px 48px 52px' }}>
+                <div className="s0-grid-wrap" style={{ position: 'relative' }}>
                     <div
                         style={{
                             display: 'flex',
@@ -591,13 +611,7 @@ export default function MarketSnapshot() {
 
                     {data && (
                         <>
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(3, 1fr)',
-                                    gap: '18px',
-                                }}
-                            >
+                            <div className="s0-grid">
                                 {gridCats.map((cat, i) => (
                                     <CategoryCard
                                         key={cat.source}
@@ -611,18 +625,16 @@ export default function MarketSnapshot() {
 
                             {landCat && (
                                 <div
+                                    className="s0-land"
                                     style={{
                                         position: 'relative',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
                                         gap: '30px',
                                         marginTop: '18px',
                                         background:
                                             'linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012))',
                                         border: '1px solid rgba(255,255,255,.07)',
                                         borderRadius: '15px',
-                                        padding: '26px 30px',
+                                        padding: '24px 28px',
                                         overflow: 'hidden',
                                         boxShadow:
                                             '0 10px 30px rgba(0,0,0,.25)',
@@ -651,6 +663,7 @@ export default function MarketSnapshot() {
                                                 borderRadius: '13px',
                                                 fontSize: '28px',
                                                 background: SALE_SOFT,
+                                                flexShrink: 0,
                                             }}
                                         >
                                             🌍
@@ -662,6 +675,7 @@ export default function MarketSnapshot() {
                                                     alignItems: 'center',
                                                     gap: '10px',
                                                     marginBottom: '6px',
+                                                    flexWrap: 'wrap',
                                                 }}
                                             >
                                                 <span
@@ -714,10 +728,10 @@ export default function MarketSnapshot() {
                                         }}
                                     >
                                         <span
+                                            className="s0-land-price"
                                             style={{
                                                 fontFamily:
                                                     "'JetBrains Mono', monospace",
-                                                fontSize: '44px',
                                                 fontWeight: 600,
                                                 color: SALE_COLOR,
                                                 letterSpacing: '-1.5px',
@@ -748,10 +762,9 @@ export default function MarketSnapshot() {
 
                 {/* CTA */}
                 <div
+                    className="s0-cta"
                     style={{
                         position: 'relative',
-                        margin: '0 48px 48px',
-                        padding: '50px',
                         borderRadius: '16px',
                         textAlign: 'center',
                         background:
@@ -772,7 +785,7 @@ export default function MarketSnapshot() {
                     <h2
                         style={{
                             position: 'relative',
-                            fontSize: '32px',
+                            fontSize: 'clamp(22px, 4vw, 32px)',
                             fontWeight: 600,
                             letterSpacing: '-.8px',
                             color: '#fff',
@@ -825,12 +838,12 @@ export default function MarketSnapshot() {
 
                 {/* Footer */}
                 <div
+                    className="s0-footer"
                     style={{
                         position: 'relative',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '26px 48px',
                         borderTop: '1px solid rgba(255,255,255,.05)',
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: '11px',

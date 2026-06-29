@@ -34,13 +34,7 @@ interface NavItemWithRoles extends NavItem {
     roles: string[];
 }
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Public Site',
-        href: '/',
-        icon: Globe,
-    },
-];
+const footerNavItems: NavItem[] = [];
 
 const intelligenceItems: NavItemWithRoles[] = [
     {
@@ -59,6 +53,12 @@ const intelligenceItems: NavItemWithRoles[] = [
         title: 'AI Assistant',
         href: '/admin/assistant',
         icon: Bot,
+        roles: ['super_admin', 'admin', 'editor'],
+    },
+    {
+        title: 'Public Site',
+        href: '/',
+        icon: Globe,
         roles: ['super_admin', 'admin', 'editor'],
     },
 ];
@@ -129,7 +129,11 @@ function NavGroup({
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
                             asChild
-                            isActive={isCurrentOrParentUrl(item.href)}
+                            isActive={
+                                item.href === '/'
+                                    ? false
+                                    : isCurrentOrParentUrl(item.href)
+                            }
                             tooltip={{ children: item.title }}
                         >
                             <Link href={item.href} prefetch>
