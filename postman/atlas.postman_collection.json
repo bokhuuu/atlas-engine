@@ -1,0 +1,640 @@
+{
+    "info": {
+        "name": "Atlas API - Yerevan Real Estate Intelligence",
+        "description": "REST API for Atlas, the Yerevan real estate market intelligence platform built for Colliers International.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Create an API token at /admin/tokens\n3. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "description": "Base URL - change to your VPS URL when deployed"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "description": "Sanctum API token - create one at /admin/tokens in the dashboard"
+        },
+        {
+            "key": "source",
+            "value": "listam_apartments_sale",
+            "description": "Scraper source key. Options: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale"
+        }
+    ],
+    "item": [
+        {
+            "name": "Public (no auth needed)",
+            "description": "Endpoints accessible without any token. These power Screen 0 - the public market snapshot.",
+            "item": [
+                {
+                    "name": "Health check",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "health"]
+                        },
+                        "description": "Check if the application is running. No auth required."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"status\": \"ok\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Market Snapshot (Screen 0)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/public/snapshot",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "public", "snapshot"]
+                        },
+                        "description": "Returns headline stats for all 7 property categories: median price/sqm, total listing count and deal type (sale/rent). Powers the public Screen 0 page. No auth required."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"categories\": [\n    {\n      \"source\": \"listam_apartments_sale\",\n      \"label\": \"Apartments for Sale\",\n      \"deal_type\": \"sale\",\n      \"median_price_per_sqm\": 2020,\n      \"total_listings\": 566\n    }\n  ]\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Scraper Control",
+            "description": "Start, stop and monitor scrape runs. All endpoints require a Bearer token.",
+            "item": [
+                {
+                    "name": "Start scrape - one category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"source\": \"{{source}}\",\n  \"pages\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/start",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "start"]
+                        },
+                        "description": "Start a scrape run for one category. pages defaults to 1 if omitted. Returns the run_id."
+                    },
+                    "response": [
+                        {
+                            "name": "202 Accepted",
+                            "status": "Accepted",
+                            "code": 202,
+                            "body": "{\n  \"message\": \"Scrape started.\",\n  \"run_id\": 42,\n  \"source\": \"listam_apartments_sale\",\n  \"pages\": 2\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Start scrape - all categories",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"pages\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/start-all",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "start-all"]
+                        },
+                        "description": "Start a scrape run for all 7 categories at once using the same page count. Categories already running are skipped automatically."
+                    },
+                    "response": [
+                        {
+                            "name": "202 Accepted",
+                            "status": "Accepted",
+                            "code": 202,
+                            "body": "{\n  \"message\": \"Scrape started for all categories.\",\n  \"runs\": [\n    {\"run_id\": 42, \"source\": \"listam_apartments_sale\", \"pages\": 1}\n  ],\n  \"skipped\": []\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Status - one category",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/status?source={{source}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "status"],
+                            "query": [
+                                { "key": "source", "value": "{{source}}" }
+                            ]
+                        },
+                        "description": "Get the latest run state for one category. States: pending, running, completed, failed, cancelled."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"run_id\": 42,\n  \"source\": \"listam_apartments_sale\",\n  \"state\": \"completed\",\n  \"started_at\": \"2026-06-29T10:00:00Z\",\n  \"finished_at\": \"2026-06-29T10:05:00Z\",\n  \"scraped_pages\": 1,\n  \"saved_listings\": 99\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Status - all categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/status-all",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "status-all"]
+                        },
+                        "description": "Get the latest run state for all 7 categories at once, including live total listing counts. Used by the dashboard polling loop."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"statuses\": [\n    {\n      \"run_id\": 42,\n      \"source\": \"listam_apartments_sale\",\n      \"state\": \"completed\",\n      \"saved_listings\": 99,\n      \"total_listings\": 566\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Trend - listing volume over time",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/trend?source={{source}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "trend"],
+                            "query": [
+                                { "key": "source", "value": "{{source}}" }
+                            ]
+                        },
+                        "description": "Returns a time-series of completed scrape runs for one category. Each point includes new_listings (that run) and cumulative_listings (running total). Powers the trend chart on the dashboard."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"series\": [\n    {\n      \"date\": \"2026-06-25\",\n      \"new_listings\": 87,\n      \"cumulative_listings\": 87,\n      \"encountered\": 105\n    },\n    {\n      \"date\": \"2026-06-26\",\n      \"new_listings\": 99,\n      \"cumulative_listings\": 186,\n      \"encountered\": 110\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel - one category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"run_id\": 42\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/cancel",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "cancel"]
+                        },
+                        "description": "Cancel a specific scrape run by ID. Note: this updates the DB state only - jobs already queued in Redis may still execute. Use horizon:clear to fully stop queued work."
+                    }
+                },
+                {
+                    "name": "Cancel - all categories",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/scrape/cancel-all",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "scrape", "cancel-all"]
+                        },
+                        "description": "Cancel all currently running scrape runs."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Listings & Market Data",
+            "description": "Query scraped listing data and market statistics.",
+            "item": [
+                {
+                    "name": "List listings",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/listings?source={{source}}&page=1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "listings"],
+                            "query": [
+                                { "key": "source", "value": "{{source}}" },
+                                { "key": "page", "value": "1" },
+                                {
+                                    "key": "district",
+                                    "value": "Kentron",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "min_price",
+                                    "value": "100000",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_price",
+                                    "value": "300000",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "rooms",
+                                    "value": "3",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "min_area",
+                                    "value": "60",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_area",
+                                    "value": "120",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Paginated list of scraped listings for a category. Filter by district, price range, rooms and area. All filters are optional."
+                    }
+                },
+                {
+                    "name": "District price stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/listings/stats?source={{source}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "listings", "stats"],
+                            "query": [
+                                { "key": "source", "value": "{{source}}" }
+                            ]
+                        },
+                        "description": "Returns average and median price/sqm per district for a category. Powers the Market Stats page. Results cached 1 hour."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"data\": [\n    {\n      \"district\": \"Kentron\",\n      \"listing_count\": 128,\n      \"avg_price_per_sqm\": 3467,\n      \"median_price_per_sqm\": 3163\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "AI market summary",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/listings/summary?source={{source}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "listings", "summary"],
+                            "query": [
+                                { "key": "source", "value": "{{source}}" }
+                            ]
+                        },
+                        "description": "Returns a one-paragraph AI-generated market summary for a category, based on real scraped data. Cached 6 hours. Cache clears automatically when a new scrape completes."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"summary\": \"The Yerevan apartments for sale market currently features 566 listings...\"\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Exports",
+            "description": "Download scraped data as Excel files.",
+            "item": [
+                {
+                    "name": "Download - one category",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/exports/{{source}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "exports", "{{source}}"]
+                        },
+                        "description": "Download an Excel export for one category. Returns the .xlsx file directly. Generates from the current full DB dataset, not scoped to any single run."
+                    }
+                },
+                {
+                    "name": "Download - all categories (zip)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/exports",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "exports"]
+                        },
+                        "description": "Download all 7 category exports in a single zip file. Returns a .zip containing one .xlsx per category."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "AI Assistant",
+            "description": "Chat with the AI assistant and manage feedback.",
+            "item": [
+                {
+                    "name": "AI health check",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "health"]
+                        },
+                        "description": "Check if the AI provider is reachable and responding."
+                    }
+                },
+                {
+                    "name": "Chat",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"message\": \"What is the median price per sqm for apartments for sale?\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/chat",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "chat"]
+                        },
+                        "description": "Send a message to the AI assistant. The agent has access to 5 tools: category list, category stats, district breakdown, comparable listing finder and Excel export. Conversation history is persisted per user in Redis."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"text\": \"The median price per sqm for apartments for sale across Yerevan is $2,020 USD, based on 566 active listings.\"\n}"
+                        },
+                        {
+                            "name": "429 Rate limited",
+                            "status": "Too Many Requests",
+                            "code": 429,
+                            "body": "{\n  \"error\": \"Rate limit exceeded. Please wait before sending another message.\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Submit feedback",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"vote\": \"up\",\n  \"response_text\": \"The median price per sqm for apartments...\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/feedback",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "feedback"]
+                        },
+                        "description": "Submit thumbs up or down feedback on an AI response. vote must be 'up' or 'down'."
+                    }
+                },
+                {
+                    "name": "Webhook (HMAC-verified)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "X-Signature",
+                                "value": "sha256=YOUR_HMAC_SIGNATURE",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"event\": \"data.updated\",\n  \"payload\": {}\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/webhook",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "webhook"]
+                        },
+                        "description": "Receive webhook events from external systems. Requests must be signed with HMAC-SHA256 using the WEBHOOK_SECRET from .env. No Bearer token required - signature verification replaces auth."
+                    }
+                }
+            ]
+        }
+    ]
+}
