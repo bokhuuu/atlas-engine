@@ -182,16 +182,20 @@ class ScrapeController extends Controller
         $runs = $this->runRepository->getTrend($source);
 
         $cumulative = 0;
-        $series = $runs->map(function (ScraperRun $run) use (&$cumulative): array {
-            $cumulative += $run->saved_listings;
+        $series = $runs
+            ->groupBy(fn (ScraperRun $run) => $run->started_at->toDateString())
+            ->map(function ($dayRuns, $date) use (&$cumulative): array {
+                $newListings = $dayRuns->sum('saved_listings');
+                $cumulative += $newListings;
 
-            return [
-                'date' => $run->started_at->toDateString(),
-                'new_listings' => $run->saved_listings,
-                'cumulative_listings' => $cumulative,
-                'encountered' => $run->encountered_listings,
-            ];
-        });
+                return [
+                    'date' => $date,
+                    'new_listings' => $newListings,
+                    'cumulative_listings' => $cumulative,
+                    'encountered' => $dayRuns->sum('encountered_listings'),
+                ];
+            })
+            ->values();
 
         return response()->json([
             'source' => $source,

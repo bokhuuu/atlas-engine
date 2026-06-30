@@ -4,10 +4,12 @@ import {
     Bot,
     FileSpreadsheet,
     List,
+    PiggyBank,
     Search,
     Send,
     ThumbsDown,
     ThumbsUp,
+    TrendingDown,
     Zap,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -58,6 +60,16 @@ const SUGGESTED_QUERIES = [
         icon: FileSpreadsheet,
         label: 'Export commercial listings to Excel',
         query: 'Export all commercial real estate for sale listings to Excel.',
+    },
+    {
+        icon: TrendingDown,
+        label: 'Districts with price reductions this week',
+        query: 'Which districts had the most price reductions for apartments for sale in the last 7 days?',
+    },
+    {
+        icon: PiggyBank,
+        label: 'Best rental yield districts for commercial',
+        query: 'What is the estimated rental yield per district for commercial property?',
     },
 ];
 
