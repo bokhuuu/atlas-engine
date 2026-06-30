@@ -23,7 +23,7 @@ class DetectPriceChangeStage
         private readonly ListingRepository $listingRepository,
     ) {}
 
-    public function handle(ListingDTO $dto, \Closure $next): mixed
+    public function handle(ListingDTO $dto): ListingDTO
     {
         $existing = $this->listingRepository->findByExternalId(
             $dto->externalId,
@@ -41,6 +41,6 @@ class DetectPriceChangeStage
             $dto->priceChangedAt = now();
         }
 
-        return $next($dto);
+        return $dto;
     }
 }
