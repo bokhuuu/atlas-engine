@@ -99,7 +99,7 @@ class ScraperRunRepository
      */
     public function findLatest(string $source): ?ScraperRun
     {
-        return ScraperRun::where('source', $source)->latest()->first();
+        return ScraperRun::where('source', $source)->latest('started_at')->first();
     }
 
     /**
