@@ -49,6 +49,10 @@ class Listing extends Model
 
         'listing_date',
         'scraped_at',
+
+        'previous_price',
+        'price_change_pct',
+        'price_changed_at',
     ];
 
     protected $casts = [
@@ -61,6 +65,9 @@ class Listing extends Model
         'extras' => 'array',
         'listing_date' => 'datetime',
         'scraped_at' => 'datetime',
+        'previous_price' => 'float',
+        'price_change_pct' => 'float',
+        'price_changed_at' => 'datetime',
     ];
 
     /**

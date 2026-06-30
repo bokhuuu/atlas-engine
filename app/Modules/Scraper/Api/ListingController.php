@@ -52,9 +52,11 @@ class ListingController extends Controller
 
         $avgStats = $this->listingRepository->getDistrictPriceStats($source);
         $medianByDistrict = $this->listingRepository->getMedianPricePerSqmByDistrict($source);
+        $reductions = $this->listingRepository->getDistrictPriceReductions($source);
 
-        $merged = $avgStats->map(function ($row) use ($medianByDistrict) {
+        $merged = $avgStats->map(function ($row) use ($medianByDistrict, $reductions) {
             $row->median_price_per_sqm = $medianByDistrict->get($row->district)?->median_price_per_sqm;
+            $row->price_reductions = (int) ($reductions->get($row->district)?->reduction_count ?? 0);
 
             return $row;
         });

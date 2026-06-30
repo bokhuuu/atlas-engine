@@ -425,4 +425,15 @@ return [
     | unreliable figure based on too few data points.
     */
     'yield_min_listings' => env('SCRAPER_YIELD_MIN_LISTINGS', 5),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Price Change Detection Window
+    |--------------------------------------------------------------------------
+    | Number of days to look back when counting price reductions per district
+    | on the Market Stats page. Listings with a price drop detected within
+    | this window are counted as "recent reductions".
+    | Override via .env to tune per environment without touching code.
+    */
+    'price_change_window_days' => env('SCRAPER_PRICE_CHANGE_WINDOW_DAYS', 7),
 ];

@@ -162,6 +162,98 @@ class PropertyAssistantAgent extends Agent
         }
     }
 
+    #[Tool('Get districts with recent price reductions for a category. Use when the user asks which areas have sellers dropping prices, or where prices are falling. Returns districts with reduction counts in the last 7 days.')]
+    public function getPriceChanges(string $source): string
+    {
+        $labels = CategoryLabels::all();
+
+        if (! array_key_exists($source, $labels)) {
+            return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
+        }
+
+        $repo = app(ListingRepository::class);
+        $reductions = $repo->getDistrictPriceReductions($source);
+
+        if ($reductions->isEmpty()) {
+            return json_encode([
+                'category' => $labels[$source],
+                'message' => 'No price reductions detected in the last 7 days for this category.',
+            ]);
+        }
+
+        $rows = $reductions->map(fn ($r) => [
+            'district' => $r->district,
+            'reduction_count' => $r->reduction_count,
+        ])->sortByDesc('reduction_count')->values();
+
+        return json_encode([
+            'category' => $labels[$source],
+            'currency' => 'USD',
+            'window' => '7 days',
+            'districts' => $rows,
+        ]);
+    }
+
+    #[Tool('Get estimated rental yield per district for residential or commercial property. Use when the user asks about return on investment, rental yield, or income potential. Only available for apartments (residential) and commercial categories.')]
+    public function getYieldEstimate(string $pair = 'residential'): string
+    {
+        $repo = app(ListingRepository::class);
+
+        [$saleSource, $rentSource] = match ($pair) {
+            'commercial' => ['listam_commercial_sale', 'listam_commercial_rent'],
+            default => ['listam_apartments_sale', 'listam_apartments_rent'],
+        };
+
+        $minListings = (int) config('scraper.yield_min_listings', 5);
+        $saleMedians = $repo->getMedianPricePerSqmByDistrict($saleSource);
+        $rentMedians = $repo->getMedianPricePerSqmByDistrict($rentSource);
+        $saleCounts = $repo->getDistrictPriceStats($saleSource)->keyBy('district');
+        $rentCounts = $repo->getDistrictPriceStats($rentSource)->keyBy('district');
+
+        $districts = $saleMedians->keys()->merge($rentMedians->keys())->unique();
+
+        $rows = $districts->map(function (string $district) use (
+            $saleMedians,
+            $rentMedians,
+            $saleCounts,
+            $rentCounts,
+            $minListings
+        ) {
+            $sale = $saleMedians->get($district)?->median_price_per_sqm;
+            $rent = $rentMedians->get($district)?->median_price_per_sqm;
+            $saleCount = (int) ($saleCounts->get($district)?->listing_count ?? 0);
+            $rentCount = (int) ($rentCounts->get($district)?->listing_count ?? 0);
+
+            $yield = ($sale && $rent && (float) $sale > 0
+                && $saleCount >= $minListings && $rentCount >= $minListings)
+                ? round(((float) $rent * 12) / (float) $sale * 100, 2)
+                : null;
+
+            return [
+                'district' => $district,
+                'sale_median' => $sale ? round((float) $sale, 2) : null,
+                'rent_median' => $rent ? round((float) $rent, 2) : null,
+                'yield_pct' => $yield,
+            ];
+        })->filter(fn ($r) => $r['yield_pct'] !== null)
+            ->sortByDesc('yield_pct')
+            ->values();
+
+        if ($rows->isEmpty()) {
+            return json_encode([
+                'pair' => $pair,
+                'message' => 'Not enough data in both sale and rent categories to calculate yield. Need at least '.$minListings.' listings per district on each side.',
+            ]);
+        }
+
+        return json_encode([
+            'pair' => $pair,
+            'currency' => 'USD',
+            'note' => 'Gross yield estimate based on median prices. Professional adjustment required for vacancy, maintenance and taxes.',
+            'districts' => $rows,
+        ]);
+    }
+
     private function defaultSystemPrompt(): string
     {
         return <<<'PROMPT'
@@ -177,6 +269,8 @@ Rules you must follow without exception:
 - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
 - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
 - When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
+- When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
+- When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 

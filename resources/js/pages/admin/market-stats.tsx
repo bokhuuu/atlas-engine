@@ -23,6 +23,7 @@ interface DistrictRow {
     listing_count: number;
     avg_price_per_sqm: number | null;
     median_price_per_sqm: number | null;
+    price_reductions: number;
 }
 
 interface YieldRow {
@@ -242,6 +243,9 @@ export default function MarketStats({ categories }: Props) {
                                     <th className="px-4 py-2">
                                         Median Price/sqm
                                     </th>
+                                    <th className="px-4 py-2">
+                                        Price Reductions
+                                    </th>
                                     {showYield && (
                                         <th className="px-4 py-2">
                                             Est. Yield/yr{' '}
@@ -273,6 +277,17 @@ export default function MarketStats({ categories }: Props) {
                                             {row.median_price_per_sqm !== null
                                                 ? `$${Math.round(row.median_price_per_sqm).toLocaleString()}`
                                                 : '—'}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            {row.price_reductions > 0 ? (
+                                                <span className="text-red-400">
+                                                    {row.price_reductions} ↓
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
                                         </td>
                                         {showYield && (
                                             <td className="px-4 py-2 font-medium text-blue-700">

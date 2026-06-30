@@ -54,6 +54,10 @@ final class ListingDTO
 
         public ?Carbon $listingDate,
         public Carbon $scrapedAt,
+
+        public ?float $previousPrice = null,
+        public ?float $priceChangePct = null,
+        public ?Carbon $priceChangedAt = null,
     ) {}
 
     /**
@@ -148,6 +152,10 @@ final class ListingDTO
 
             'listing_date' => $this->listingDate?->toDateTimeString(),
             'scraped_at' => $this->scrapedAt->toDateTimeString(),
+
+            'previous_price' => $this->previousPrice,
+            'price_change_pct' => $this->priceChangePct,
+            'price_changed_at' => $this->priceChangedAt?->toDateTimeString(),
         ];
     }
 

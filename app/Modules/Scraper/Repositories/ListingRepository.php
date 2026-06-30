@@ -68,6 +68,19 @@ class ListingRepository
     }
 
     /**
+     * Find an existing listing by its external ID and source.
+     *
+     * Used by DetectPriceChangeStage to retrieve the current price
+     * before a re-scrape overwrites it. Returns null for new listings.
+     */
+    public function findByExternalId(string $externalId, string $source): ?Listing
+    {
+        return Listing::where('external_id', $externalId)
+            ->where('source_profile_name', $source)
+            ->first();
+    }
+
+    /**
      * Retrieve all active listings for a given source.
      */
     public function findBySource(string $source): Collection
@@ -278,6 +291,28 @@ class ListingRepository
                 ->orderByDesc('avg_price_per_sqm')
                 ->get();
         });
+    }
+
+    /**
+     * Count listings with a price reduction per district for a given source.
+     * Only counts listings where price_change_pct is negative (price dropped)
+     * and price_changed_at is within the last 7 days.
+     */
+    public function getDistrictPriceReductions(string $source): Collection
+    {
+        $days = (int) config('scraper.price_change_window_days', 7);
+
+        return collect(
+            DB::table('listings')
+                ->where('source_profile_name', $source)
+                ->whereNotNull('price_change_pct')
+                ->where('price_change_pct', '<', 0)
+                ->where('price_changed_at', '>=', now()->subDays($days))
+                ->whereNotNull('district')
+                ->select('district', DB::raw('COUNT(*) as reduction_count'))
+                ->groupBy('district')
+                ->get()
+        )->keyBy('district');
     }
 
     /**
