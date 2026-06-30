@@ -80,4 +80,63 @@ class ListingController extends Controller
             'summary' => $summary,
         ]);
     }
+
+    /**
+     * Return estimated rental yield per district for a property pair.
+     *
+     * Pair options: 'residential' (apartments sale vs rent)
+     *               'commercial' (commercial sale vs rent)
+     *
+     * Yield = (rent_median * 12) / sale_median * 100
+     * Only shown for districts where both sale and rent data exist.
+     * Returns null yield for districts missing either side.
+     */
+    public function yield(Request $request): JsonResponse
+    {
+        $pair = $request->query('pair', 'residential');
+
+        [$saleSource, $rentSource] = match ($pair) {
+            'commercial' => ['listam_commercial_sale', 'listam_commercial_rent'],
+            default => ['listam_apartments_sale', 'listam_apartments_rent'],
+        };
+
+        $minListings = (int) config('scraper.yield_min_listings', 5);
+
+        $saleMedians = $this->listingRepository->getMedianPricePerSqmByDistrict($saleSource);
+        $rentMedians = $this->listingRepository->getMedianPricePerSqmByDistrict($rentSource);
+        $saleCounts = $this->listingRepository->getDistrictPriceStats($saleSource)->keyBy('district');
+        $rentCounts = $this->listingRepository->getDistrictPriceStats($rentSource)->keyBy('district');
+
+        $districts = $saleMedians->keys()->merge($rentMedians->keys())->unique();
+
+        $rows = $districts->map(function (string $district) use (
+            $saleMedians,
+            $rentMedians,
+            $saleCounts,
+            $rentCounts,
+            $minListings
+        ) {
+            $sale = $saleMedians->get($district)?->median_price_per_sqm;
+            $rent = $rentMedians->get($district)?->median_price_per_sqm;
+            $saleCount = (int) ($saleCounts->get($district)?->listing_count ?? 0);
+            $rentCount = (int) ($rentCounts->get($district)?->listing_count ?? 0);
+
+            $yield = ($sale && $rent && (float) $sale > 0
+                && $saleCount >= $minListings && $rentCount >= $minListings)
+                ? round(((float) $rent * 12) / (float) $sale * 100, 2)
+                : null;
+
+            return [
+                'district' => $district,
+                'sale_median' => $sale ? round((float) $sale, 2) : null,
+                'rent_median' => $rent ? round((float) $rent, 2) : null,
+                'yield_pct' => $yield,
+            ];
+        })->values();
+
+        return response()->json([
+            'pair' => $pair,
+            'rows' => $rows,
+        ]);
+    }
 }

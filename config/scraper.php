@@ -414,4 +414,15 @@ return [
         'area_tolerance_percent_strict' => env('DUPLICATE_AREA_TOLERANCE_PERCENT_STRICT', 3.0),
         'price_tolerance_percent_strict' => env('DUPLICATE_PRICE_TOLERANCE_PERCENT_STRICT', 6.0),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Yield Estimate Minimum Listings
+    |--------------------------------------------------------------------------
+    | Minimum number of listings required on both the sale and rent side
+    | of a district before an estimated rental yield is calculated.
+    | Districts below this threshold show — instead of a potentially
+    | unreliable figure based on too few data points.
+    */
+    'yield_min_listings' => env('SCRAPER_YIELD_MIN_LISTINGS', 5),
 ];

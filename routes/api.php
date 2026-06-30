@@ -38,6 +38,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/listings', [ListingController::class, 'index']);
         Route::get('/listings/stats', [ListingController::class, 'stats']);
         Route::get('/listings/summary', [ListingController::class, 'summary']);
+        Route::get('/listings/yield', [ListingController::class, 'yield']);
 
         Route::get('/exports', [ExportController::class, 'downloadAll']);
         Route::get('/exports/{source}', [ExportController::class, 'download']);

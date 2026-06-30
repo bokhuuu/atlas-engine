@@ -242,6 +242,87 @@ summaryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 summary.form = summaryForm
 
-const ListingController = { index, stats, summary }
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+export const yieldMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: yieldMethod.url(options),
+    method: 'get',
+})
+
+yieldMethod.definition = {
+    methods: ["get","head"],
+    url: '/api/v1/listings/yield',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+yieldMethod.url = (options?: RouteQueryOptions) => {
+    return yieldMethod.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+yieldMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: yieldMethod.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+yieldMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: yieldMethod.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+const yieldMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+yieldMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:94
+* @route '/api/v1/listings/yield'
+*/
+yieldMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+yieldMethod.form = yieldMethodForm
+
+const ListingController = { index, stats, summary, yieldMethod, yield: yieldMethod }
 
 export default ListingController

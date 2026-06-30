@@ -25,6 +25,13 @@ interface DistrictRow {
     median_price_per_sqm: number | null;
 }
 
+interface YieldRow {
+    district: string;
+    sale_median: number | null;
+    rent_median: number | null;
+    yield_pct: number | null;
+}
+
 interface Props {
     categories: Category[];
 }
@@ -75,6 +82,7 @@ export default function MarketStats({ categories }: Props) {
     const [errorSource, setErrorSource] = useState<string | null>(null);
     const [summary, setSummary] = useState<string | null>(null);
     const [summarySource, setSummarySource] = useState<string>('');
+    const [yieldData, setYieldData] = useState<Record<string, YieldRow>>({});
 
     useEffect(() => {
         if (!selectedSource) {
@@ -131,8 +139,42 @@ export default function MarketStats({ categories }: Props) {
         };
     }, [selectedSource]);
 
+    useEffect(() => {
+        const pair =
+            selectedSource === 'listam_commercial_sale' ? 'commercial' : null;
+
+        let active = true;
+
+        if (pair) {
+            fetchJson<{ pair: string; rows: YieldRow[] }>(
+                `/api/v1/listings/yield?pair=${pair}`,
+            )
+                .then((res) => {
+                    if (active) {
+                        const map: Record<string, YieldRow> = {};
+
+                        res.rows.forEach((r) => {
+                            map[r.district] = r;
+                        });
+
+                        setYieldData(map);
+                    }
+                })
+                .catch(() => {
+                    if (active) {
+                        setYieldData({});
+                    }
+                });
+        }
+
+        return () => {
+            active = false;
+        };
+    }, [selectedSource]);
+
     const error = errorSource === selectedSource;
     const rows = result?.source === selectedSource ? result.rows : null;
+    const showYield = selectedSource === 'listam_commercial_sale';
 
     const sortedRows = rows
         ? [...rows].sort(
@@ -200,6 +242,14 @@ export default function MarketStats({ categories }: Props) {
                                     <th className="px-4 py-2">
                                         Median Price/sqm
                                     </th>
+                                    {showYield && (
+                                        <th className="px-4 py-2">
+                                            Est. Yield/yr{' '}
+                                            <span className="text-[10px] font-normal text-muted-foreground/60">
+                                                (rent ÷ sale)
+                                            </span>
+                                        </th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
@@ -224,6 +274,14 @@ export default function MarketStats({ categories }: Props) {
                                                 ? `$${Math.round(row.median_price_per_sqm).toLocaleString()}`
                                                 : '—'}
                                         </td>
+                                        {showYield && (
+                                            <td className="px-4 py-2 font-medium text-blue-700">
+                                                {yieldData[row.district]
+                                                    ?.yield_pct != null
+                                                    ? `${yieldData[row.district].yield_pct}%`
+                                                    : '—'}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
