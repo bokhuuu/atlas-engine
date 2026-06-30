@@ -8,12 +8,12 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 
 ## What's Live
 
-| Screen                     | URL                   | Description                                                                                                                                                           |
-| -------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Screen 0 - Public Snapshot | `/`                   | Public market snapshot. No login. 7 category cards with median price/sqm, listing counts, animated count-up, live badge.                                              |
-| Screen 1 - Dashboard       | `/admin/dashboard`    | Scraper control panel. Start/stop scrapes, live status, listing volume trend chart, Excel exports.                                                                    |
-| Screen 1 - Market Stats    | `/admin/market-stats` | District-level price breakdown by category. Median + average price/sqm, heat-shaded ranking, AI market summary.                                                       |
-| Screen 3 - AI Assistant    | `/admin/assistant`    | Chat interface powered by Claude Haiku. 5 callable tools: category stats, district breakdown, comparable-listing finder, Excel export. Per-user conversation history. |
+| Screen                     | URL                   | Description                                                                                                                                                                                                          |
+| -------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Screen 0 - Public Snapshot | `/`                   | Public market snapshot. No login. 7 category cards with median price/sqm, listing counts, animated count-up, live badge.                                                                                             |
+| Screen 1 - Dashboard       | `/admin/dashboard`    | Scraper control panel. Start/stop scrapes, live status, listing volume trend chart, Excel exports.                                                                                                                   |
+| Screen 1 - Market Stats    | `/admin/market-stats` | District-level price breakdown by category. Median + average price/sqm, heat-shaded ranking, price reductions, commercial rental yield, AI market summary.                                                           |
+| Screen 3 - AI Assistant    | `/admin/assistant`    | Chat interface powered by Claude Haiku. 7 callable tools: category stats, district breakdown, comparable-listing finder, Excel export, price change detection, rental yield estimate. Per-user conversation history. |
 
 ---
 
@@ -81,11 +81,12 @@ GET  /api/v1/public/snapshot              - public market snapshot (no auth)
 GET  /api/v1/scrape/status-all            - live status for all 7 categories
 POST /api/v1/scrape/start-all             - start scraping all categories
 GET  /api/v1/scrape/trend?source=...      - listing volume over time
-GET  /api/v1/listings/stats?source=...    - district price breakdown
+GET  /api/v1/listings/stats?source=...    - district price breakdown with price reductions
 GET  /api/v1/listings/summary?source=...  - AI market summary
+GET  /api/v1/listings/yield?pair=...      - rental yield estimate per district (residential|commercial)
 GET  /api/v1/exports/{source}             - Excel export, one category
 GET  /api/v1/exports                      - Excel exports, all categories (zip)
-POST /api/v1/ai/chat                      - AI assistant chat
+POST /api/v1/ai/chat                      - AI assistant chat (7 tools)
 ```
 
 ---

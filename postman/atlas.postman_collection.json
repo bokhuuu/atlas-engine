@@ -245,7 +245,7 @@
                                 { "key": "source", "value": "{{source}}" }
                             ]
                         },
-                        "description": "Returns a time-series of completed scrape runs for one category. Each point includes new_listings (that run) and cumulative_listings (running total). Powers the trend chart on the dashboard."
+                        "description": "Returns a time-series of completed scrape runs for one category grouped by date. Each point includes new_listings (added that day) and cumulative_listings (running total). Powers the trend chart on the dashboard."
                     },
                     "response": [
                         {
@@ -401,14 +401,14 @@
                                 { "key": "source", "value": "{{source}}" }
                             ]
                         },
-                        "description": "Returns average and median price/sqm per district for a category. Powers the Market Stats page. Results cached 1 hour."
+                        "description": "Returns average and median price/sqm per district for a category, plus price reduction count per district in the last 7 days. Powers the Market Stats page. Results cached 1 hour."
                     },
                     "response": [
                         {
                             "name": "200 OK",
                             "status": "OK",
                             "code": 200,
-                            "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"data\": [\n    {\n      \"district\": \"Kentron\",\n      \"listing_count\": 128,\n      \"avg_price_per_sqm\": 3467,\n      \"median_price_per_sqm\": 3163\n    }\n  ]\n}"
+                            "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"data\": [\n    {\n      \"district\": \"Kentron\",\n      \"listing_count\": 128,\n      \"avg_price_per_sqm\": 3467,\n      \"median_price_per_sqm\": 3163,\n      \"price_reductions\": 3\n    }\n  ]\n}"
                         }
                     ]
                 },
@@ -446,6 +446,45 @@
                             "body": "{\n  \"source\": \"listam_apartments_sale\",\n  \"summary\": \"The Yerevan apartments for sale market currently features 566 listings...\"\n}"
                         }
                     ]
+                },
+                {
+                    "name": "Rental yield estimate",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/listings/yield?pair=commercial",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "listings", "yield"],
+                            "query": [
+                                {
+                                    "key": "pair",
+                                    "value": "commercial",
+                                    "description": "Property pair to calculate yield for. Options: residential (apartments sale vs rent), commercial (commercial sale vs rent)"
+                                }
+                            ]
+                        },
+                        "description": "Returns estimated gross rental yield per district. Yield = (rent_median * 12) / sale_median * 100. Only shown for districts with at least 5 listings on both the sale and rent side. Currently shown on Market Stats for Commercial for Sale only."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"pair\": \"commercial\",\n  \"currency\": \"USD\",\n  \"note\": \"Gross yield estimate based on median prices. Professional adjustment required for vacancy, maintenance and taxes.\",\n  \"rows\": [\n    {\n      \"district\": \"Erebuni\",\n      \"sale_median\": 986.84,\n      \"rent_median\": 14.66,\n      \"yield_pct\": 17.83\n    },\n    {\n      \"district\": \"Kentron\",\n      \"sale_median\": 3920.60,\n      \"rent_median\": 27.60,\n      \"yield_pct\": 8.45\n    }\n  ]\n}"
+                        }
+                    ]
                 }
             ]
         },
@@ -469,7 +508,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "exports", "{{source}}"]
                         },
-                        "description": "Download an Excel export for one category. Returns the .xlsx file directly. Generates from the current full DB dataset, not scoped to any single run."
+                        "description": "Download an Excel export for one category. Returns the .xlsx file directly. Generates from the current full DB dataset, not scoped to any single run. Apartments and Rentals include a 5-sheet market report; other categories include a single raw listings sheet."
                     }
                 },
                 {
@@ -495,7 +534,7 @@
         },
         {
             "name": "AI Assistant",
-            "description": "Chat with the AI assistant and manage feedback.",
+            "description": "Chat with the AI assistant and manage feedback. The agent has access to 7 tools: category list, category stats, district breakdown, comparable listing finder, Excel export, price change detection, and rental yield estimate.",
             "item": [
                 {
                     "name": "AI health check",
@@ -551,7 +590,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "ai", "chat"]
                         },
-                        "description": "Send a message to the AI assistant. The agent has access to 5 tools: category list, category stats, district breakdown, comparable listing finder and Excel export. Conversation history is persisted per user in Redis."
+                        "description": "Send a message to the AI assistant. The agent has 7 callable tools and answers only from real scraped data. Conversation history is persisted per user in Redis."
                     },
                     "response": [
                         {
