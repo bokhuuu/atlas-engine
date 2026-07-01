@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -48,6 +49,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->isProduction()) {
+            URL::forceScheme('https');
+            request()->server->set('HTTPS', 'on');
+        }
+
         $this->configureDefaults();
 
         Model::preventLazyLoading(! app()->isProduction());
@@ -58,8 +64,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(ScrapeCompleted::class, TriggerScrapeExport::class);
         Event::listen(ScrapeFailed::class, SendScrapeFailedNotification::class);
 
-        RateLimiter::for('api.global', fn () => Limit::perMinute(config('scraper.api_rate_limit', 60)));
-        RateLimiter::for('api.per_token', fn (Request $request) => Limit::perMinute(config('scraper.api_per_token_limit', 30))->by($request->user()?->id ?: $request->ip()));
+        RateLimiter::for('api.global', fn() => Limit::perMinute(config('scraper.api_rate_limit', 60)));
+        RateLimiter::for('api.per_token', fn(Request $request) => Limit::perMinute(config('scraper.api_per_token_limit', 30))->by($request->user()?->id ?: $request->ip()));
 
         Event::listen(AiCallCompleted::class, UsageTrackingListener::class);
         Event::listen(AiCallCompleted::class, CostAlertListener::class);
@@ -79,13 +85,13 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Password::defaults(
-            fn (): ?Password => app()->isProduction()
+            fn(): ?Password => app()->isProduction()
                 ? Password::min(12)
-                    ->mixedCase()
-                    ->letters()
-                    ->numbers()
-                    ->symbols()
-                    ->uncompromised()
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised()
                 : null,
         );
     }
