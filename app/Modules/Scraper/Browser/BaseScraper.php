@@ -41,7 +41,9 @@ abstract class BaseScraper
         protected readonly ProxyResolver $proxyResolver,
         ?Browser $browser = null,
     ) {
-        $this->browser = $browser ?? $this->createBrowser();
+        if ($browser !== null) {
+            $this->browser = $browser;
+        }
     }
 
     /**
@@ -140,7 +142,10 @@ abstract class BaseScraper
      */
     public function closeBrowser(): void
     {
-        $this->browser->quit();
+        if (isset($this->browser)) {
+            $this->browser->quit();
+            unset($this->browser);
+        }
     }
 
     /**
@@ -164,7 +169,7 @@ abstract class BaseScraper
      */
     protected function navigate(string $url): void
     {
-        $this->browser->visit($url);
+        $this->getBrowser()->visit($url);
         $this->pauseForHuman();
     }
 
@@ -173,7 +178,7 @@ abstract class BaseScraper
      */
     protected function getText(string $selector): string
     {
-        return $this->browser->text($selector);
+        return $this->getBrowser()->text($selector);
     }
 
     /**
@@ -181,7 +186,7 @@ abstract class BaseScraper
      */
     protected function getAttribute(string $selector, string $attribute): string
     {
-        return $this->browser->attribute($selector, $attribute);
+        return $this->getBrowser()->attribute($selector, $attribute);
     }
 
     /**
@@ -190,7 +195,7 @@ abstract class BaseScraper
      */
     protected function click(string $selector): void
     {
-        $this->browser->click($selector);
+        $this->getBrowser()->click($selector);
     }
 
     /**
@@ -199,7 +204,7 @@ abstract class BaseScraper
      */
     protected function waitFor(string $selector, ?int $seconds = null): void
     {
-        $this->browser->waitFor(
+        $this->getBrowser()->waitFor(
             selector: $selector,
             seconds: $seconds ?? config('scraper.element_wait_timeout_s'),
         );
@@ -210,7 +215,7 @@ abstract class BaseScraper
      */
     protected function waitForText(string $text, ?int $seconds = null): void
     {
-        $this->browser->waitForText(
+        $this->getBrowser()->waitForText(
             text: $text,
             seconds: $seconds ?? config('scraper.element_wait_timeout_s'),
         );
@@ -222,7 +227,7 @@ abstract class BaseScraper
      */
     protected function isPresent(string $selector): bool
     {
-        return $this->browser->element($selector) !== null;
+        return $this->getBrowser()->element($selector) !== null;
     }
 
     /**
@@ -231,7 +236,7 @@ abstract class BaseScraper
      */
     protected function getPageSource(): string
     {
-        return $this->browser->driver->getPageSource();
+        return $this->getBrowser()->driver->getPageSource();
     }
 
     /**
@@ -324,6 +329,10 @@ abstract class BaseScraper
      */
     public function getBrowser(): Browser
     {
+        if (! isset($this->browser)) {
+            $this->browser = $this->createBrowser();
+        }
+
         return $this->browser;
     }
 
