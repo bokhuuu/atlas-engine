@@ -72,8 +72,8 @@ export default function TrashedUsers({ users }: Props) {
                         No trashed users found.
                     </div>
                 ) : (
-                    <div className="rounded-lg border">
-                        <table className="w-full text-sm">
+                    <div className="overflow-x-auto rounded-lg border">
+                        <table className="w-full min-w-150 text-sm">
                             <thead>
                                 <tr className="border-b bg-muted/50">
                                     <th className="px-4 py-3 text-left font-medium">

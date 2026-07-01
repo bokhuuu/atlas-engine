@@ -4,6 +4,8 @@ Atlas scrapes Armenian real estate listings from list.am, cleans the data automa
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
+**Production:** `https://45-32-154-101.nip.io`
+
 ---
 
 ## What's Live
@@ -29,7 +31,7 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 | Scraping   | Laravel Dusk + ChromeDriver (real headless browser - list.am is JS-rendered)                  |
 | Queue      | Redis + Laravel Horizon                                                                       |
 | Monitoring | Sentry                                                                                        |
-| DevOps     | Docker, GitHub Actions (CI)                                                                   |
+| DevOps     | Docker, Caddy (HTTPS), Vultr VPS                                                              |
 
 ---
 
@@ -45,10 +47,25 @@ Then visit `http://localhost:8080`.
 
 The setup script handles environment file creation, app key generation, migrations, database seeding, and storage linking in one pass.
 
-**Default credentials** (change before any client-facing use):
+**Default credentials (change before any client-facing use):**
 
 - Email: `zura.coding@gmail.com`
 - Password: `zura1234`
+
+---
+
+## Production Deploy
+
+After every `git push`, SSH into the server and run:
+
+```bash
+cd /var/www/atlas
+bash scripts/deploy.sh
+```
+
+This handles: git pull, composer install, migrations, permissions, cache rebuild, horizon restart.
+
+**Do not run while a scrape is in progress** — deploy restarts Horizon and kills running jobs.
 
 ---
 
