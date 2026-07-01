@@ -197,7 +197,7 @@ class ListingRepository
             $result = DB::select($sql, [$source]);
 
             return $result[0]->median !== null
-                ? round((float) $result[0]->median, 2)
+                ? (float) round((float) $result[0]->median, 2)
                 : null;
         });
     }
