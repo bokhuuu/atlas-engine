@@ -171,7 +171,7 @@ class ListingRepository
     {
         $key = "scraper:stats:median_price:{$source}";
 
-        return Cache::remember($key, now()->addHour(), function () use ($source) {
+        $value = Cache::remember($key, now()->addHour(), function () use ($source) {
             $sql = <<<'SQL'
             WITH deduplicated AS (
                 SELECT
@@ -197,9 +197,11 @@ class ListingRepository
             $result = DB::select($sql, [$source]);
 
             return $result[0]->median !== null
-                ? (float) round((float) $result[0]->median, 2)
+                ? round((float) $result[0]->median, 2)
                 : null;
         });
+
+        return $value !== null ? (float) $value : null;
     }
 
     /**
