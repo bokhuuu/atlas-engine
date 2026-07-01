@@ -32,4 +32,4 @@ _ide_helper_models.php
 .phpstorm.meta.php
 
 /storage/app/scraper/cookies/
-/storage/app/exports/
+/storage/app/exports/atlas_data.sql
