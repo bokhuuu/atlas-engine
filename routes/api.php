@@ -21,7 +21,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::get('/health', HealthController::class);
 
-    Route::prefix('public')->group(function () {
+    Route::prefix('public')->middleware('throttle:60,1')->group(function () {
         Route::get('/snapshot', SnapshotController::class);
     });
 
