@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Jobs;
 
 use App\Modules\Scraper\DriftDetector;
 use App\Modules\Scraper\Events\ScrapeCompleted;
+use App\Modules\Scraper\Notifications\TelegramNotifier;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Repositories\ScraperRunRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,6 +40,21 @@ class ScrapeCompletedJob implements ShouldQueue
         $savedCount = $listingRepository->countByRun($this->scraperRunId);
         $run = $runRepository->findById($this->scraperRunId);
         $encounteredCount = $run->encountered_listings ?? 0;
+
+        if ($encounteredCount === 0 && $savedCount === 0) {
+            try {
+                app(TelegramNotifier::class)->notify([
+                    'source' => $this->source,
+                    'status' => '⚠️ Chrome failure suspected',
+                    'error' => 'Both encountered and saved listings are 0. Chrome may have failed to load pages.',
+                ]);
+            } catch (Throwable $e) {
+                Log::warning('ScrapeCompletedJob: failed to send Chrome failure alert', [
+                    'error' => $e->getMessage(),
+                    'run_id' => $this->scraperRunId,
+                ]);
+            }
+        }
 
         $runRepository->markAsCompleted(id: $this->scraperRunId, savedListings: $savedCount, scrapedPages: $this->scrapedPages);
 
