@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libjpeg-dev \
     libwebp-dev \
+    libpq-dev \
     zip \
     unzip \
     && apt-get clean \
@@ -19,7 +20,8 @@ RUN apt-get update && apt-get install -y \
 # GD is configured separately to enable JPEG and WebP support
 RUN docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install \
-    pdo_mysql \
+    pdo_pgsql \
+    pgsql \
     mbstring \
     exif \
     pcntl \
