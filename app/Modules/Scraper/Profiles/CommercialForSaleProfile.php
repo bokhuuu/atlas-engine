@@ -6,7 +6,7 @@ namespace App\Modules\Scraper\Profiles;
 
 /**
  * Commercial Real Estate for Sale - list.am category 199.
- * The core Colliers-relevant asset class.
+ * The core commercial asset class
  */
 class CommercialForSaleProfile extends AbstractListAmProfile
 {

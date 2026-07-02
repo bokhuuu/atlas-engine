@@ -6,7 +6,7 @@ namespace App\Modules\Scraper\Profiles;
 
 /**
  * Houses for Sale - list.am category 1386.
- * Colliers' residential sector coverage.
+ * Residential sector coverage
  */
 class HousesForSaleProfile extends AbstractListAmProfile
 {

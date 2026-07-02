@@ -6,7 +6,7 @@ namespace App\Modules\Scraper\Profiles;
 
 /**
  * Land for Sale - list.am category 55.
- * Feeds feasibility studies - a real Colliers service line.
+ * Feeds feasibility studies - a core service line
  */
 class LandForSaleProfile extends AbstractListAmProfile
 {

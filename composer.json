@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "colliers/atlas",
     "type": "project",
-    "description": "Colliers Yerevan Market Intelligence Platform",
+    "description": "Yerevan Real Estate Market Intelligence Platform",
     "keywords": [
         "laravel",
         "framework"

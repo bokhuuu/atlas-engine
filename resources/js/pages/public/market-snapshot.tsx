@@ -532,7 +532,7 @@ export default function MarketSnapshot() {
                             }}
                         >
                             {siteSettings.site_description ||
-                                'Live median pricing and active inventory across seven asset classes — the market view behind Colliers Armenia.'}
+                                'Live median pricing and active inventory across seven asset classes — the market view behind Atlas.'}
                         </p>
 
                         <div
@@ -854,7 +854,7 @@ export default function MarketSnapshot() {
                         Powered by live{' '}
                         <span style={{ color: '#9aa1ad' }}>list.am</span> data
                     </span>
-                    <span>© 2026 Colliers International · Yerevan</span>
+                    <span>© 2026 Atlas · Yerevan</span>
                 </div>
             </div>
         </>

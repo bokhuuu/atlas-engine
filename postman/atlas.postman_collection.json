@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Atlas API - Yerevan Real Estate Intelligence",
-        "description": "REST API for Atlas, the Yerevan real estate market intelligence platform built for Colliers International.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Create an API token at /admin/tokens\n3. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}",
+        "description": "REST API for Atlas, built for the Yerevan real estate market intelligence platform.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Create an API token at /admin/tokens\n3. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [

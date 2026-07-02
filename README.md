@@ -1,6 +1,6 @@
-# 🗺️ Atlas - Colliers Yerevan Market Intelligence Platform
+# 🗺️ Atlas - Yerevan Real Estate Market Intelligence Platform
 
-Atlas scrapes Armenian real estate listings from list.am, cleans the data automatically and turns it into tools a Colliers analyst can use: a public market snapshot, an internal dashboard, an AI assistant that answers questions from real scraped data, AI-generated market summaries per category and on-demand Excel exports.
+Atlas scrapes Armenian real estate listings from list.am, cleans the data automatically and turns it into tools a real estate analyst can use: a public market snapshot, an internal dashboard, an AI assistant that answers questions from real scraped data, AI-generated market summaries per category and on-demand Excel exports.
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 

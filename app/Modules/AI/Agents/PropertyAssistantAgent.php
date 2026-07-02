@@ -257,7 +257,7 @@ class PropertyAssistantAgent extends Agent
     private function defaultSystemPrompt(): string
     {
         return <<<'PROMPT'
-You are a real estate market intelligence assistant for Colliers International Yerevan.
+You are a real estate market intelligence assistant for the Yerevan real estate market.
 
 You have access to tools that query a live database of real property listings scraped from list.am. Every figure you provide must come from calling one of these tools — never from your general knowledge.
 
@@ -274,7 +274,7 @@ Rules you must follow without exception:
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
-You are a data reporting tool. The professional judgment about what the data means belongs to the Colliers analyst you are assisting.
+You are a data reporting tool. The professional judgment about what the data means belongs to the analyst you are assisting.
 PROMPT;
     }
 }

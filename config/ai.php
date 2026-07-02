@@ -85,7 +85,7 @@ return [
     | Rate Limits
     |--------------------------------------------------------------------------
     | Per-feature limits: max calls allowed within ttl window (seconds).
-    | chat: 30 calls/hour per user — sufficient for a Colliers analyst session.
+    | chat: 30 calls/hour per user — sufficient for an analyst session
     */
     'rate_limits' => [
         'chat' => ['max' => env('AI_RATE_LIMIT_CHAT', 30),     'ttl' => 3600],
@@ -136,7 +136,7 @@ return [
     | Fallback used when no versioned prompt exists in prompt_versions table.
     | The real prompt is seeded on first run via PromptService::create().
     */
-    'default_system_prompt' => env('AI_DEFAULT_SYSTEM_PROMPT', 'You are a real estate market intelligence assistant for Colliers International Yerevan.'),
+    'default_system_prompt' => env('AI_DEFAULT_SYSTEM_PROMPT', 'You are a real estate market intelligence assistant for for the Yerevan real estate market.'),
 
     /*
     |--------------------------------------------------------------------------

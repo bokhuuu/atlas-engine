@@ -68,7 +68,7 @@ class MarketSummaryService
         })->implode("\n");
 
         $prompt = <<<PROMPT
-You are a real estate market analyst writing a concise market briefing for Colliers International.
+You are a real estate market analyst writing a concise market briefing for the Yerevan market.
 
 Write exactly one paragraph (4-6 sentences) summarizing the current state of the {$label} market in Yerevan, Armenia based on the following scraped data from list.am:
 

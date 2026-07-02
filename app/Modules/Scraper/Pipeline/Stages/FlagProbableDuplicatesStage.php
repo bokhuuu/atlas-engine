@@ -18,7 +18,7 @@ use App\Modules\Scraper\Repositories\ListingRepository;
  * same real apartment have different external_ids and pass straight
  * through DeduplicateStage untouched.
  *
- * Rule-based by design, not AI-based - explainable to Colliers and
+ * Rule-based by design, not AI-based - explainable to clients and
  * costs nothing in AI token budget. Thresholds confirmed against real
  * scraped data, not picked arbitrarily - see ATLAS.md.
  *
