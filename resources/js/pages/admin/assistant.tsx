@@ -15,7 +15,6 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useAuth } from '@/hooks/use-auth';
 import AppLayout from '@/layouts/app-layout';
 import { postJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
@@ -74,30 +73,11 @@ const SUGGESTED_QUERIES = [
 ];
 
 export default function Assistant() {
-    const { user } = useAuth();
-    const SESSION_KEY = `atlas_chat_messages_${user.id}`;
-    const FEEDBACK_KEY = `atlas_chat_feedback_${user.id}`;
-
-    const [messages, setMessages] = useState<Message[]>(() => {
-        try {
-            const saved = sessionStorage.getItem(SESSION_KEY);
-
-            return saved ? (JSON.parse(saved) as Message[]) : [];
-        } catch {
-            return [];
-        }
-    });
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [feedback, setFeedback] = useState<FeedbackState>({});
     const [input, setInput] = useState('');
     const [streaming, setStreaming] = useState(false);
-    const [feedback, setFeedback] = useState<FeedbackState>(() => {
-        try {
-            const saved = sessionStorage.getItem(FEEDBACK_KEY);
 
-            return saved ? (JSON.parse(saved) as FeedbackState) : {};
-        } catch {
-            return {};
-        }
-    });
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -106,22 +86,30 @@ export default function Assistant() {
     }, [messages]);
 
     useEffect(() => {
-        try {
-            const toSave = messages.filter((m) => !m.streaming);
-
-            sessionStorage.setItem(SESSION_KEY, JSON.stringify(toSave));
-        } catch {
-            // sessionStorage unavailable
-        }
-    }, [messages, SESSION_KEY]);
-
-    useEffect(() => {
-        try {
-            sessionStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
-        } catch {
-            // sessionStorage unavailable
-        }
-    }, [feedback, FEEDBACK_KEY]);
+        fetch('/api/v1/ai/history', {
+            headers: {
+                Accept: 'application/json',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
+                ),
+            },
+        })
+            .then((r) => r.json())
+            .then((data) => {
+                if (Array.isArray(data.messages) && data.messages.length > 0) {
+                    setMessages(
+                        data.messages.map(
+                            (m: { role: string; content: string }) => ({
+                                id: crypto.randomUUID(),
+                                role: m.role as 'user' | 'assistant',
+                                content: m.content,
+                            }),
+                        ),
+                    );
+                }
+            })
+            .catch(() => {});
+    }, []);
 
     const sendMessage = async (text: string) => {
         if (!text.trim() || streaming) {

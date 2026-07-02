@@ -46,6 +46,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/ai/health', [HealthCheckController::class, 'check']);
         Route::post('/ai/feedback', [FeedbackController::class, 'store']);
 
+        Route::get('/ai/history', [ChatController::class, 'history']);
         Route::post('/ai/chat', [ChatController::class, 'chat']);
     });
 
