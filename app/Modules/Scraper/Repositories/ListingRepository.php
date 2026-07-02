@@ -162,10 +162,10 @@ class ListingRepository
      * found to sit well above real Yerevan market reports, traced to
      * exactly this kind of extreme-but-real listing, not a scraping bug.
      *
-     * MySQL 8.0 has no MEDIAN() function, so this is computed manually:
-     * dedup groups are ranked by price, then the middle-ranked row (or
-     * the average of the two middle rows, if the count is even) is
-     * selected. Cached for 1 hour, same pattern as getDistrictPriceStats().
+     * Uses PostgreSQL's native PERCENTILE_CONT(0.5) ordered-set aggregate,
+     * which computes a true interpolated median in a single pass —
+     * cleaner and faster than the window-function workaround required on MySQL.
+     * Cached for 1 hour, same pattern as getDistrictPriceStats().
      */
     public function getMedianPricePerSqm(string $source): ?float
     {
@@ -173,26 +173,18 @@ class ListingRepository
 
         $value = Cache::remember($key, now()->addHour(), function () use ($source) {
             $sql = <<<'SQL'
-            WITH deduplicated AS (
-                SELECT
-                    COALESCE(duplicate_group_id, id) AS effective_group,
-                    AVG(price_per_sqm) AS group_price_per_sqm
-                FROM listings
-                WHERE source_profile_name = ?
-                    AND price_per_sqm IS NOT NULL
-                GROUP BY effective_group
-            ),
-            ranked AS (
-                SELECT
-                    group_price_per_sqm,
-                    ROW_NUMBER() OVER (ORDER BY group_price_per_sqm) AS rn,
-                    COUNT(*) OVER () AS total
+                WITH deduplicated AS (
+                    SELECT
+                        COALESCE(duplicate_group_id, id) AS effective_group,
+                        AVG(price_per_sqm) AS group_price_per_sqm
+                    FROM listings
+                    WHERE source_profile_name = ?
+                        AND price_per_sqm IS NOT NULL
+                    GROUP BY effective_group
+                )
+                SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY group_price_per_sqm) AS median
                 FROM deduplicated
-            )
-            SELECT AVG(group_price_per_sqm) AS median
-            FROM ranked
-            WHERE rn IN (FLOOR((total + 1) / 2), FLOOR((total + 2) / 2))
-        SQL;
+            SQL;
 
             $result = DB::select($sql, [$source]);
 
@@ -207,11 +199,14 @@ class ListingRepository
     /**
      * Median price per sqm grouped by district for a given source.
      *
-     * Companion to getDistrictPriceStats() (which provides AVG) - same
-     * window-function approach as getMedianPricePerSqm(), partitioned
-     * by district instead of computed citywide. Average alone is fragile
-     * against real-but-extreme listings; with smaller per-district sample
+     * Companion to getDistrictPriceStats() (which provides AVG) — uses
+     * PostgreSQL's native PERCENTILE_CONT(0.5) ordered-set aggregate
+     * partitioned by district. Average alone is fragile against
+     * real-but-extreme listings; with smaller per-district sample
      * sizes, that risk is even larger than the citywide case.
+     *
+     * CAST to numeric required because ROUND() in PostgreSQL only
+     * accepts numeric, not double precision (which PERCENTILE_CONT returns).
      */
     public function getMedianPricePerSqmByDistrict(string $source): Collection
     {
@@ -219,24 +214,23 @@ class ListingRepository
 
         return Cache::remember($key, now()->addHour(), function () use ($source) {
             $sql = <<<'SQL'
-        WITH deduplicated AS (
-            SELECT district, COALESCE(duplicate_group_id, id) AS effective_group,
-                   AVG(price_per_sqm) AS group_price_per_sqm
-            FROM listings
-            WHERE source_profile_name = ? AND district IS NOT NULL AND price_per_sqm IS NOT NULL
-            GROUP BY district, effective_group
-        ),
-        ranked AS (
-            SELECT district, group_price_per_sqm,
-                   ROW_NUMBER() OVER (PARTITION BY district ORDER BY group_price_per_sqm) AS rn,
-                   COUNT(*) OVER (PARTITION BY district) AS total
-            FROM deduplicated
-        )
-        SELECT district, ROUND(AVG(group_price_per_sqm), 2) AS median_price_per_sqm
-        FROM ranked
-        WHERE rn IN (FLOOR((total + 1) / 2), FLOOR((total + 2) / 2))
-        GROUP BY district
-        SQL;
+                WITH deduplicated AS (
+                    SELECT
+                        district,
+                        COALESCE(duplicate_group_id, id) AS effective_group,
+                        AVG(price_per_sqm) AS group_price_per_sqm
+                    FROM listings
+                    WHERE source_profile_name = ?
+                        AND district IS NOT NULL
+                        AND price_per_sqm IS NOT NULL
+                    GROUP BY district, effective_group
+                )
+                SELECT
+                    district,
+                    ROUND(CAST(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY group_price_per_sqm) AS numeric), 2) AS median_price_per_sqm
+                FROM deduplicated
+                GROUP BY district
+            SQL;
 
             return collect(DB::select($sql, [$source]))->keyBy('district');
         });
@@ -288,7 +282,7 @@ class ListingRepository
 
             return DB::query()
                 ->fromSub($deduplicated, 'deduplicated')
-                ->selectRaw('district, ROUND(AVG(group_avg_price_per_sqm), 2) as avg_price_per_sqm, COUNT(*) as listing_count')
+                ->selectRaw('district, ROUND(AVG(group_avg_price_per_sqm)::numeric, 2) as avg_price_per_sqm, COUNT(*) as listing_count')
                 ->groupBy('district')
                 ->orderByDesc('avg_price_per_sqm')
                 ->get();
