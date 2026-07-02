@@ -27,7 +27,7 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 | Frontend   | Inertia.js + React + TypeScript, Tailwind, shadcn/Radix UI                                    |
 | Auth       | Fortify + Sanctum (stateful API for first-party dashboard requests), Spatie roles/permissions |
 | AI         | Prism → OpenRouter, LarAgent agent framework, `anthropic/claude-haiku-4-5` as agent model     |
-| Database   | MySQL 8.0                                                                                     |
+| Database   | PostgreSQL 16                                                                                 |
 | Scraping   | Laravel Dusk + ChromeDriver (real headless browser - list.am is JS-rendered)                  |
 | Queue      | Redis + Laravel Horizon                                                                       |
 | Monitoring | Sentry                                                                                        |
