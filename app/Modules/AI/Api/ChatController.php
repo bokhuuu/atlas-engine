@@ -136,7 +136,8 @@ class ChatController extends Controller
         })
             ->filter()
             ->values()
-            ->takeLast(20);
+            ->slice(-20)
+            ->values();
 
         return response()->json(['messages' => $messages]);
     }
