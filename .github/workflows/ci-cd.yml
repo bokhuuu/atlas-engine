@@ -18,7 +18,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16-alpine
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: atlas_test
           POSTGRES_USER: atlas
@@ -70,6 +70,9 @@ jobs:
 
       - name: Generate app key
         run: php artisan key:generate
+
+      - name: Enable pgvector extension
+        run: psql postgresql://atlas:atlas_test_pass@127.0.0.1:5432/atlas_test -c "CREATE EXTENSION IF NOT EXISTS vector;"
 
       - name: Build frontend assets
         run: npm run build

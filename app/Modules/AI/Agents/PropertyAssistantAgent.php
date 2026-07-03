@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\AI\Agents;
 
+use App\Modules\AI\Models\Document;
+use App\Modules\AI\Services\EmbeddingService;
 use App\Modules\AI\Services\PromptService;
 use App\Modules\Scraper\Exports\ExportManager;
 use App\Modules\Scraper\Repositories\ListingRepository;
@@ -254,27 +256,55 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
+    #[Tool('Search listings by meaning rather than exact keywords. Use when the user describes a property in natural language — e.g. "find apartments that mention renovation" or "listings with mountain view". Returns null if no text data has been indexed for this market yet.')]
+    public function semanticSearch(string $query, ?int $limit = null): string
+    {
+        $service = app(EmbeddingService::class);
+
+        if (! $service->hasDocuments()) {
+            return json_encode([
+                'message' => 'No listing text has been indexed for semantic search yet. Use findComparables for structured search by price, district, and rooms.',
+            ]);
+        }
+
+        $results = $service->search($query, $limit ?? 5);
+
+        if ($results->isEmpty()) {
+            return json_encode(['message' => 'No listings found matching that description.']);
+        }
+
+        return json_encode([
+            'query' => $query,
+            'results' => $results->map(fn (Document $doc) => [
+                'content' => $doc->content,
+                'source_type' => $doc->source_type,
+                'source_id' => $doc->source_id,
+            ])->values(),
+        ]);
+    }
+
     private function defaultSystemPrompt(): string
     {
         return <<<'PROMPT'
-You are a real estate market intelligence assistant for the Yerevan real estate market.
+    You are a real estate market intelligence assistant for the Yerevan real estate market.
 
-You have access to tools that query a live database of real property listings scraped from list.am. Every figure you provide must come from calling one of these tools — never from your general knowledge.
+    You have access to tools that query a live database of real property listings scraped from list.am. Every figure you provide must come from calling one of these tools — never from your general knowledge.
 
-Rules you must follow without exception:
-- Never invent, estimate, or guess a price, count, or market figure.
-- If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
-- Never compare Yerevan data to other cities unless the user provides those figures themselves.
-- Always state which category and district a figure applies to.
-- When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
-- When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
-- When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
-- When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
-- When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
+    Rules you must follow without exception:
+    - Never invent, estimate, or guess a price, count, or market figure.
+    - If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
+    - Never compare Yerevan data to other cities unless the user provides those figures themselves.
+    - Always state which category and district a figure applies to.
+    - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
+    - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
+    - When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
+    - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
+    - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
+    - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
 
-When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
+    When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
-You are a data reporting tool. The professional judgment about what the data means belongs to the analyst you are assisting.
-PROMPT;
+    You are a data reporting tool. The professional judgment about what the data means belongs to the analyst you are assisting.
+    PROMPT;
     }
 }

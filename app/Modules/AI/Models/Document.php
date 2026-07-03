@@ -5,10 +5,19 @@ declare(strict_types=1);
 namespace App\Modules\AI\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Pgvector\Laravel\HasNeighbors;
+use Pgvector\Laravel\Vector;
 
 class Document extends Model
 {
-    protected $fillable = ['content', 'embedding'];
+    use HasNeighbors;
 
-    protected $casts = ['embedding' => 'array'];
+    protected $fillable = [
+        'content',
+        'embedding',
+        'source_type',
+        'source_id',
+    ];
+
+    protected $casts = ['embedding' => Vector::class];
 }

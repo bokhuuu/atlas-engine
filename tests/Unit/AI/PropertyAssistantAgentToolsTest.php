@@ -77,3 +77,11 @@ test('getYieldEstimate returns error gracefully for unknown pair falls back to r
 
     expect($result)->toHaveKey('message');
 });
+
+test('semanticSearch returns no data message when documents table is empty', function () {
+    $agent = makeAgent();
+    $result = json_decode($agent->semanticSearch('apartment with renovation'), true);
+
+    expect($result)->toHaveKey('message')
+        ->and($result['message'])->toContain('No listing text has been indexed');
+});
