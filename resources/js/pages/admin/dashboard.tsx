@@ -184,6 +184,10 @@ export default function Dashboard({
                         <p className="text-xs text-muted-foreground">
                             total listings across all categories
                         </p>
+                        <p className="text-xs text-muted-foreground/60">
+                            new per run excludes duplicates already in the
+                            database
+                        </p>
                     </div>
                 </div>
 
