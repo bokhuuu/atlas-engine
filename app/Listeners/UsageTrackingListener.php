@@ -28,6 +28,7 @@ class UsageTrackingListener
             model: $event->model,
             promptTokens: $event->promptTokens,
             completionTokens: $event->completionTokens,
+            userId: $event->userId,
         );
     }
 }

@@ -24,11 +24,13 @@ class UsageTrackingService
         string $provider,
         string $model,
         int $promptTokens,
-        int $completionTokens
+        int $completionTokens,
+        ?int $userId = null,
     ): AiUsageLog {
         $cost = $this->calculateCost($model, $promptTokens, $completionTokens);
 
         return AiUsageLog::create([
+            'user_id' => $userId,
             'feature' => $feature,
             'provider' => $provider,
             'model' => $model,

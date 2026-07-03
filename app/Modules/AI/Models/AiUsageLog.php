@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class AiUsageLog extends Model
 {
     protected $fillable = [
+        'user_id',
         'feature',
         'provider',
         'model',

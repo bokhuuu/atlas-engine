@@ -7,6 +7,7 @@ namespace App\Modules\AI\Api;
 use App\Events\AiCallCompleted;
 use App\Http\Controllers\Controller;
 use App\Modules\AI\Agents\PropertyAssistantAgent;
+use App\Modules\AI\Models\AiUsageLog;
 use App\Modules\AI\Requests\StreamPromptRequest;
 use App\Modules\AI\Services\AIFallbackService;
 use App\Modules\AI\Services\RateLimitingService;
@@ -72,6 +73,7 @@ class ChatController extends Controller
                 model: config('ai.models.agent'),
                 promptTokens: $usage?->promptTokens ?? 0,
                 completionTokens: $usage?->completionTokens ?? 0,
+                userId: (int) $user->id,
             );
 
             return response()->json(['text' => $response]);
@@ -140,5 +142,60 @@ class ChatController extends Controller
             ->values();
 
         return response()->json(['messages' => $messages]);
+    }
+
+    /**
+     * Return the current user's AI usage stats.
+     * Returns this month and all-time token counts and cost.
+     */
+    public function usage(Request $request): JsonResponse
+    {
+        $userId = (int) $request->user()->id;
+
+        $thisMonth = AiUsageLog::where('user_id', $userId)
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->selectRaw('COALESCE(SUM(total_tokens), 0) as tokens, COALESCE(SUM(cost_usd), 0) as cost')
+            ->first();
+
+        $allTime = AiUsageLog::where('user_id', $userId)
+            ->selectRaw('COALESCE(SUM(total_tokens), 0) as tokens, COALESCE(SUM(cost_usd), 0) as cost')
+            ->first();
+
+        return response()->json([
+            'this_month' => [
+                'tokens' => (int) $thisMonth->tokens,
+                'cost_usd' => round((float) $thisMonth->cost, 6),
+            ],
+            'all_time' => [
+                'tokens' => (int) $allTime->tokens,
+                'cost_usd' => round((float) $allTime->cost, 6),
+            ],
+        ]);
+    }
+
+    /**
+     * Return system-wide AI usage stats (admin only).
+     */
+    public function systemUsage(Request $request): JsonResponse
+    {
+        $thisMonth = AiUsageLog::whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->selectRaw('COALESCE(SUM(total_tokens), 0) as tokens, COALESCE(SUM(cost_usd), 0) as cost')
+            ->first();
+
+        $allTime = AiUsageLog::selectRaw('COALESCE(SUM(total_tokens), 0) as tokens, COALESCE(SUM(cost_usd), 0) as cost')
+            ->first();
+
+        return response()->json([
+            'this_month' => [
+                'tokens' => (int) $thisMonth->tokens,
+                'cost_usd' => round((float) $thisMonth->cost, 6),
+            ],
+            'all_time' => [
+                'tokens' => (int) $allTime->tokens,
+                'cost_usd' => round((float) $allTime->cost, 6),
+            ],
+        ]);
     }
 }

@@ -20,5 +20,6 @@ class AiCallCompleted
         public readonly string $model,
         public readonly int $promptTokens,
         public readonly int $completionTokens,
+        public readonly ?int $userId = null,
     ) {}
 }
