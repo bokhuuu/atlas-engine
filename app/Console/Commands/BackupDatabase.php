@@ -28,9 +28,6 @@ class BackupDatabase extends Command
     {
         $database = config('database.connections.pgsql.database');
         $username = config('database.connections.pgsql.username');
-        $password = config('database.connections.pgsql.password');
-        $host = config('database.connections.pgsql.host');
-        $port = config('database.connections.pgsql.port', 5432);
         $bucket = env('B2_BUCKET');
 
         if (! $bucket) {
@@ -39,7 +36,7 @@ class BackupDatabase extends Command
             return self::FAILURE;
         }
 
-        $filename = 'atlas_'.now()->format('Y_m_d_His').'.sql.gz';
+        $filename = 'atlas_' . now()->format('Y_m_d_His') . '.sql.gz';
         $localPath = storage_path("backups/{$filename}");
 
         if (! is_dir(storage_path('backups'))) {
@@ -49,10 +46,7 @@ class BackupDatabase extends Command
         $this->info("Creating database dump: {$filename}");
 
         $dumpCommand = sprintf(
-            'PGPASSWORD=%s pg_dump -h %s -p %s -U %s %s | gzip > %s',
-            escapeshellarg($password),
-            escapeshellarg($host),
-            escapeshellarg((string) $port),
+            'docker compose -f /var/www/atlas/docker-compose.prod.yml exec -T postgres pg_dump -U %s %s | gzip > %s',
             escapeshellarg($username),
             escapeshellarg($database),
             escapeshellarg($localPath)
