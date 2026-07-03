@@ -36,7 +36,7 @@ class BackupDatabase extends Command
             return self::FAILURE;
         }
 
-        $filename = 'atlas_' . now()->format('Y_m_d_His') . '.sql.gz';
+        $filename = 'atlas_'.now()->format('Y_m_d_His').'.sql.gz';
         $localPath = storage_path("backups/{$filename}");
 
         if (! is_dir(storage_path('backups'))) {
@@ -84,8 +84,6 @@ class BackupDatabase extends Command
         $this->info('Upload complete.');
 
         unlink($localPath);
-
-        $cutoff = now()->subDays(7)->format('Y-m-d');
 
         $deleteCommand = sprintf(
             'rclone delete b2:%s --min-age 7d',
