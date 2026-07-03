@@ -106,6 +106,9 @@ GET  /api/v1/exports/{source}             - Excel export, one category
 GET  /api/v1/exports                      - Excel exports, all categories (zip)
 POST /api/v1/ai/chat                      - AI assistant chat (8 tools)
 GET  /api/v1/ai/history                   - fetch last 20 AI chat messages for current user
+GET  /api/v1/ai/usage                     - current user's token usage and cost (this month + all time)
+GET  /api/v1/ai/usage/system              - system-wide token usage and cost, admin only
+
 ```
 
 ---
