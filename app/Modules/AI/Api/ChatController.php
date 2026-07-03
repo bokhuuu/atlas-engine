@@ -70,8 +70,8 @@ class ChatController extends Controller
                 feature: 'chat',
                 provider: config('ai.providers.default'),
                 model: config('ai.models.agent'),
-                promptTokens: 0,
-                completionTokens: 0,
+                promptTokens: $usage?->promptTokens ?? 0,
+                completionTokens: $usage?->completionTokens ?? 0,
             );
 
             return response()->json(['text' => $response]);

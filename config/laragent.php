@@ -71,7 +71,7 @@ return [
 
     'mcp_servers' => [],
 
-    'track_usage' => false,
+    'track_usage' => true,
 
     'default_usage_storage' => null,
 
