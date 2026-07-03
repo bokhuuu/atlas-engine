@@ -3,6 +3,8 @@ import {
     Settings,
     Users,
     LayoutGrid,
+    Zap,
+    DollarSign,
     Activity,
     ShieldCheck,
     KeyRound,
@@ -11,6 +13,7 @@ import {
     Bot,
     Globe,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavUser } from '@/components/nav-user';
@@ -35,6 +38,11 @@ interface NavItemWithRoles extends NavItem {
 }
 
 const footerNavItems: NavItem[] = [];
+
+interface SystemUsage {
+    this_month: { tokens: number; cost_usd: number };
+    all_time: { tokens: number; cost_usd: number };
+}
 
 const intelligenceItems: NavItemWithRoles[] = [
     {
@@ -150,6 +158,25 @@ function NavGroup({
 
 export function AppSidebar() {
     const { role } = useAuth();
+    const [systemUsage, setSystemUsage] = useState<SystemUsage | null>(null);
+
+    useEffect(() => {
+        if (!['admin', 'super_admin'].includes(role)) {
+            return;
+        }
+
+        fetch('/api/v1/ai/usage/system', {
+            headers: {
+                Accept: 'application/json',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
+                ),
+            },
+        })
+            .then((r) => r.json())
+            .then((data) => setSystemUsage(data))
+            .catch(() => {});
+    }, [role]);
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -180,6 +207,50 @@ export function AppSidebar() {
                 />
             </SidebarContent>
             <SidebarFooter>
+                {systemUsage && ['admin', 'super_admin'].includes(role) && (
+                    <div className="mx-3 mb-2 rounded-lg border border-sidebar-border/50 bg-sidebar-accent/30 px-3 py-2">
+                        <p className="mb-1.5 text-[10px] font-semibold tracking-widest text-muted-foreground/60 uppercase">
+                            AI Usage
+                        </p>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] text-muted-foreground">
+                                    This month
+                                </span>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
+                                        <Zap className="h-2.5 w-2.5 text-primary" />
+                                        {systemUsage.this_month.tokens.toLocaleString()}
+                                    </span>
+                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
+                                        <DollarSign className="h-2.5 w-2.5 text-primary" />
+                                        {systemUsage.this_month.cost_usd.toFixed(
+                                            4,
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] text-muted-foreground">
+                                    All time
+                                </span>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
+                                        <Zap className="h-2.5 w-2.5 text-muted-foreground" />
+                                        {systemUsage.all_time.tokens.toLocaleString()}
+                                    </span>
+                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
+                                        <DollarSign className="h-2.5 w-2.5 text-muted-foreground" />
+                                        {systemUsage.all_time.cost_usd.toFixed(
+                                            4,
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <div className="px-2 pb-1">
                     <p className="px-2 text-[10px] font-semibold tracking-widest text-muted-foreground/60 uppercase">

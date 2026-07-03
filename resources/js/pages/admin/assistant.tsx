@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import {
     BarChart2,
     Bot,
+    DollarSign,
     FileSpreadsheet,
     List,
     PiggyBank,
@@ -32,6 +33,11 @@ interface Message {
 
 interface FeedbackState {
     [messageId: string]: 1 | -1 | null;
+}
+
+interface UsageStats {
+    this_month: { tokens: number; cost_usd: number };
+    all_time: { tokens: number; cost_usd: number };
 }
 
 const SUGGESTED_QUERIES = [
@@ -77,6 +83,8 @@ export default function Assistant() {
     const [feedback, setFeedback] = useState<FeedbackState>({});
     const [input, setInput] = useState('');
     const [streaming, setStreaming] = useState(false);
+    const [usage, setUsage] = useState<UsageStats | null>(null);
+    const [usageFlash, setUsageFlash] = useState(false);
 
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -109,6 +117,10 @@ export default function Assistant() {
                 }
             })
             .catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        fetchUsage();
     }, []);
 
     const sendMessage = async (text: string) => {
@@ -208,6 +220,7 @@ export default function Assistant() {
         } finally {
             setStreaming(false);
             inputRef.current?.focus();
+            fetchUsage();
         }
     };
 
@@ -236,6 +249,25 @@ export default function Assistant() {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage(input);
+        }
+    };
+
+    const fetchUsage = async () => {
+        try {
+            const r = await fetch('/api/v1/ai/usage', {
+                headers: {
+                    Accept: 'application/json',
+                    'X-XSRF-TOKEN': decodeURIComponent(
+                        document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
+                    ),
+                },
+            });
+            const data = await r.json();
+            setUsage(data);
+            setUsageFlash(true);
+            setTimeout(() => setUsageFlash(false), 600);
+        } catch {
+            // usage fetch failure is silent
         }
     };
 
@@ -278,9 +310,43 @@ export default function Assistant() {
                         <span className="text-sm font-medium text-foreground">
                             Atlas AI Assistant
                         </span>
-                        <span className="ml-auto text-xs text-muted-foreground">
-                            Yerevan market data
-                        </span>
+                        {usage && (
+                            <div
+                                className={`ml-auto flex items-center gap-3 transition-all duration-300 ${
+                                    usageFlash
+                                        ? 'text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.6)]'
+                                        : 'text-muted-foreground'
+                                }`}
+                            >
+                                <span className="flex items-center gap-1 text-xs">
+                                    <Zap className="h-3 w-3" />
+                                    <span
+                                        className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'}`}
+                                    >
+                                        {usage.this_month.tokens.toLocaleString()}
+                                    </span>
+                                    <span className="text-muted-foreground/60">
+                                        tokens
+                                    </span>
+                                </span>
+                                <span className="flex items-center gap-1 text-xs">
+                                    <DollarSign className="h-3 w-3" />
+                                    <span
+                                        className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'}`}
+                                    >
+                                        {usage.this_month.cost_usd.toFixed(4)}
+                                    </span>
+                                    <span className="text-muted-foreground/60">
+                                        this month
+                                    </span>
+                                </span>
+                            </div>
+                        )}
+                        {!usage && (
+                            <span className="ml-auto text-xs text-muted-foreground">
+                                Yerevan market data
+                            </span>
+                        )}
                     </div>
 
                     {/* Messages */}
