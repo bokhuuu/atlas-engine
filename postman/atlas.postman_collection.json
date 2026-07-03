@@ -534,7 +534,7 @@
         },
         {
             "name": "AI Assistant",
-            "description": "Chat with the AI assistant and manage feedback. The agent has access to 7 tools: category list, category stats, district breakdown, comparable listing finder, Excel export, price change detection, and rental yield estimate.",
+            "description": "Chat with the AI assistant and manage feedback. The agent has access to 8 tools: category list, category stats, district breakdown, comparable listing finder, Excel export, price change detection, rental yield estimate, and semantic search.",
             "item": [
                 {
                     "name": "AI health check",
@@ -590,7 +590,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "ai", "chat"]
                         },
-                        "description": "Send a message to the AI assistant. The agent has 7 callable tools and answers only from real scraped data. Conversation history is persisted per user in Redis."
+                        "description": "Send a message to the AI assistant. The agent has 8 callable tools and answers only from real scraped data. Conversation history is persisted per user in Redis."
                     },
                     "response": [
                         {
@@ -606,6 +606,54 @@
                             "body": "{\n  \"error\": \"Rate limit exceeded. Please wait before sending another message.\"\n}"
                         }
                     ]
+                },
+                {
+                    "name": "AI usage - current user",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/usage",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "usage"]
+                        },
+                        "description": "Returns the current user's token usage and cost for this month and all time."
+                    }
+                },
+                {
+                    "name": "AI usage - system wide (admin only)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/usage/system",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "usage", "system"]
+                        },
+                        "description": "Returns system-wide token usage and cost for this month and all time. Admin and super_admin only."
+                    }
                 },
                 {
                     "name": "Submit feedback",
