@@ -23,6 +23,33 @@ class PropertyAssistantAgent extends Agent
 
     protected $mcpServers = [];
 
+    protected ?int $lastPromptTokens = null;
+
+    protected ?int $lastCompletionTokens = null;
+
+    public function getLastPromptTokens(): ?int
+    {
+        return $this->lastPromptTokens;
+    }
+
+    public function getLastCompletionTokens(): ?int
+    {
+        return $this->lastCompletionTokens;
+    }
+
+    protected function afterResponse(mixed $message): void
+    {
+        $storage = $this->usageStorage();
+        if ($storage === null) {
+            return;
+        }
+        $last = $storage->getLastUsage();
+        if ($last !== null) {
+            $this->lastPromptTokens = $last->promptTokens;
+            $this->lastCompletionTokens = $last->completionTokens;
+        }
+    }
+
     public function __construct(string $sessionId)
     {
         $this->provider = config('ai.providers.default', 'openrouter');

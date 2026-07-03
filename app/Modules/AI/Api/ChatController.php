@@ -71,8 +71,8 @@ class ChatController extends Controller
                 feature: 'chat',
                 provider: config('ai.providers.default'),
                 model: config('ai.models.agent'),
-                promptTokens: $usage?->promptTokens ?? 0,
-                completionTokens: $usage?->completionTokens ?? 0,
+                promptTokens: $agent->getLastPromptTokens() ?? 0,
+                completionTokens: $agent->getLastCompletionTokens() ?? 0,
                 userId: (int) $user->id,
             );
 

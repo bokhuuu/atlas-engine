@@ -81,87 +81,6 @@ historyForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 history.form = historyForm
 
 /**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-export const usage = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: usage.url(options),
-    method: 'get',
-})
-
-usage.definition = {
-    methods: ["get","head"],
-    url: '/api/v1/ai/usage',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-usage.url = (options?: RouteQueryOptions) => {
-    return usage.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-usage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: usage.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-usage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: usage.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-const usageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: usage.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-usageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: usage.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:151
-* @route '/api/v1/ai/usage'
-*/
-usageForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: usage.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-usage.form = usageForm
-
-/**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
 * @see app/Modules/AI/Api/ChatController.php:180
 * @route '/api/v1/ai/usage/system'
@@ -243,6 +162,87 @@ systemUsageForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 systemUsage.form = systemUsageForm
 
 /**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+export const usage = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: usage.url(options),
+    method: 'get',
+})
+
+usage.definition = {
+    methods: ["get","head"],
+    url: '/api/v1/ai/usage',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+usage.url = (options?: RouteQueryOptions) => {
+    return usage.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+usage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: usage.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+usage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: usage.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+const usageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: usage.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+usageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: usage.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\AI\Api\ChatController::usage
+* @see app/Modules/AI/Api/ChatController.php:151
+* @route '/api/v1/ai/usage'
+*/
+usageForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: usage.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+usage.form = usageForm
+
+/**
 * @see \App\Modules\AI\Api\ChatController::chat
 * @see app/Modules/AI/Api/ChatController.php:44
 * @route '/api/v1/ai/chat'
@@ -298,6 +298,6 @@ chatForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
 
 chat.form = chatForm
 
-const ChatController = { history, usage, systemUsage, chat }
+const ChatController = { history, systemUsage, usage, chat }
 
 export default ChatController
