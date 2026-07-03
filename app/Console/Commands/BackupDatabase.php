@@ -28,10 +28,10 @@ class BackupDatabase extends Command
     {
         $database = config('database.connections.pgsql.database');
         $username = config('database.connections.pgsql.username');
-        $bucket = env('B2_BUCKET');
+        $bucket = config('services.b2.bucket');
 
         if (! $bucket) {
-            $this->error('B2_BUCKET is not set in .env');
+            $this->error('B2_BUCKET is not configured in config/services.php');
 
             return self::FAILURE;
         }

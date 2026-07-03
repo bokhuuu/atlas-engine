@@ -45,5 +45,9 @@ return [
     'mail' => [
         'scraper_to' => env('SCRAPER_MAIL_TO'),
     ],
-
+    'b2' => [
+        'key_id' => env('B2_KEY_ID'),
+        'application_key' => env('B2_APPLICATION_KEY'),
+        'bucket' => env('B2_BUCKET'),
+    ],
 ];
