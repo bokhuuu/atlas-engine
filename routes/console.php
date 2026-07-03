@@ -17,3 +17,5 @@ Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5
 Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('05:00');
 Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('05:00');
 Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('05:00');
+
+Schedule::command('db:backup')->dailyAt('07:00');
