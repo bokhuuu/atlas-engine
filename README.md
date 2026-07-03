@@ -56,16 +56,17 @@ The setup script handles environment file creation, app key generation, migratio
 
 ## Production Deploy
 
-After every `git push`, SSH into the server and run:
+Every push to `main` auto-deploys via GitHub Actions CI/CD:
 
-```bash
-cd /var/www/atlas
-bash scripts/deploy.sh
-```
+1. Tests run against PostgreSQL 16
+2. Frontend assets are built
+3. Server is updated automatically via `scripts/deploy.sh`
 
-This handles: git pull, composer install, migrations, permissions, cache rebuild, horizon restart.
+No manual steps needed for code or frontend changes.
 
-**Do not run while a scrape is in progress** — deploy restarts Horizon and kills running jobs.
+**Manual deploy** (if needed): SSH as `deploy` user and run `bash scripts/deploy.sh` from `/var/www/atlas`.
+
+**Do not deploy while a scrape is in progress** - deploy restarts Horizon and kills running jobs.
 
 ---
 
