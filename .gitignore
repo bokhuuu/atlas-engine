@@ -33,3 +33,4 @@ _ide_helper_models.php
 
 /storage/app/scraper/cookies/
 /storage/app/exports/atlas_data.sql
+*.xlsx
