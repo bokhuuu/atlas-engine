@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import AppLayout from '@/layouts/app-layout';
+import { formatCost } from '@/lib/format-cost';
 import { postJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
 
@@ -334,7 +335,7 @@ export default function Assistant() {
                                     <span
                                         className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'}`}
                                     >
-                                        {usage.this_month.cost_usd.toFixed(4)}
+                                        {formatCost(usage.this_month.cost_usd)}
                                     </span>
                                     <span className="text-muted-foreground/60">
                                         this month

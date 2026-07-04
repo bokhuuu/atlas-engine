@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { formatCost } from '@/lib/format-cost';
 import { dashboard } from '@/routes/admin';
 import type { NavItem } from '@/types';
 
@@ -224,8 +225,8 @@ export function AppSidebar() {
                                     </span>
                                     <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
                                         <DollarSign className="h-2.5 w-2.5 text-primary" />
-                                        {systemUsage.this_month.cost_usd.toFixed(
-                                            4,
+                                        {formatCost(
+                                            systemUsage.this_month.cost_usd,
                                         )}
                                     </span>
                                 </div>
@@ -241,8 +242,8 @@ export function AppSidebar() {
                                     </span>
                                     <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
                                         <DollarSign className="h-2.5 w-2.5 text-muted-foreground" />
-                                        {systemUsage.all_time.cost_usd.toFixed(
-                                            4,
+                                        {formatCost(
+                                            systemUsage.all_time.cost_usd,
                                         )}
                                     </span>
                                 </div>
