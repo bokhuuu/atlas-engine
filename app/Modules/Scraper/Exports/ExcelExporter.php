@@ -89,7 +89,9 @@ class ExcelExporter implements ExporterInterface
                     $row['days_on_market'] = $start
                         ? (int) Carbon::parse($start)->diffInDays(Carbon::parse($end))
                         : null;
-
+                    // $row['days_on_market'] = $start
+                    //    ? (int) Carbon::parse((string) $start)->diffInDays(Carbon::parse((string) $end))
+                    //    : null;
                     if (! empty($row['disappeared_at'])) {
                         $row['status'] = 'Disappeared';
                     } elseif ($start && Carbon::parse($start)->diffInDays(now()) >= $staleDays) {
