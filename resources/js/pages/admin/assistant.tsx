@@ -263,7 +263,17 @@ export default function Assistant() {
                     ),
                 },
             });
+
+            if (!r.ok) {
+                return;
+            }
+
             const data = await r.json();
+
+            if (!data?.this_month || !data?.all_time) {
+                return;
+            }
+
             setUsage(data);
             setUsageFlash(true);
             setTimeout(() => setUsageFlash(false), 600);

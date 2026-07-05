@@ -174,8 +174,18 @@ export function AppSidebar() {
                 ),
             },
         })
-            .then((r) => r.json())
-            .then((data) => setSystemUsage(data))
+            .then((r) => {
+                if (!r.ok) {
+                    return null;
+                }
+
+                return r.json();
+            })
+            .then((data) => {
+                if (data?.this_month && data?.all_time) {
+                    setSystemUsage(data);
+                }
+            })
             .catch(() => {});
     }, [role]);
 
