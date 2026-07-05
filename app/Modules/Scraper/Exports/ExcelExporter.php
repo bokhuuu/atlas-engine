@@ -67,6 +67,7 @@ class ExcelExporter implements ExporterInterface
                 'is_new_building',
                 'agency_name',
                 'listing_date',
+                'scraped_at',
                 'duplicate_group_id',
                 'last_seen_at',
                 'disappeared_at',
