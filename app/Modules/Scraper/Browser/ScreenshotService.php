@@ -88,9 +88,15 @@ class ScreenshotService
     private function takeScreenshot(Browser $browser, string $externalId): ?string
     {
         $screenshotName = 'atlas_screenshot_'.$externalId;
+        $screenshotDir = base_path('tests/Browser/screenshots');
+
+        if (! is_dir($screenshotDir)) {
+            mkdir($screenshotDir, 0755, true);
+        }
+
         $browser->screenshot($screenshotName);
 
-        $duskPath = base_path('tests/Browser/screenshots/'.$screenshotName.'.png');
+        $duskPath = $screenshotDir.'/'.$screenshotName.'.png';
 
         if (! file_exists($duskPath)) {
             return null;
