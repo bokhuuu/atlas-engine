@@ -88,11 +88,14 @@ class ScreenshotService
     private function takeScreenshot(Browser $browser, string $externalId): ?string
     {
         $screenshotName = 'atlas_screenshot_'.$externalId;
-        $screenshotDir = base_path('tests/Browser/screenshots');
+        $screenshotDir = storage_path('app/screenshots');
 
         if (! is_dir($screenshotDir)) {
             mkdir($screenshotDir, 0755, true);
         }
+
+        // Tell Dusk where to save screenshots
+        Browser::$storeScreenshotsAt = $screenshotDir;
 
         $browser->screenshot($screenshotName);
 
