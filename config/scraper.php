@@ -464,4 +464,17 @@ return [
     |
     */
     'stale_listing_days' => (int) env('SCRAPER_STALE_LISTING_DAYS', 90),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Screenshot Capture
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, CrawlDetailPageJob captures a full-page screenshot of
+    | each new listing detail page and uploads it to Backblaze B2.
+    | Only new listings are screenshotted - never re-captured on re-scrape.
+    | Set false locally to avoid B2 uploads during development.
+    |
+    */
+    'screenshots_enabled' => (bool) env('SCRAPER_SCREENSHOTS_ENABLED', false),
 ];
