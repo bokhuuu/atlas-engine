@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Models;
 
+use Database\Factories\ListingFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Listing extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'scraper_run_id',
         'external_id',
@@ -85,5 +89,10 @@ class Listing extends Model
     public function scopeForSource(Builder $query, string $source): Builder
     {
         return $query->where('source_profile_name', $source);
+    }
+
+    protected static function newFactory(): ListingFactory
+    {
+        return ListingFactory::new();
     }
 }

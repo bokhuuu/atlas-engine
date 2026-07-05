@@ -17,3 +17,5 @@ Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5
 Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('05:00');
 Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('05:00');
 Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('05:00');
+
+Schedule::command('atlas:check-listings')->days([0, 2, 4, 6])->at('05:00');

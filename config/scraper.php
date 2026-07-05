@@ -436,4 +436,19 @@ return [
     | Override via .env to tune per environment without touching code.
     */
     'price_change_window_days' => env('SCRAPER_PRICE_CHANGE_WINDOW_DAYS', 7),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Listing Lifecycle Check
+    |--------------------------------------------------------------------------
+    |
+    | listing_check_daily_percent - percentage of active listings to check
+    |                               per daily run via HTTP HEAD requests.
+    |                               5% = full DB cycles in ~20 days.
+    | listing_check_delay_ms      - delay between HEAD requests in milliseconds.
+    |                               Keeps request rate human-like.
+    |
+    */
+    'listing_check_daily_percent' => (float) env('LISTING_CHECK_DAILY_PERCENT', 5.0),
+    'listing_check_delay_ms' => (int) env('LISTING_CHECK_DELAY_MS', 2000),
 ];
