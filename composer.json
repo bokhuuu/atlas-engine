@@ -20,6 +20,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "league/flysystem-aws-s3-v3": "^3.35",
         "maatwebsite/excel": "^3.1",
         "maestroerror/laragent": "^1.4",
         "pgvector/pgvector": "^0.2.2",

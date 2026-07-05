@@ -61,7 +61,17 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
+        'b2_screenshots' => [
+            'driver' => 's3',
+            'key' => env('B2_SCREENSHOTS_KEY_ID'),
+            'secret' => env('B2_SCREENSHOTS_APPLICATION_KEY'),
+            'region' => env('B2_SCREENSHOTS_REGION', 'eu-central-003'),
+            'bucket' => env('B2_SCREENSHOTS_BUCKET', 'bokhuuu-atlas-screenshots'),
+            'endpoint' => env('B2_SCREENSHOTS_ENDPOINT', 'https://s3.eu-central-003.backblazeb2.com'),
+            'use_path_style_endpoint' => true,
+            'throw' => false,
+            'report' => false,
+        ],
     ],
 
     /*
