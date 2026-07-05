@@ -37,7 +37,7 @@ class PostFactory extends Factory
 
     public function published(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => PostStatus::Published,
             'published_at' => now(),
         ]);
