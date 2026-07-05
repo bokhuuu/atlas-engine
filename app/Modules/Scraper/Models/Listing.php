@@ -53,6 +53,12 @@ class Listing extends Model
         'previous_price',
         'price_change_pct',
         'price_changed_at',
+
+        'last_seen_at',
+        'last_checked_at',
+        'disappeared_at',
+        'screenshot_url',
+        'translated_description',
     ];
 
     protected $casts = [
@@ -68,6 +74,9 @@ class Listing extends Model
         'previous_price' => 'float',
         'price_change_pct' => 'float',
         'price_changed_at' => 'datetime',
+        'last_seen_at' => 'datetime',
+        'last_checked_at' => 'datetime',
+        'disappeared_at' => 'datetime',
     ];
 
     /**
