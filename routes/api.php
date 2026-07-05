@@ -50,6 +50,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/ai/usage/system', [ChatController::class, 'systemUsage'])
             ->middleware('role:admin|super_admin');
         Route::get('/ai/usage', [ChatController::class, 'usage']);
+        Route::get('/ai/feedback', [ChatController::class, 'feedback']);
+        Route::post('/ai/feedback', [FeedbackController::class, 'store']);
         Route::post('/ai/chat', [ChatController::class, 'chat']);
     });
 

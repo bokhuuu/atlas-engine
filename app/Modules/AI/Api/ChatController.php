@@ -7,6 +7,7 @@ namespace App\Modules\AI\Api;
 use App\Events\AiCallCompleted;
 use App\Http\Controllers\Controller;
 use App\Modules\AI\Agents\PropertyAssistantAgent;
+use App\Modules\AI\Models\AiFeedback;
 use App\Modules\AI\Models\AiUsageLog;
 use App\Modules\AI\Requests\StreamPromptRequest;
 use App\Modules\AI\Services\AIFallbackService;
@@ -172,6 +173,21 @@ class ChatController extends Controller
                 'cost_usd' => round((float) $allTime->cost, 6),
             ],
         ]);
+    }
+
+    /**
+     * Return the current user's feedback votes as a message_id → vote map.
+     * Used to restore feedback state after page reload.
+     */
+    public function feedback(Request $request): JsonResponse
+    {
+        $userId = (int) $request->user()->id;
+
+        $votes = AiFeedback::where('user_id', $userId)
+            ->whereNotNull('message_id')
+            ->pluck('vote', 'message_id');
+
+        return response()->json(['votes' => $votes]);
     }
 
     /**

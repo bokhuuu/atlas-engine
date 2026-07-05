@@ -22,6 +22,7 @@ class StoreFeedbackRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'message_id' => ['nullable', 'string', 'max:255'],
             'vote' => ['required', 'integer', 'in:-1,1'],
             'response_text' => ['required', 'string', 'max:5000'],
             'comment' => ['nullable', 'string', 'max:500'],

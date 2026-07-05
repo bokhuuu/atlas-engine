@@ -28,6 +28,7 @@ class FeedbackController extends Controller
         $feedback = AiFeedback::create([
             'session_id' => $request->header('X-Session-ID', $request->ip()),
             'user_id' => auth()->id(),
+            'message_id' => $request->input('message_id'),
             'response_text' => $request->input('response_text'),
             'vote' => $request->input('vote'),
             'comment' => $request->input('comment'),
