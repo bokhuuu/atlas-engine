@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Exports;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Concerns\CalculatesMedian;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -34,7 +35,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class RealEstateMarketReport implements ExporterInterface
 {
     /**
-     * Generate the six-sheet market research report.
+     * Generate the five-sheet market research report.
      */
     public function export(array $data, ScraperProfileInterface $profile): string
     {
@@ -119,8 +120,11 @@ class RealEstateMarketReport implements ExporterInterface
 
 /**
  * Sheet 1 — Client-facing raw dataset.
- * Contains only fields relevant to the client
- * Ordered for readability: location → price → property details → contact.
+ * Contains only fields relevant to the client.
+ * Ordered for readability: location → price → property details → lifecycle.
+ *
+ * days_on_market and status are computed on export —
+ * they do not exist as DB columns.
  */
 class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 {
@@ -148,6 +152,11 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'agency_name',
         'listing_date',
         'duplicate_group_id',
+        'last_seen_at',
+        'disappeared_at',
+        'days_on_market',
+        'status',
+        'screenshot_url',
     ];
 
     public function __construct(private readonly array $data) {}
@@ -164,7 +173,24 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 
     public function array(): array
     {
-        return array_map(function ($row) {
+        $staleDays = (int) config('scraper.stale_listing_days', 90);
+
+        return array_map(function ($row) use ($staleDays) {
+            $start = $row['scraped_at'] ?? null;
+            $end = $row['disappeared_at'] ?? now()->toDateTimeString();
+
+            $row['days_on_market'] = $start
+                ? (int) Carbon::parse($start)->diffInDays(Carbon::parse($end))
+                : null;
+
+            if (! empty($row['disappeared_at'])) {
+                $row['status'] = 'Disappeared';
+            } elseif ($start && Carbon::parse($start)->diffInDays(now()) >= $staleDays) {
+                $row['status'] = "Stale ({$staleDays}+ days)";
+            } else {
+                $row['status'] = 'Active';
+            }
+
             return array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns);
         }, $this->data);
     }

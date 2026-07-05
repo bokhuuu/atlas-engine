@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Exports;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -39,6 +40,9 @@ class ExcelExporter implements ExporterInterface
              * (id, scraper_run_id, external_id, source_profile_name,
              * created_at, updated_at, images, extras) that have no
              * meaning outside the application.
+             *
+             * days_on_market and status are computed on export —
+             * they do not exist as DB columns.
              */
             private array $clientColumns = [
                 'url',
@@ -64,16 +68,37 @@ class ExcelExporter implements ExporterInterface
                 'agency_name',
                 'listing_date',
                 'duplicate_group_id',
+                'last_seen_at',
+                'disappeared_at',
+                'days_on_market',
+                'status',
+                'screenshot_url',
             ];
 
             public function __construct(private readonly array $data) {}
 
             public function array(): array
             {
-                return array_map(
-                    fn ($row) => array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns),
-                    $this->data
-                );
+                $staleDays = (int) config('scraper.stale_listing_days', 90);
+
+                return array_map(function ($row) use ($staleDays) {
+                    $start = $row['scraped_at'] ?? null;
+                    $end = $row['disappeared_at'] ?? now()->toDateTimeString();
+
+                    $row['days_on_market'] = $start
+                        ? (int) Carbon::parse($start)->diffInDays(Carbon::parse($end))
+                        : null;
+
+                    if (! empty($row['disappeared_at'])) {
+                        $row['status'] = 'Disappeared';
+                    } elseif ($start && Carbon::parse($start)->diffInDays(now()) >= $staleDays) {
+                        $row['status'] = "Stale ({$staleDays}+ days)";
+                    } else {
+                        $row['status'] = 'Active';
+                    }
+
+                    return array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns);
+                }, $this->data);
             }
 
             public function headings(): array

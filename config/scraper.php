@@ -451,4 +451,17 @@ return [
     */
     'listing_check_daily_percent' => (float) env('LISTING_CHECK_DAILY_PERCENT', 5.0),
     'listing_check_delay_ms' => (int) env('LISTING_CHECK_DELAY_MS', 2000),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Stale Listing Threshold
+    |--------------------------------------------------------------------------
+    |
+    | Number of days after which a listing is considered stale.
+    | Stale listings are still active on the site but have been
+    | listed for a long time — potentially overpriced or slow-moving.
+    | Shown as "Stale (90+ days)" in exports and admin panel.
+    |
+    */
+    'stale_listing_days' => (int) env('SCRAPER_STALE_LISTING_DAYS', 90),
 ];
