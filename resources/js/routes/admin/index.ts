@@ -7,6 +7,7 @@ import activityLog from './activity-log'
 import notifications from './notifications'
 import tokens from './tokens'
 import systemHealth from './system-health'
+import aiFeedback from './ai-feedback'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
@@ -262,6 +263,7 @@ const admin = {
     notifications: Object.assign(notifications, notifications),
     tokens: Object.assign(tokens, tokens),
     systemHealth: Object.assign(systemHealth, systemHealth),
+    aiFeedback: Object.assign(aiFeedback, aiFeedback),
 }
 
 export default admin

@@ -8,6 +8,7 @@ import ActivityLogController from './ActivityLogController'
 import NotificationController from './NotificationController'
 import TokenController from './TokenController'
 import SystemHealthController from './SystemHealthController'
+import AiFeedbackController from './AiFeedbackController'
 
 const Admin = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -20,6 +21,7 @@ const Admin = {
     NotificationController: Object.assign(NotificationController, NotificationController),
     TokenController: Object.assign(TokenController, TokenController),
     SystemHealthController: Object.assign(SystemHealthController, SystemHealthController),
+    AiFeedbackController: Object.assign(AiFeedbackController, AiFeedbackController),
 }
 
 export default Admin

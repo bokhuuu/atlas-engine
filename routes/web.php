@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\AiFeedbackController;
 use App\Http\Controllers\Admin\AssistantController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MarketStatsController;
@@ -64,6 +65,10 @@ Route::middleware(['auth', 'admin'])
             Route::post('/cache', [SystemHealthController::class, 'clearCache'])->name('cache.clear');
             Route::post('/maintenance', [SystemHealthController::class, 'toggleMaintenance'])->name('maintenance.toggle');
         });
+
+        Route::middleware(['role:super_admin|admin'])
+            ->get('ai-feedback', [AiFeedbackController::class, 'index'])
+            ->name('ai-feedback.index');
     });
 
 require __DIR__.'/settings.php';

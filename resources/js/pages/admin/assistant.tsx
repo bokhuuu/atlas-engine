@@ -109,12 +109,34 @@ export default function Assistant() {
                     setMessages(
                         data.messages.map(
                             (m: { role: string; content: string }) => ({
-                                id: crypto.randomUUID(),
+                                id: btoa(
+                                    encodeURIComponent(
+                                        m.role + ':' + m.content,
+                                    ),
+                                ).slice(0, 36),
                                 role: m.role as 'user' | 'assistant',
                                 content: m.content,
                             }),
                         ),
                     );
+                }
+            })
+            .catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        fetch('/api/v1/ai/feedback', {
+            headers: {
+                Accept: 'application/json',
+                'X-XSRF-TOKEN': decodeURIComponent(
+                    document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
+                ),
+            },
+        })
+            .then((r) => r.json())
+            .then((data) => {
+                if (data.votes && typeof data.votes === 'object') {
+                    setFeedback(data.votes);
                 }
             })
             .catch(() => {});
@@ -238,6 +260,7 @@ export default function Assistant() {
 
         try {
             await postJson('/api/v1/ai/feedback', {
+                message_id: messageId,
                 vote,
                 response_text: content.slice(0, 5000),
             });

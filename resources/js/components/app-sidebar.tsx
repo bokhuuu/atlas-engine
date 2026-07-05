@@ -6,6 +6,7 @@ import {
     Zap,
     DollarSign,
     Activity,
+    ThumbsUp,
     ShieldCheck,
     KeyRound,
     HeartPulse,
@@ -63,6 +64,12 @@ const intelligenceItems: NavItemWithRoles[] = [
         href: '/admin/assistant',
         icon: Bot,
         roles: ['super_admin', 'admin', 'editor'],
+    },
+    {
+        title: 'AI Feedback',
+        href: '/admin/ai-feedback',
+        icon: ThumbsUp,
+        roles: ['super_admin', 'admin'],
     },
     {
         title: 'Public Site',
