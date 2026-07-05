@@ -205,10 +205,18 @@ export default function Assistant() {
             const interval = setInterval(() => {
                 if (index >= words.length) {
                     clearInterval(interval);
+                    const stableId = btoa(
+                        encodeURIComponent('assistant:' + fullText),
+                    ).slice(0, 36);
                     setMessages((prev) =>
                         prev.map((m) =>
                             m.id === assistantId
-                                ? { ...m, content: fullText, streaming: false }
+                                ? {
+                                      ...m,
+                                      id: stableId,
+                                      content: fullText,
+                                      streaming: false,
+                                  }
                                 : m,
                         ),
                     );
