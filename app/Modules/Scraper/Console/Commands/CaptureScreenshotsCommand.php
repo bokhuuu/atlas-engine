@@ -113,15 +113,16 @@ class CaptureScreenshotsCommand extends Command
                 }
 
                 $sessionId = $browser->driver->getSessionID();
-                $this->line('Closing WebDriver before CDP...');
-                $scraper->closeBrowser();
-                $this->line('Taking CDP screenshot...');
+                // Don't close browser yet - session must stay alive for CDP
+                usleep(500_000); // 0.5 second settle time
 
                 $path = $screenshotService->captureBySessionId(
                     $sessionId,
                     $listing->external_id,
                     $listing->source_profile_name,
                 );
+
+                $scraper->closeBrowser(); // close AFTER CDP
 
                 if ($path !== null) {
                     $listing->update(['screenshot_url' => $path]);
