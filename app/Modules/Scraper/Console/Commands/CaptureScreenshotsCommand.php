@@ -94,7 +94,7 @@ class CaptureScreenshotsCommand extends Command
                 $this->line("Scraper created for listing {$listing->id}");
 
                 $browser = $scraper->getBrowser();
-                $this->line('Browser session: ' . $browser->driver->getSessionID());
+                $this->line('Browser session: '.$browser->driver->getSessionID());
 
                 $browser->driver->manage()->timeouts()->pageLoadTimeout(8);
                 $this->line('Timeout set');
@@ -125,7 +125,7 @@ class CaptureScreenshotsCommand extends Command
                 }
             } catch (Throwable $e) {
                 $failed++;
-                $this->error("Failed listing {$listing->id}: " . $e->getMessage());
+                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
 
                 try {
                     $scraper->closeBrowser();
