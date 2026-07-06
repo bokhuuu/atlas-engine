@@ -87,15 +87,14 @@ class CaptureScreenshotsCommand extends Command
 
                     continue;
                 }
-                $this->info("Opening browser for listing {$listing->id}...");
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
 
                 $browser = $scraper->getBrowser();
+                $browser->driver->manage()->timeouts()->pageLoadTimeout(0);
                 $browser->driver->get($listing->url);
-                $this->info('Navigation done, taking screenshot...');
-                usleep(3_000_000);
 
-                $this->info('Testing chrome connectivity...');
+                usleep(5_000_000);
+
                 $testResponse = Http::timeout(5)->get('http://chrome:4444/wd/hub/status');
                 $this->info('Chrome status: '.$testResponse->status());
                 $this->info('Session ID: '.$browser->driver->getSessionID());
@@ -105,8 +104,6 @@ class CaptureScreenshotsCommand extends Command
                     $listing->external_id,
                     $listing->source_profile_name,
                 );
-
-                $this->info('Screenshot done: '.($path ?? 'NULL'));
 
                 $scraper->closeBrowser();
 
