@@ -104,12 +104,6 @@ class CaptureScreenshotsCommand extends Command
                     $this->line('Navigation complete');
                 } catch (TimeoutException $e) {
                     $this->line('Navigation timeout - proceeding with partial load');
-                    try {
-                        $browser->driver->executeScript('window.stop();');
-                        $this->line('Page load stopped');
-                    } catch (Throwable) {
-                        // ignore
-                    }
                 }
 
                 $sessionId = $browser->driver->getSessionID();
