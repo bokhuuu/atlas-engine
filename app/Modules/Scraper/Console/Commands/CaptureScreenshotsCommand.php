@@ -126,7 +126,7 @@ class CaptureScreenshotsCommand extends Command
                 }
             } catch (Throwable $e) {
                 $failed++;
-                $this->error("Failed listing {$listing->id}: " . $e->getMessage());
+                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
 
                 try {
                     $driver?->quit();
