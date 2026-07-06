@@ -90,7 +90,6 @@ class CaptureScreenshotsCommand extends Command
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
 
                 $scraper->getBrowser()->visit($listing->url);
-                $scraper->getBrowser()->script('window.stop()');
 
                 $path = $screenshotService->capture(
                     $scraper->getBrowser(),

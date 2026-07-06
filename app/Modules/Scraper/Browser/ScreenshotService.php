@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Browser;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Dusk\Browser;
@@ -11,21 +12,21 @@ use Throwable;
 
 /**
  * Captures a screenshot of the current browser page and uploads it to
- * Backblaze B2. Called by CrawlDetailPageJob for new listings only.
+ * Backblaze B2. Called by CaptureScreenshotsCommand for listings without
+ * a screenshot.
+ *
+ * Uses Chrome DevTools Protocol (CDP) directly via Selenium Grid's HTTP
+ * endpoint — bypasses WebDriver's takeScreenshot() which hangs in Grid 4.
  *
  * Stores the B2 path (not a URL) in screenshot_url. Signed URLs are
  * generated on demand from the path - never stored as permanent links.
- *
- * Uses WebDriver's native takeScreenshot() directly instead of Dusk's
- * screenshot() method - avoids Dusk's file management and path config
- * which are not available outside of a test context.
  */
 class ScreenshotService
 {
     private const DISK = 'b2_screenshots';
 
     /**
-     * Capture the current browser page and upload to B2.
+     * Capture the current browser page via CDP and upload to B2.
      * Returns the B2 path on success, null on any failure.
      * Failures are logged but never throw - a missing screenshot
      * must never fail a scrape run.
@@ -37,20 +38,16 @@ class ScreenshotService
         }
 
         try {
-            $tmpPath = $this->takeScreenshot($browser, $externalId);
+            $sessionId = $browser->driver->getSessionID();
+            $imageData = $this->captureViaCdp($sessionId);
 
-            if ($tmpPath === null) {
+            if ($imageData === null) {
                 return null;
             }
 
             $b2Path = $this->buildB2Path($source, $externalId);
 
-            Storage::disk(self::DISK)->put(
-                $b2Path,
-                file_get_contents($tmpPath),
-            );
-
-            @unlink($tmpPath);
+            Storage::disk(self::DISK)->put($b2Path, $imageData);
 
             return $b2Path;
         } catch (Throwable $e) {
@@ -86,27 +83,39 @@ class ScreenshotService
     }
 
     /**
-     * Capture screenshot using WebDriver's native takeScreenshot().
-     * Returns raw PNG bytes directly - no Dusk file management needed.
-     * Writes to a temp file and returns the path.
+     * Capture screenshot via Chrome DevTools Protocol (CDP).
+     *
+     * Uses Selenium Grid's /chromium/send_command_and_get_result endpoint
+     * which proxies CDP commands directly to Chrome. This bypasses
+     * WebDriver's takeScreenshot() which hangs in Selenium Grid 4.
+     *
+     * Returns raw PNG bytes on success, null on failure.
      */
-    private function takeScreenshot(Browser $browser, string $externalId): ?string
+    private function captureViaCdp(string $sessionId): ?string
     {
-        $imageData = $browser->driver->takeScreenshot();
+        $chromedriverUrl = rtrim(config('scraper.chromedriver_url'), '/');
 
-        if (empty($imageData)) {
+        $response = Http::timeout(30)->post(
+            "{$chromedriverUrl}/session/{$sessionId}/chromium/send_command_and_get_result",
+            ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']],
+        );
+
+        if (! $response->successful()) {
+            Log::warning('CDP screenshot failed', [
+                'status' => $response->status(),
+                'session' => $sessionId,
+            ]);
+
             return null;
         }
 
-        $tmpPath = sys_get_temp_dir().'/atlas_screenshot_'.$externalId.'_'.time().'.png';
+        $data = $response->json('value.data');
 
-        file_put_contents($tmpPath, $imageData);
-
-        if (! file_exists($tmpPath) || filesize($tmpPath) === 0) {
+        if (empty($data)) {
             return null;
         }
 
-        return $tmpPath;
+        return base64_decode($data);
     }
 
     /**
