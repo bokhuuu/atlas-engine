@@ -86,12 +86,12 @@ class CaptureScreenshotsCommand extends Command
 
                     continue;
                 }
-
+                $this->info("Opening browser for listing {$listing->id}...");
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
 
                 $browser = $scraper->getBrowser();
                 $browser->driver->get($listing->url);
-
+                $this->info('Navigation done, taking screenshot...');
                 usleep(3_000_000);
 
                 $path = $screenshotService->capture(
@@ -99,6 +99,8 @@ class CaptureScreenshotsCommand extends Command
                     $listing->external_id,
                     $listing->source_profile_name,
                 );
+
+                $this->info('Screenshot done: '.($path ?? 'NULL'));
 
                 $scraper->closeBrowser();
 
