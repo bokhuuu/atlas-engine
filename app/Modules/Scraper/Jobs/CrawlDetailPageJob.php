@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Jobs;
 
-use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\DTOs\ListingDTO;
 use App\Modules\Scraper\Jobs\Middleware\RateLimitedMiddleware;
@@ -25,6 +24,9 @@ use Throwable;
  *
  * Dispatched by CrawlIndexPageJob - one job per URL found on a grid page.
  * These are the most numerous jobs: 50 pages × 20 listings = ~1000 jobs per run.
+ *
+ * Screenshots are handled separately by atlas:capture-screenshots command,
+ * which runs on off-scrape nights to avoid interfering with scraping.
  */
 class CrawlDetailPageJob implements ShouldQueue
 {
@@ -71,11 +73,9 @@ class CrawlDetailPageJob implements ShouldQueue
     /**
      * Crawls one listing detail page, processes it through the pipeline,
      * and saves it to the database if it passes validation and isn't
-     * a duplicate. For new listings, captures a screenshot and uploads
-     * it to Backblaze B2 before saving. Always closes the browser when
-     * done, success or not.
+     * a duplicate. Always closes the browser when done, success or not.
      */
-    public function handle(ListingRepository $repository, ScreenshotService $screenshotService): void
+    public function handle(ListingRepository $repository): void
     {
         $scraper = app($this->profile->getScraperClass(), [
             'profile' => $this->profile,
@@ -87,20 +87,7 @@ class CrawlDetailPageJob implements ShouldQueue
         }
 
         try {
-            $raw = $scraper->crawlDetailPage($this->url);
-
-            $isNew = ! $repository->existsByExternalId(
-                $raw['external_id'],
-                $raw['source_profile_name'],
-            );
-
-            if ($isNew) {
-                $raw['screenshot_url'] = $screenshotService->capture(
-                    $scraper->getBrowser(),
-                    $raw['external_id'],
-                    $raw['source_profile_name'],
-                );
-            }
+            $raw = $scraper->fetchDetailPage($this->url);
 
             $dto = ListingDTO::fromArray($raw);
             $dto->scraperRunId = $this->scraperRunId;
