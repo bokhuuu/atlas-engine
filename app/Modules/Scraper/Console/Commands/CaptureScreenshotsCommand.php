@@ -7,23 +7,22 @@ namespace App\Modules\Scraper\Console\Commands;
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
-use Facebook\WebDriver\Exception\TimeoutException;
+use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Illuminate\Console\Command;
 use Throwable;
 
 /**
  * Captures screenshots of listings that don't have one yet.
  *
- * Opens a fresh Chrome session per listing, navigates to the URL,
- * captures the full page, uploads to Backblaze B2, and stores the
- * path in screenshot_url.
+ * Opens a fresh Chrome session per listing using pageLoadStrategy=none,
+ * navigates to the URL, waits for initial render, captures via CDP,
+ * uploads to Backblaze B2, and stores the path in screenshot_url.
  *
  * Runs on off-scrape nights (Tue/Thu/Sat at 05:00 Tbilisi) so it
  * never interferes with active scraping. Config-driven chunk size
  * limits how many screenshots are taken per run.
- *
- * Uses fetchDetailPage() to navigate — same flow as the scraper,
- * ensuring the browser is fully on the page before CDP screenshot.
  *
  * Usage:
  *   php artisan atlas:capture-screenshots
@@ -81,34 +80,33 @@ class CaptureScreenshotsCommand extends Command
                 continue;
             }
 
+            $driver = null;
+
             try {
-                $profile = $this->resolveProfile($listing->source_profile_name);
+                $options = new ChromeOptions;
+                $options->addArguments([
+                    '--headless',
+                    '--no-sandbox',
+                    '--disable-gpu',
+                    '--disable-dev-shm-usage',
+                    '--window-size=1920,1080',
+                ]);
 
-                if ($profile === null) {
-                    $bar->advance();
+                $capabilities = DesiredCapabilities::chrome();
+                $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+                $capabilities->setCapability('pageLoadStrategy', 'none');
 
-                    continue;
-                }
+                $driver = RemoteWebDriver::create(
+                    'http://chrome:4444/wd/hub',
+                    $capabilities,
+                    30000,
+                    30000,
+                );
 
-                $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
-                $this->line("Scraper created for listing {$listing->id}");
+                $driver->get($listing->url);
+                usleep(5_000_000);
 
-                $browser = $scraper->getBrowser();
-                $this->line('Browser session: '.$browser->driver->getSessionID());
-
-                $browser->driver->manage()->timeouts()->pageLoadTimeout(8);
-                $this->line('Timeout set');
-
-                try {
-                    $browser->driver->get($listing->url);
-                    $this->line('Navigation complete');
-                } catch (TimeoutException $e) {
-                    $this->line('Navigation timeout - proceeding with partial load');
-                }
-
-                $sessionId = $browser->driver->getSessionID();
-                // Don't close browser yet - session must stay alive for CDP
-                usleep(500_000); // 0.5 second settle time
+                $sessionId = $driver->getSessionID();
 
                 $path = $screenshotService->captureBySessionId(
                     $sessionId,
@@ -116,7 +114,8 @@ class CaptureScreenshotsCommand extends Command
                     $listing->source_profile_name,
                 );
 
-                $scraper->closeBrowser(); // close AFTER CDP
+                $driver->quit();
+                $driver = null;
 
                 if ($path !== null) {
                     $listing->update(['screenshot_url' => $path]);
@@ -127,10 +126,10 @@ class CaptureScreenshotsCommand extends Command
                 }
             } catch (Throwable $e) {
                 $failed++;
-                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
+                $this->error("Failed listing {$listing->id}: " . $e->getMessage());
 
                 try {
-                    $scraper->closeBrowser();
+                    $driver?->quit();
                 } catch (Throwable) {
                     // already closed
                 }
