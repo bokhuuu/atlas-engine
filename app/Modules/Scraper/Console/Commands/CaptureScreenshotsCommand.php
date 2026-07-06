@@ -72,6 +72,8 @@ class CaptureScreenshotsCommand extends Command
         $failed = 0;
 
         foreach ($listings as $listing) {
+            Log::info('Processing listing', ['id' => $listing->id, 'url' => $listing->url]);
+
             if (empty($listing->url)) {
                 $bar->advance();
 
