@@ -15,6 +15,10 @@ use Throwable;
  *
  * Stores the B2 path (not a URL) in screenshot_url. Signed URLs are
  * generated on demand from the path - never stored as permanent links.
+ *
+ * Uses WebDriver's native takeScreenshot() directly instead of Dusk's
+ * screenshot() method - avoids Dusk's file management and path config
+ * which are not available outside of a test context.
  */
 class ScreenshotService
 {
@@ -82,31 +86,25 @@ class ScreenshotService
     }
 
     /**
-     * Take a full-page screenshot via Dusk and save to a local temp file.
-     * Returns the local path on success, null on failure.
+     * Capture screenshot using WebDriver's native takeScreenshot().
+     * Returns raw PNG bytes directly - no Dusk file management needed.
+     * Writes to a temp file and returns the path.
      */
     private function takeScreenshot(Browser $browser, string $externalId): ?string
     {
-        $screenshotName = 'atlas_screenshot_'.$externalId;
-        $screenshotDir = storage_path('app/screenshots');
+        $imageData = $browser->driver->takeScreenshot();
 
-        if (! is_dir($screenshotDir)) {
-            mkdir($screenshotDir, 0755, true);
-        }
-
-        // Tell Dusk where to save screenshots
-        Browser::$storeScreenshotsAt = $screenshotDir;
-
-        $browser->screenshot($screenshotName);
-
-        $duskPath = $screenshotDir.'/'.$screenshotName.'.png';
-
-        if (! file_exists($duskPath)) {
+        if (empty($imageData)) {
             return null;
         }
 
-        $tmpPath = sys_get_temp_dir().'/'.$screenshotName.'_'.time().'.png';
-        rename($duskPath, $tmpPath);
+        $tmpPath = sys_get_temp_dir().'/atlas_screenshot_'.$externalId.'_'.time().'.png';
+
+        file_put_contents($tmpPath, $imageData);
+
+        if (! file_exists($tmpPath) || filesize($tmpPath) === 0) {
+            return null;
+        }
 
         return $tmpPath;
     }
