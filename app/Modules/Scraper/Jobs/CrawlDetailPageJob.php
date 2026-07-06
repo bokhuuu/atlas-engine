@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Jobs;
 
-use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\DTOs\ListingDTO;
 use App\Modules\Scraper\Jobs\Middleware\RateLimitedMiddleware;
@@ -26,8 +25,8 @@ use Throwable;
  * Dispatched by CrawlIndexPageJob - one job per URL found on a grid page.
  * These are the most numerous jobs: 50 pages × 20 listings = ~1000 jobs per run.
  *
- * Screenshots are handled separately by atlas:capture-screenshots command,
- * which runs on off-scrape nights to avoid interfering with scraping.
+ * Screenshots are captured by atlas:capture-screenshots command
+ * which runs on off-scrape nights.
  */
 class CrawlDetailPageJob implements ShouldQueue
 {
@@ -39,11 +38,6 @@ class CrawlDetailPageJob implements ShouldQueue
 
     private int $concurrency;
 
-    /**
-     * Sets up the job with the profile, page number, and run ID,
-     * pulling retry/timeout/concurrency settings from the profile's
-     * queue config (falling back to the global defaults).
-     */
     public function __construct(
         private readonly ScraperProfileInterface $profile,
         private readonly string $url,
@@ -55,10 +49,6 @@ class CrawlDetailPageJob implements ShouldQueue
         $this->concurrency = $config['concurrency'] ?? config('scraper.default_concurrency');
     }
 
-    /**
-     * Rate-limits how many of this job can run at once per source,
-     * and applies backoff between retries.
-     */
     public function middleware(): array
     {
         return [
@@ -66,19 +56,11 @@ class CrawlDetailPageJob implements ShouldQueue
                 source: $this->profile->getName(),
                 maxConcurrent: $this->concurrency,
             ),
-
             new ThrottledRetryMiddleware,
         ];
     }
 
-    /**
-     * Crawls one listing detail page, processes it through the pipeline,
-     * and saves it to the database if it passes validation and isn't
-     * a duplicate. For new listings, captures a screenshot via CDP and
-     * uploads it to Backblaze B2 before saving. Always closes the browser
-     * when done, success or not.
-     */
-    public function handle(ListingRepository $repository, ScreenshotService $screenshotService): void
+    public function handle(ListingRepository $repository): void
     {
         $scraper = app($this->profile->getScraperClass(), [
             'profile' => $this->profile,
@@ -91,19 +73,6 @@ class CrawlDetailPageJob implements ShouldQueue
 
         try {
             $raw = $scraper->fetchDetailPage($this->url);
-
-            $isNew = ! $repository->existsByExternalId(
-                $raw['external_id'],
-                $raw['source_profile_name'],
-            );
-
-            if ($isNew) {
-                $raw['screenshot_url'] = $screenshotService->capture(
-                    $scraper->getBrowser(),
-                    $raw['external_id'],
-                    $raw['source_profile_name'],
-                );
-            }
 
             $dto = ListingDTO::fromArray($raw);
             $dto->scraperRunId = $this->scraperRunId;
@@ -129,10 +98,6 @@ class CrawlDetailPageJob implements ShouldQueue
         }
     }
 
-    /**
-     * Logs the failure with enough context to know which page and
-     * run it belongs to.
-     */
     public function failed(Throwable $exception): void
     {
         Log::error('CrawlDetailPageJob failed', [
