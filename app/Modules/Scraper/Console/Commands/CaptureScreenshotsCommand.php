@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Console\Commands;
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -90,8 +91,22 @@ class CaptureScreenshotsCommand extends Command
                 }
 
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
-                $scraper->fetchDetailPage($listing->url);
+                $this->line("Scraper created for listing {$listing->id}");
+
                 $browser = $scraper->getBrowser();
+                $this->line('Browser session: ' . $browser->driver->getSessionID());
+
+                $browser->driver->manage()->timeouts()->pageLoadTimeout(8);
+                $this->line('Timeout set');
+
+                try {
+                    $browser->driver->get($listing->url);
+                    $this->line('Navigation complete');
+                } catch (TimeoutException $e) {
+                    $this->line('Navigation timeout - proceeding with partial load');
+                }
+
+                $this->line('Taking screenshot...');
 
                 $path = $screenshotService->capture(
                     $browser,
@@ -110,7 +125,7 @@ class CaptureScreenshotsCommand extends Command
                 }
             } catch (Throwable $e) {
                 $failed++;
-                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
+                $this->error("Failed listing {$listing->id}: " . $e->getMessage());
 
                 try {
                     $scraper->closeBrowser();
