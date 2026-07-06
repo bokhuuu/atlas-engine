@@ -93,13 +93,18 @@ class ScreenshotService
      */
     private function captureViaCdp(string $sessionId): ?string
     {
-        Log::info('CDP screenshot attempt', ['session' => $sessionId]);
         $chromedriverUrl = rtrim(config('scraper.chromedriver_url'), '/');
 
         $response = Http::timeout(30)->post(
             "{$chromedriverUrl}/session/{$sessionId}/chromium/send_command_and_get_result",
             ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']],
         );
+
+        Log::info('CDP response', [
+            'status' => $response->status(),
+            'has_data' => ! empty($response->json('value.data')),
+            'body_preview' => substr($response->body(), 0, 200),
+        ]);
 
         if (! $response->successful()) {
             Log::warning('CDP screenshot failed', [
