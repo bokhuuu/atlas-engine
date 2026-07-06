@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Console\Commands;
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -85,13 +86,19 @@ class CaptureScreenshotsCommand extends Command
 
                     continue;
                 }
+
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
 
                 $browser = $scraper->getBrowser();
-                $browser->driver->manage()->timeouts()->pageLoadTimeout(0);
-                $browser->driver->get($listing->url);
+                $browser->driver->manage()->timeouts()->pageLoadTimeout(10);
 
-                usleep(5_000_000);
+                try {
+                    $browser->driver->get($listing->url);
+                } catch (TimeoutException) {
+                    // Page load timed out - partial render is fine for screenshot
+                }
+
+                usleep(3_000_000);
 
                 $path = $screenshotService->capture(
                     $browser,
