@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Browser;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -96,22 +97,15 @@ class ScreenshotService
      */
     private function captureViaCdp(string $sessionId): ?string
     {
-        // CDP endpoint lives at /session/, not under /wd/hub/
-        $response = Http::timeout(30)->post(
+        $client = new Client(['timeout' => 30]);
+
+        $response = $client->post(
             'http://chrome:4444/session/'.$sessionId.'/chromium/send_command_and_get_result',
-            ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']],
+            ['json' => ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']]]
         );
 
-        if (! $response->successful()) {
-            Log::warning('CDP screenshot failed', [
-                'status' => $response->status(),
-                'session' => $sessionId,
-            ]);
-
-            return null;
-        }
-
-        $data = $response->json('value.data');
+        $body = json_decode($response->getBody()->getContents(), true);
+        $data = $body['value']['data'] ?? null;
 
         if (empty($data)) {
             return null;
