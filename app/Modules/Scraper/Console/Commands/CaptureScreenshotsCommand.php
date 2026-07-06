@@ -8,7 +8,6 @@ use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -72,8 +71,6 @@ class CaptureScreenshotsCommand extends Command
         $failed = 0;
 
         foreach ($listings as $listing) {
-            Log::info('Processing listing', ['id' => $listing->id, 'url' => $listing->url]);
-
             if (empty($listing->url)) {
                 $bar->advance();
 
@@ -109,19 +106,11 @@ class CaptureScreenshotsCommand extends Command
                     $captured++;
                 } else {
                     $failed++;
-                    Log::warning('Screenshot capture returned null', [
-                        'id' => $listing->id,
-                        'url' => $listing->url,
-                    ]);
+                    $this->warn("Null capture for listing {$listing->id}: {$listing->url}");
                 }
             } catch (Throwable $e) {
                 $failed++;
-                Log::warning('Screenshot capture failed', [
-                    'id' => $listing->id,
-                    'url' => $listing->url,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
+                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
 
                 try {
                     $scraper->closeBrowser();
