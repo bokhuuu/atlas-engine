@@ -87,7 +87,7 @@ class CrawlDetailPageJob implements ShouldQueue
         }
 
         try {
-            $raw = $scraper->fetchDetailPage($this->url);
+            $raw = $scraper->crawlDetailPage($this->url);
 
             $isNew = ! $repository->existsByExternalId(
                 $raw['external_id'],
