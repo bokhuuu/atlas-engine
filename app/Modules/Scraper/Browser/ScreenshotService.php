@@ -38,7 +38,6 @@ class ScreenshotService
 
         try {
             $sessionId = $browser->driver->getSessionID();
-            error_log("ScreenshotService session: {$sessionId}");
 
             $imageData = $this->captureViaCdp($sessionId);
 
@@ -129,5 +128,33 @@ class ScreenshotService
     private function buildB2Path(string $source, string $externalId): string
     {
         return "screenshots/{$source}/{$externalId}.png";
+    }
+
+    public function captureBySessionId(string $sessionId, string $externalId, string $source): ?string
+    {
+        if (! config('scraper.screenshots_enabled', false)) {
+            return null;
+        }
+
+        try {
+            $imageData = $this->captureViaCdp($sessionId);
+
+            if ($imageData === null) {
+                return null;
+            }
+
+            $b2Path = $this->buildB2Path($source, $externalId);
+            Storage::disk(self::DISK)->put($b2Path, $imageData);
+
+            return $b2Path;
+        } catch (Throwable $e) {
+            Log::warning('Screenshot capture failed', [
+                'external_id' => $externalId,
+                'source' => $source,
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 }

@@ -112,16 +112,16 @@ class CaptureScreenshotsCommand extends Command
                     }
                 }
 
-                $this->line('Taking screenshot...');
+                $sessionId = $browser->driver->getSessionID();
+                $this->line('Closing WebDriver before CDP...');
+                $scraper->closeBrowser();
+                $this->line('Taking CDP screenshot...');
 
-                $this->line('Session before capture: '.$browser->driver->getSessionID());
-                $path = $screenshotService->capture(
-                    $browser,
+                $path = $screenshotService->captureBySessionId(
+                    $sessionId,
                     $listing->external_id,
                     $listing->source_profile_name,
                 );
-
-                $scraper->closeBrowser();
 
                 if ($path !== null) {
                     $listing->update(['screenshot_url' => $path]);
