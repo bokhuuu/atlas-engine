@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Browser;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Dusk\Browser;
@@ -97,21 +95,29 @@ class ScreenshotService
      */
     private function captureViaCdp(string $sessionId): ?string
     {
-        $client = new Client(['timeout' => 30]);
+        $url = 'http://chrome:4444/session/'.$sessionId.'/chromium/send_command_and_get_result';
+        $data = json_encode(['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']]);
 
-        $response = $client->post(
-            'http://chrome:4444/session/'.$sessionId.'/chromium/send_command_and_get_result',
-            ['json' => ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']]]
+        $cmd = sprintf(
+            'curl -s -X POST -H "Content-Type: application/json" -d %s %s',
+            escapeshellarg($data),
+            escapeshellarg($url)
         );
 
-        $body = json_decode($response->getBody()->getContents(), true);
-        $data = $body['value']['data'] ?? null;
+        $result = shell_exec($cmd);
 
-        if (empty($data)) {
+        if (empty($result)) {
             return null;
         }
 
-        return base64_decode($data);
+        $body = json_decode($result, true);
+        $imageData = $body['value']['data'] ?? null;
+
+        if (empty($imageData)) {
+            return null;
+        }
+
+        return base64_decode($imageData);
     }
 
     /**
