@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Jobs;
 
+use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\DTOs\ListingDTO;
 use App\Modules\Scraper\Jobs\Middleware\RateLimitedMiddleware;
@@ -73,9 +74,11 @@ class CrawlDetailPageJob implements ShouldQueue
     /**
      * Crawls one listing detail page, processes it through the pipeline,
      * and saves it to the database if it passes validation and isn't
-     * a duplicate. Always closes the browser when done, success or not.
+     * a duplicate. For new listings, captures a screenshot via CDP and
+     * uploads it to Backblaze B2 before saving. Always closes the browser
+     * when done, success or not.
      */
-    public function handle(ListingRepository $repository): void
+    public function handle(ListingRepository $repository, ScreenshotService $screenshotService): void
     {
         $scraper = app($this->profile->getScraperClass(), [
             'profile' => $this->profile,
@@ -88,6 +91,19 @@ class CrawlDetailPageJob implements ShouldQueue
 
         try {
             $raw = $scraper->fetchDetailPage($this->url);
+
+            $isNew = ! $repository->existsByExternalId(
+                $raw['external_id'],
+                $raw['source_profile_name'],
+            );
+
+            if ($isNew) {
+                $raw['screenshot_url'] = $screenshotService->capture(
+                    $scraper->getBrowser(),
+                    $raw['external_id'],
+                    $raw['source_profile_name'],
+                );
+            }
 
             $dto = ListingDTO::fromArray($raw);
             $dto->scraperRunId = $this->scraperRunId;
