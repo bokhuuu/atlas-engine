@@ -98,6 +98,7 @@ class CaptureScreenshotsCommand extends Command
                 $this->info('Testing chrome connectivity...');
                 $testResponse = Http::timeout(5)->get('http://chrome:4444/wd/hub/status');
                 $this->info('Chrome status: '.$testResponse->status());
+                $this->info('Session ID: '.$browser->driver->getSessionID());
 
                 $path = $screenshotService->capture(
                     $browser,
