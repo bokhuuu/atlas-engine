@@ -8,7 +8,6 @@ use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -95,10 +94,6 @@ class CaptureScreenshotsCommand extends Command
 
                 usleep(5_000_000);
 
-                $testResponse = Http::timeout(5)->get('http://chrome:4444/wd/hub/status');
-                $this->info('Chrome status: '.$testResponse->status());
-                $this->info('Session ID: '.$browser->driver->getSessionID());
-
                 $path = $screenshotService->capture(
                     $browser,
                     $listing->external_id,
@@ -123,6 +118,7 @@ class CaptureScreenshotsCommand extends Command
                     'id' => $listing->id,
                     'url' => $listing->url,
                     'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
 
                 try {

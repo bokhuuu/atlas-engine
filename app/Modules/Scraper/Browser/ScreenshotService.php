@@ -100,12 +100,6 @@ class ScreenshotService
             ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']],
         );
 
-        Log::info('CDP response', [
-            'status' => $response->status(),
-            'has_data' => ! empty($response->json('value.data')),
-            'body_preview' => substr($response->body(), 0, 200),
-        ]);
-
         if (! $response->successful()) {
             Log::warning('CDP screenshot failed', [
                 'status' => $response->status(),
