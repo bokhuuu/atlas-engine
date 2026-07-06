@@ -89,10 +89,13 @@ class CaptureScreenshotsCommand extends Command
 
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
 
-                $scraper->getBrowser()->visit($listing->url);
+                $browser = $scraper->getBrowser();
+                $browser->driver->get($listing->url);
+
+                usleep(3_000_000);
 
                 $path = $screenshotService->capture(
-                    $scraper->getBrowser(),
+                    $browser,
                     $listing->external_id,
                     $listing->source_profile_name,
                 );
