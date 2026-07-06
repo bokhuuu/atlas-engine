@@ -38,6 +38,8 @@ class ScreenshotService
 
         try {
             $sessionId = $browser->driver->getSessionID();
+            error_log("ScreenshotService session: {$sessionId}");
+
             $imageData = $this->captureViaCdp($sessionId);
 
             if ($imageData === null) {

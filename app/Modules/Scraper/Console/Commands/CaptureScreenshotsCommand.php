@@ -114,6 +114,7 @@ class CaptureScreenshotsCommand extends Command
 
                 $this->line('Taking screenshot...');
 
+                $this->line('Session before capture: '.$browser->driver->getSessionID());
                 $path = $screenshotService->capture(
                     $browser,
                     $listing->external_id,
