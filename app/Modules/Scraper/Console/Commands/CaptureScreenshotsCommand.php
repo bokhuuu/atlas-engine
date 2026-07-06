@@ -7,7 +7,6 @@ namespace App\Modules\Scraper\Console\Commands;
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
-use Facebook\WebDriver\Exception\TimeoutException;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -21,6 +20,9 @@ use Throwable;
  * Runs on off-scrape nights (Tue/Thu/Sat at 05:00 Tbilisi) so it
  * never interferes with active scraping. Config-driven chunk size
  * limits how many screenshots are taken per run.
+ *
+ * Uses fetchDetailPage() to navigate — same flow as the scraper,
+ * ensuring the browser is fully on the page before CDP screenshot.
  *
  * Usage:
  *   php artisan atlas:capture-screenshots
@@ -88,17 +90,8 @@ class CaptureScreenshotsCommand extends Command
                 }
 
                 $scraper = app($profile->getScraperClass(), ['profile' => $profile]);
-
+                $scraper->fetchDetailPage($listing->url);
                 $browser = $scraper->getBrowser();
-                $browser->driver->manage()->timeouts()->pageLoadTimeout(10);
-
-                try {
-                    $browser->driver->get($listing->url);
-                } catch (TimeoutException) {
-                    // Page load timed out - partial render is fine for screenshot
-                }
-
-                usleep(3_000_000);
 
                 $path = $screenshotService->capture(
                     $browser,
@@ -117,7 +110,7 @@ class CaptureScreenshotsCommand extends Command
                 }
             } catch (Throwable $e) {
                 $failed++;
-                $this->error("Failed listing {$listing->id}: ".$e->getMessage());
+                $this->error("Failed listing {$listing->id}: " . $e->getMessage());
 
                 try {
                     $scraper->closeBrowser();
