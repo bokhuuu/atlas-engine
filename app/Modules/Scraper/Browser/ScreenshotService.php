@@ -85,18 +85,20 @@ class ScreenshotService
     /**
      * Capture screenshot via Chrome DevTools Protocol (CDP).
      *
-     * Uses Selenium Grid's /chromium/send_command_and_get_result endpoint
-     * which proxies CDP commands directly to Chrome. This bypasses
+     * Uses Selenium Grid's /session/{id}/chromium/send_command_and_get_result
+     * endpoint which proxies CDP commands directly to Chrome. This bypasses
      * WebDriver's takeScreenshot() which hangs in Selenium Grid 4.
+     *
+     * Note: CDP endpoint is at /session/, not /wd/hub/session/ — the
+     * chromedriver_url config includes /wd/hub which is for WebDriver only.
      *
      * Returns raw PNG bytes on success, null on failure.
      */
     private function captureViaCdp(string $sessionId): ?string
     {
-        $chromedriverUrl = rtrim(config('scraper.chromedriver_url'), '/');
-
+        // CDP endpoint lives at /session/, not under /wd/hub/
         $response = Http::timeout(30)->post(
-            "{$chromedriverUrl}/session/{$sessionId}/chromium/send_command_and_get_result",
+            'http://chrome:4444/session/'.$sessionId.'/chromium/send_command_and_get_result',
             ['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']],
         );
 
