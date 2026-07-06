@@ -454,6 +454,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Screenshot Capture Chunk
+    |--------------------------------------------------------------------------
+    |
+    | Maximum number of listings to screenshot per nightly run.
+    | Limits Chrome session count and run duration.
+    | At ~20 seconds per listing, 200 = ~67 minutes per run.
+    |
+    */
+    'screenshot_daily_chunk' => (int) env('SCREENSHOT_DAILY_CHUNK', 200),
+
+    /*
+    |--------------------------------------------------------------------------
     | Stale Listing Threshold
     |--------------------------------------------------------------------------
     |
