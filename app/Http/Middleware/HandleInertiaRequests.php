@@ -36,11 +36,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function version(Request $request): ?string
     {
-        if (! cache()->has('inertia_version')) {
-            cache()->forever('inertia_version', 1);
+        $manifest = public_path('build/manifest.json');
+
+        if (file_exists($manifest)) {
+            return md5_file($manifest) ?: parent::version($request);
         }
 
-        return (string) cache()->get('inertia_version', 1);
+        return parent::version($request);
     }
 
     /**
