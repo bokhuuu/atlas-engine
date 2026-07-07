@@ -361,20 +361,9 @@ export default function Assistant() {
                                 }`}
                             >
                                 <span className="flex items-center gap-1 text-xs">
-                                    <Zap className="h-3 w-3" />
-                                    <span
-                                        className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'}`}
-                                    >
-                                        {usage.this_month.tokens.toLocaleString()}
-                                    </span>
-                                    <span className="text-muted-foreground/60">
-                                        tokens
-                                    </span>
-                                </span>
-                                <span className="flex items-center gap-1 text-xs">
                                     <DollarSign className="h-3 w-3" />
                                     <span
-                                        className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'}`}
+                                        className={`tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'} text-emerald-400`}
                                     >
                                         {formatCost(usage.this_month.cost_usd)}
                                     </span>

@@ -3,16 +3,15 @@ import {
     Settings,
     Users,
     LayoutGrid,
-    Zap,
     DollarSign,
     Activity,
     ThumbsUp,
     ShieldCheck,
-    KeyRound,
-    HeartPulse,
+    Key,
     ChartNoAxesColumn,
     Bot,
     Globe,
+    ExternalLink,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import AppLogo from '@/components/app-logo';
@@ -71,12 +70,6 @@ const intelligenceItems: NavItemWithRoles[] = [
         icon: ThumbsUp,
         roles: ['super_admin', 'admin'],
     },
-    {
-        title: 'Public Site',
-        href: '/',
-        icon: Globe,
-        roles: ['super_admin', 'admin', 'editor'],
-    },
 ];
 
 const administrationItems: NavItemWithRoles[] = [
@@ -93,12 +86,6 @@ const administrationItems: NavItemWithRoles[] = [
         roles: ['super_admin'],
     },
     {
-        title: 'System Health',
-        href: '/admin/system-health',
-        icon: HeartPulse,
-        roles: ['super_admin'],
-    },
-    {
         title: 'Site Settings',
         href: '/admin/settings',
         icon: Settings,
@@ -110,11 +97,20 @@ const administrationItems: NavItemWithRoles[] = [
         icon: Activity,
         roles: ['super_admin', 'admin'],
     },
+];
+
+const systemItems: NavItemWithRoles[] = [
+    {
+        title: 'System Health',
+        href: '/admin/system-health',
+        icon: Activity,
+        roles: ['super_admin', 'admin'],
+    },
     {
         title: 'API Tokens',
         href: '/admin/tokens',
-        icon: KeyRound,
-        roles: ['super_admin', 'admin'],
+        icon: Key,
+        roles: ['super_admin', 'admin', 'editor'],
     },
 ];
 
@@ -218,11 +214,19 @@ export function AppSidebar() {
 
                 <div className="mx-4 my-1 border-t border-sidebar-border/50" />
 
-                <NavGroup
-                    label="Administration"
-                    items={administrationItems}
-                    role={role}
-                />
+                <div className="opacity-60">
+                    <NavGroup
+                        label="Administration"
+                        items={administrationItems}
+                        role={role}
+                    />
+                </div>
+
+                <div className="mx-4 my-1 border-t border-sidebar-border/50" />
+
+                <div className="opacity-60">
+                    <NavGroup label="System" items={systemItems} role={role} />
+                </div>
             </SidebarContent>
             <SidebarFooter>
                 {systemUsage && ['admin', 'super_admin'].includes(role) && (
@@ -236,12 +240,8 @@ export function AppSidebar() {
                                     This month
                                 </span>
                                 <div className="flex items-center gap-1.5">
-                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
-                                        <Zap className="h-2.5 w-2.5 text-primary" />
-                                        {systemUsage.this_month.tokens.toLocaleString()}
-                                    </span>
-                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
-                                        <DollarSign className="h-2.5 w-2.5 text-primary" />
+                                    <span className="flex items-center gap-0.5 text-[10px] text-emerald-400 tabular-nums">
+                                        <DollarSign className="h-2.5 w-2.5 text-emerald-400" />
                                         {formatCost(
                                             systemUsage.this_month.cost_usd,
                                         )}
@@ -253,12 +253,8 @@ export function AppSidebar() {
                                     All time
                                 </span>
                                 <div className="flex items-center gap-1.5">
-                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
-                                        <Zap className="h-2.5 w-2.5 text-muted-foreground" />
-                                        {systemUsage.all_time.tokens.toLocaleString()}
-                                    </span>
-                                    <span className="flex items-center gap-0.5 text-[10px] text-foreground tabular-nums">
-                                        <DollarSign className="h-2.5 w-2.5 text-muted-foreground" />
+                                    <span className="flex items-center gap-0.5 text-[10px] text-amber-400 tabular-nums">
+                                        <DollarSign className="h-2.5 w-2.5 text-amber-400" />
                                         {formatCost(
                                             systemUsage.all_time.cost_usd,
                                         )}
@@ -269,7 +265,20 @@ export function AppSidebar() {
                     </div>
                 )}
 
+                <div className="mx-3 mb-2">
+                    <a
+                        href="/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-blue-400 transition-colors hover:text-blue-300"
+                    >
+                        <Globe className="h-3.5 w-3.5" />
+                        <span>Public Site</span>
+                        <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
+                    </a>
+                </div>
                 <NavFooter items={footerNavItems} className="mt-auto" />
+
                 <div className="px-2 pb-1">
                     <p className="px-2 text-[10px] font-semibold tracking-widest text-muted-foreground/60 uppercase">
                         Account
