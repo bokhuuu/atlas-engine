@@ -96,7 +96,7 @@ class ScreenshotService
      */
     private function captureViaCdp(string $sessionId): ?string
     {
-        $url = 'http://chrome:4444/session/' . $sessionId . '/chromium/send_command_and_get_result';
+        $url = 'http://chrome:4444/session/'.$sessionId.'/chromium/send_command_and_get_result';
         $data = json_encode(['cmd' => 'Page.captureScreenshot', 'params' => ['format' => 'png']]);
 
         $cmd = sprintf(
