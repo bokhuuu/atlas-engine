@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Console\Commands;
 
 use App\Modules\Scraper\Browser\ScreenshotService;
-use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Models\Listing;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -16,7 +15,6 @@ use Throwable;
 /**
  * Captures screenshots of listings that don't have one yet.
  *
- * Opens a fresh Chrome session per listing using pageLoadStrategy=none,
  * navigates to the URL, waits for initial render, captures via CDP,
  * uploads to Backblaze B2, and stores the path in screenshot_url.
  *
@@ -148,20 +146,5 @@ class CaptureScreenshotsCommand extends Command
         }
 
         return self::SUCCESS;
-    }
-
-    /**
-     * Resolve the correct scraper profile for a given source profile name.
-     * Returns null if the profile is not registered in config.
-     */
-    private function resolveProfile(string $profileName): ?ScraperProfileInterface
-    {
-        $profiles = config('scraper.profiles', []);
-
-        if (! isset($profiles[$profileName])) {
-            return null;
-        }
-
-        return app($profiles[$profileName]);
     }
 }
