@@ -11,6 +11,7 @@ import {
     ChartNoAxesColumn,
     Bot,
     Globe,
+    Database,
     ExternalLink,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -57,6 +58,12 @@ const intelligenceItems: NavItemWithRoles[] = [
         href: '/admin/market-stats',
         icon: ChartNoAxesColumn,
         roles: ['super_admin', 'admin', 'editor'],
+    },
+    {
+        title: 'Data Hub',
+        href: '/admin/data-hub',
+        icon: Database,
+        roles: ['super_admin', 'admin'],
     },
     {
         title: 'AI Assistant',
@@ -207,7 +214,7 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <NavGroup
-                    label="Intelligence"
+                    label="Intelligence & Data"
                     items={intelligenceItems}
                     role={role}
                 />
@@ -240,7 +247,7 @@ export function AppSidebar() {
                                     This month
                                 </span>
                                 <div className="flex items-center gap-1.5">
-                                    <span className="flex items-center gap-0.5 text-[10px] text-emerald-400 tabular-nums">
+                                    <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-emerald-400 tabular-nums">
                                         <DollarSign className="h-2.5 w-2.5 text-emerald-400" />
                                         {formatCost(
                                             systemUsage.this_month.cost_usd,
@@ -253,7 +260,7 @@ export function AppSidebar() {
                                     All time
                                 </span>
                                 <div className="flex items-center gap-1.5">
-                                    <span className="flex items-center gap-0.5 text-[10px] text-amber-400 tabular-nums">
+                                    <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-amber-400 tabular-nums">
                                         <DollarSign className="h-2.5 w-2.5 text-amber-400" />
                                         {formatCost(
                                             systemUsage.all_time.cost_usd,
@@ -265,7 +272,7 @@ export function AppSidebar() {
                     </div>
                 )}
 
-                <div className="mx-3 mb-2">
+                <div className="mx-3 mt-4 mb-2">
                     <a
                         href="/"
                         target="_blank"

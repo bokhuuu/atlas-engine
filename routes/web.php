@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AiFeedbackController;
 use App\Http\Controllers\Admin\AssistantController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DataHubController;
 use App\Http\Controllers\Admin\MarketStatsController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
@@ -69,6 +70,8 @@ Route::middleware(['auth', 'admin'])
         Route::middleware(['role:super_admin|admin'])
             ->get('ai-feedback', [AiFeedbackController::class, 'index'])
             ->name('ai-feedback.index');
+
+        Route::get('data-hub', [DataHubController::class, 'index'])->name('data-hub.index');
     });
 
 require __DIR__.'/settings.php';
