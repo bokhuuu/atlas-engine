@@ -175,7 +175,10 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "scrape", "status"],
                             "query": [
-                                { "key": "source", "value": "{{source}}" }
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}"
+                                }
                             ]
                         },
                         "description": "Get the latest run state for one category. States: pending, running, completed, failed, cancelled."
@@ -242,7 +245,10 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "scrape", "trend"],
                             "query": [
-                                { "key": "source", "value": "{{source}}" }
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}"
+                                }
                             ]
                         },
                         "description": "Returns a time-series of completed scrape runs for one category grouped by date. Each point includes new_listings (added that day) and cumulative_listings (running total). Powers the trend chart on the dashboard."
@@ -340,8 +346,14 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings"],
                             "query": [
-                                { "key": "source", "value": "{{source}}" },
-                                { "key": "page", "value": "1" },
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
                                 {
                                     "key": "district",
                                     "value": "Kentron",
@@ -398,7 +410,10 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "stats"],
                             "query": [
-                                { "key": "source", "value": "{{source}}" }
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}"
+                                }
                             ]
                         },
                         "description": "Returns average and median price/sqm per district for a category, plus price reduction count per district in the last 7 days. Powers the Market Stats page. Results cached 1 hour."
@@ -433,7 +448,10 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "summary"],
                             "query": [
-                                { "key": "source", "value": "{{source}}" }
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}"
+                                }
                             ]
                         },
                         "description": "Returns a one-paragraph AI-generated market summary for a category, based on real scraped data. Cached 6 hours. Cache clears automatically when a new scrape completes."
@@ -485,6 +503,112 @@
                             "body": "{\n  \"pair\": \"commercial\",\n  \"currency\": \"USD\",\n  \"note\": \"Gross yield estimate based on median prices. Professional adjustment required for vacancy, maintenance and taxes.\",\n  \"rows\": [\n    {\n      \"district\": \"Erebuni\",\n      \"sale_median\": 986.84,\n      \"rent_median\": 14.66,\n      \"yield_pct\": 17.83\n    },\n    {\n      \"district\": \"Kentron\",\n      \"sale_median\": 3920.60,\n      \"rent_median\": 27.60,\n      \"yield_pct\": 8.45\n    }\n  ]\n}"
                         }
                     ]
+                },
+                {
+                    "name": "Filter listings (Data Hub)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/listings/filter?source={{source}}&status[]=active&status[]=stale&status[]=disappeared",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "listings", "filter"],
+                            "query": [
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}",
+                                    "description": "Category source key"
+                                },
+                                {
+                                    "key": "district",
+                                    "value": "",
+                                    "description": "Filter by district (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "active",
+                                    "description": "Status filter: active, stale, disappeared"
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "stale"
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "disappeared"
+                                },
+                                {
+                                    "key": "min_price",
+                                    "value": "",
+                                    "description": "Min price in USD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_price",
+                                    "value": "",
+                                    "description": "Max price in USD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "min_area",
+                                    "value": "",
+                                    "description": "Min area in sqm (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_area",
+                                    "value": "",
+                                    "description": "Max area in sqm (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "rooms[]",
+                                    "value": "",
+                                    "description": "Number of rooms (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "agency",
+                                    "value": "",
+                                    "description": "agency or owner (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "scraped_from",
+                                    "value": "",
+                                    "description": "From date YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "scraped_to",
+                                    "value": "",
+                                    "description": "To date YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited — safe for UI polling. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"url\": \"https://list.am/en/item/23952670\",\n      \"district\": \"Kentron\",\n      \"price\": 185000,\n      \"area\": 78,\n      \"rooms\": 3,\n      \"status\": \"active\"\n    }\n  ],\n  \"total\": 142,\n  \"per_page\": 20,\n  \"current_page\": 1,\n  \"last_page\": 8\n}"
+                        }
+                    ]
                 }
             ]
         },
@@ -529,6 +653,118 @@
                         },
                         "description": "Download all 7 category exports in a single zip file. Returns a .zip containing one .xlsx per category."
                     }
+                },
+                {
+                    "name": "Download filtered (Data Hub)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/exports/filtered?source={{source}}&status[]=active&status[]=stale&status[]=disappeared",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "exports", "filtered"],
+                            "query": [
+                                {
+                                    "key": "source",
+                                    "value": "{{source}}",
+                                    "description": "Category source key (required)"
+                                },
+                                {
+                                    "key": "district",
+                                    "value": "",
+                                    "description": "Filter by district (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "active",
+                                    "description": "Status: active, stale, disappeared"
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "stale"
+                                },
+                                {
+                                    "key": "status[]",
+                                    "value": "disappeared"
+                                },
+                                {
+                                    "key": "min_price",
+                                    "value": "",
+                                    "description": "Min price in USD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_price",
+                                    "value": "",
+                                    "description": "Max price in USD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "min_area",
+                                    "value": "",
+                                    "description": "Min area in sqm (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_area",
+                                    "value": "",
+                                    "description": "Max area in sqm (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "rooms[]",
+                                    "value": "",
+                                    "description": "Number of rooms (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "agency",
+                                    "value": "",
+                                    "description": "agency or owner (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "scraped_from",
+                                    "value": "",
+                                    "description": "From date YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "scraped_to",
+                                    "value": "",
+                                    "description": "To date YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Generate and download a filtered Excel export from the Data Hub. Accepts the same filter params as /listings/filter. Returns a single-sheet .xlsx file with all matching listings. Not rate-limited."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK - Excel file download",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "Binary .xlsx file download"
+                        },
+                        {
+                            "name": "404 - No listings match filters",
+                            "status": "Not Found",
+                            "code": 404,
+                            "body": "No listings match the selected filters."
+                        }
+                    ]
                 }
             ]
         },
