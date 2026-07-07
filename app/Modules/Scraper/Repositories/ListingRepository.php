@@ -124,6 +124,86 @@ class ListingRepository
     }
 
     /**
+     * Filter listings by multiple criteria for the Data Hub page.
+     * Returns paginated results with all lifecycle fields included.
+     */
+    public function filterListings(array $filters = [], int $perPage = 20): LengthAwarePaginator
+    {
+        $staleDays = (int) config('scraper.stale_listing_days', 90);
+        $query = Listing::query();
+
+        if (! empty($filters['source'])) {
+            $query->where('source_profile_name', $filters['source']);
+        }
+
+        if (! empty($filters['district'])) {
+            $query->where('district', $filters['district']);
+        }
+
+        if (! empty($filters['rooms'])) {
+            $query->whereIn('rooms', (array) $filters['rooms']);
+        }
+
+        if (! empty($filters['min_price'])) {
+            $query->where('price', '>=', (float) $filters['min_price']);
+        }
+
+        if (! empty($filters['max_price'])) {
+            $query->where('price', '<=', (float) $filters['max_price']);
+        }
+
+        if (! empty($filters['min_area'])) {
+            $query->where('area', '>=', (float) $filters['min_area']);
+        }
+
+        if (! empty($filters['max_area'])) {
+            $query->where('area', '<=', (float) $filters['max_area']);
+        }
+
+        if (! empty($filters['agency'])) {
+            if ($filters['agency'] === 'agency') {
+                $query->whereNotNull('agency_name');
+            } elseif ($filters['agency'] === 'owner') {
+                $query->whereNull('agency_name');
+            }
+        }
+
+        if (! empty($filters['scraped_from'])) {
+            $query->where('scraped_at', '>=', $filters['scraped_from']);
+        }
+
+        if (! empty($filters['scraped_to'])) {
+            $query->where('scraped_at', '<=', $filters['scraped_to'].' 23:59:59');
+        }
+
+        if (! empty($filters['status'])) {
+            $statuses = (array) $filters['status'];
+            $query->where(function ($q) use ($statuses, $staleDays) {
+                foreach ($statuses as $i => $status) {
+                    $method = $i === 0 ? 'where' : 'orWhere';
+                    if ($status === 'active') {
+                        $q->$method(function ($sub) use ($staleDays) {
+                            $sub->whereNull('disappeared_at')
+                                ->where('scraped_at', '>', now()->subDays($staleDays));
+                        });
+                    } elseif ($status === 'stale') {
+                        $q->$method(function ($sub) use ($staleDays) {
+                            $sub->whereNull('disappeared_at')
+                                ->where('scraped_at', '<=', now()->subDays($staleDays));
+                        });
+                    } elseif ($status === 'disappeared') {
+                        $q->$method(function ($sub) {
+                            $sub->whereNotNull('disappeared_at');
+                        });
+                    }
+                }
+            });
+        }
+
+        return $query->orderByDesc('scraped_at')->paginate($perPage);
+    }
+
+    /**
      * Count total listings for a given source.
      *
      * Used by ScraperManager to record saved_listings count on run completion.
@@ -306,6 +386,46 @@ class ListingRepository
                 ->where('price_changed_at', '>=', now()->subDays($days))
                 ->whereNotNull('district')
                 ->select('district', DB::raw('COUNT(*) as reduction_count'))
+                ->groupBy('district')
+                ->get()
+        )->keyBy('district');
+    }
+
+    /**
+     * Count disappeared listings per district for a given source.
+     * Only counts listings where disappeared_at is set.
+     * Keyed by district for easy merging with other district stats.
+     */
+    public function getDistrictDisappearedCounts(string $source): Collection
+    {
+        return collect(
+            DB::table('listings')
+                ->where('source_profile_name', $source)
+                ->whereNotNull('disappeared_at')
+                ->whereNotNull('district')
+                ->select('district', DB::raw('COUNT(*) as disappeared_count'))
+                ->groupBy('district')
+                ->get()
+        )->keyBy('district');
+    }
+
+    /**
+     * Count stale listings per district for a given source.
+     * Stale = still active (no disappeared_at) but scraped more than
+     * stale_listing_days ago. Threshold from config/scraper.php.
+     * Keyed by district for easy merging with other district stats.
+     */
+    public function getDistrictStaleCounts(string $source): Collection
+    {
+        $staleDays = (int) config('scraper.stale_listing_days', 90);
+
+        return collect(
+            DB::table('listings')
+                ->where('source_profile_name', $source)
+                ->whereNull('disappeared_at')
+                ->where('scraped_at', '<=', now()->subDays($staleDays))
+                ->whereNotNull('district')
+                ->select('district', DB::raw('COUNT(*) as stale_count'))
                 ->groupBy('district')
                 ->get()
         )->keyBy('district');

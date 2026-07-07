@@ -53,10 +53,14 @@ class ListingController extends Controller
         $avgStats = $this->listingRepository->getDistrictPriceStats($source);
         $medianByDistrict = $this->listingRepository->getMedianPricePerSqmByDistrict($source);
         $reductions = $this->listingRepository->getDistrictPriceReductions($source);
+        $disappeared = $this->listingRepository->getDistrictDisappearedCounts($source);
+        $stale = $this->listingRepository->getDistrictStaleCounts($source);
 
-        $merged = $avgStats->map(function ($row) use ($medianByDistrict, $reductions) {
+        $merged = $avgStats->map(function ($row) use ($medianByDistrict, $reductions, $disappeared, $stale) {
             $row->median_price_per_sqm = $medianByDistrict->get($row->district)?->median_price_per_sqm;
             $row->price_reductions = (int) ($reductions->get($row->district)?->reduction_count ?? 0);
+            $row->disappeared_count = (int) ($disappeared->get($row->district)?->disappeared_count ?? 0);
+            $row->stale_count = (int) ($stale->get($row->district)?->stale_count ?? 0);
 
             return $row;
         });
@@ -140,5 +144,30 @@ class ListingController extends Controller
             'pair' => $pair,
             'rows' => $rows,
         ]);
+    }
+
+    /**
+     * Filter listings by multiple criteria for the Data Hub page.
+     * Supports source, district, rooms, price, area, agency, date range, status.
+     */
+    public function filter(Request $request): JsonResponse
+    {
+        $filters = $request->only([
+            'source',
+            'district',
+            'rooms',
+            'min_price',
+            'max_price',
+            'min_area',
+            'max_area',
+            'agency',
+            'scraped_from',
+            'scraped_to',
+            'status',
+        ]);
+
+        $listings = $this->listingRepository->filterListings($filters, 20);
+
+        return response()->json($listings);
     }
 }

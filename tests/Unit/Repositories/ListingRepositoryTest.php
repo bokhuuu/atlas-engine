@@ -172,3 +172,48 @@ test('clearStatsCache forgets all four cache keys for the source', function () u
         ->and(Cache::has('scraper:stats:median_district_prices:listam'))->toBeFalse()
         ->and(Cache::has('ai:market_summary:listam'))->toBeFalse();
 });
+
+test('it counts disappeared listings per district', function () use ($repository) {
+    $repository->updateOrCreate(listingData([
+        'external_id' => 'd-1',
+        'district' => 'Kentron',
+        'disappeared_at' => now()->toDateTimeString(),
+    ]));
+    $repository->updateOrCreate(listingData([
+        'external_id' => 'd-2',
+        'url' => 'https://list.am/en/item/d-2',
+        'district' => 'Kentron',
+        'disappeared_at' => now()->toDateTimeString(),
+    ]));
+    $repository->updateOrCreate(listingData([
+        'external_id' => 'd-3',
+        'url' => 'https://list.am/en/item/d-3',
+        'district' => 'Arabkir',
+        'disappeared_at' => null,
+    ]));
+
+    $counts = $repository->getDistrictDisappearedCounts('listam');
+
+    expect((int) $counts->get('Kentron')->disappeared_count)->toBe(2);
+    expect($counts->has('Arabkir'))->toBeFalse();
+});
+
+test('it counts stale listings per district', function () use ($repository) {
+    $repository->updateOrCreate(listingData([
+        'external_id' => 's-1',
+        'district' => 'Kentron',
+        'scraped_at' => now()->subDays(91)->toDateTimeString(),
+        'disappeared_at' => null,
+    ]));
+    $repository->updateOrCreate(listingData([
+        'external_id' => 's-2',
+        'url' => 'https://list.am/en/item/s-2',
+        'district' => 'Kentron',
+        'scraped_at' => now()->toDateTimeString(),
+        'disappeared_at' => null,
+    ]));
+
+    $counts = $repository->getDistrictStaleCounts('listam');
+
+    expect((int) $counts->get('Kentron')->stale_count)->toBe(1);
+});

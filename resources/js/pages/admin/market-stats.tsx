@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { TrendingDown, XCircle, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson } from '@/lib/scraper-api';
-
 import type { BreadcrumbItem } from '@/types';
 
 interface Category {
@@ -24,6 +24,8 @@ interface DistrictRow {
     avg_price_per_sqm: number | null;
     median_price_per_sqm: number | null;
     price_reductions: number;
+    disappeared_count: number;
+    stale_count: number;
 }
 
 interface YieldRow {
@@ -246,6 +248,8 @@ export default function MarketStats({ categories }: Props) {
                                     <th className="px-4 py-2">
                                         Price Reductions
                                     </th>
+                                    <th className="px-4 py-2">Disappeared</th>
+                                    <th className="px-4 py-2">Stale</th>
                                     {showYield && (
                                         <th className="px-4 py-2">
                                             Est. Yield/yr{' '}
@@ -280,8 +284,39 @@ export default function MarketStats({ categories }: Props) {
                                         </td>
                                         <td className="px-4 py-2">
                                             {row.price_reductions > 0 ? (
-                                                <span className="text-red-400">
-                                                    {row.price_reductions} ↓
+                                                <span className="flex items-center gap-1 text-red-700">
+                                                    <TrendingDown className="h-3.5 w-3.5" />
+                                                    {row.price_reductions}
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            {row.disappeared_count > 0 ? (
+                                                <span className="flex items-center gap-1 text-yellow-700">
+                                                    <XCircle className="h-3.5 w-3.5 animate-pulse" />
+                                                    {row.disappeared_count}
+                                                </span>
+                                            ) : (
+                                                <span className="text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            {row.stale_count > 0 ? (
+                                                <span className="flex items-center gap-1 text-blue-700">
+                                                    <Clock
+                                                        className="h-3.5 w-3.5 animate-spin"
+                                                        style={{
+                                                            animationDuration:
+                                                                '3s',
+                                                        }}
+                                                    />
+                                                    {row.stale_count}
                                                 </span>
                                             ) : (
                                                 <span className="text-muted-foreground">
