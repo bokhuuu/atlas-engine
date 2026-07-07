@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Api;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Exports\ExportManager;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use ZipArchive;
@@ -74,5 +75,41 @@ class ExportController extends Controller
         $zip->close();
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Generate a filtered Excel export for Data Hub.
+     * Accepts the same filter params as /api/v1/listings/filter.
+     * Returns a single-sheet Excel file with only matching listings.
+     */
+    public function downloadFiltered(Request $request): BinaryFileResponse|Response
+    {
+        $source = $request->query('source', '');
+
+        if (! array_key_exists($source, config('scraper.profiles', []))) {
+            abort(404, 'Unknown category.');
+        }
+
+        $filters = $request->only([
+            'source',
+            'district',
+            'rooms',
+            'min_price',
+            'max_price',
+            'min_area',
+            'max_area',
+            'agency',
+            'scraped_from',
+            'scraped_to',
+            'status',
+        ]);
+
+        $paths = $this->exportManager->runForSourceFiltered($source, $filters);
+
+        if (empty($paths)) {
+            return response('No listings match the selected filters.', 404);
+        }
+
+        return response()->download($paths[0]);
     }
 }

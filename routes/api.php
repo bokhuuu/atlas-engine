@@ -25,6 +25,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/snapshot', SnapshotController::class);
     });
 
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/listings/filter', [ListingController::class, 'filter']);
+        Route::get('/exports/filtered', [ExportController::class, 'downloadFiltered']);
+    });
+
     Route::middleware(['auth:sanctum', 'throttle:api.per_token'])->group(function () {
         Route::post('/scrape/start', [ScrapeController::class, 'start']);
         Route::get('/scrape/status', [ScrapeController::class, 'status']);

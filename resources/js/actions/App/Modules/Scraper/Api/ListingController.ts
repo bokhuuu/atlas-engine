@@ -1,5 +1,86 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+export const filter = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: filter.url(options),
+    method: 'get',
+})
+
+filter.definition = {
+    methods: ["get","head"],
+    url: '/api/v1/listings/filter',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+filter.url = (options?: RouteQueryOptions) => {
+    return filter.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+filter.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: filter.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+filter.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: filter.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+const filterForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+filterForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:153
+* @route '/api/v1/listings/filter'
+*/
+filterForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+filter.form = filterForm
+
+/**
 * @see \App\Modules\Scraper\Api\ListingController::index
 * @see app/Modules/Scraper/Api/ListingController.php:31
 * @route '/api/v1/listings'
@@ -163,7 +244,7 @@ stats.form = statsForm
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 export const summary = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +259,7 @@ summary.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 summary.url = (options?: RouteQueryOptions) => {
@@ -187,7 +268,7 @@ summary.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 summary.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -197,7 +278,7 @@ summary.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 summary.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -207,7 +288,7 @@ summary.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 const summaryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -217,7 +298,7 @@ const summaryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 summaryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +308,7 @@ summaryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
-* @see app/Modules/Scraper/Api/ListingController.php:74
+* @see app/Modules/Scraper/Api/ListingController.php:78
 * @route '/api/v1/listings/summary'
 */
 summaryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -244,7 +325,7 @@ summary.form = summaryForm
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 export const yieldMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -259,7 +340,7 @@ yieldMethod.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 yieldMethod.url = (options?: RouteQueryOptions) => {
@@ -268,7 +349,7 @@ yieldMethod.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 yieldMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -278,7 +359,7 @@ yieldMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 yieldMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -288,7 +369,7 @@ yieldMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 const yieldMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +379,7 @@ const yieldMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 yieldMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -308,7 +389,7 @@ yieldMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
-* @see app/Modules/Scraper/Api/ListingController.php:96
+* @see app/Modules/Scraper/Api/ListingController.php:100
 * @route '/api/v1/listings/yield'
 */
 yieldMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -323,6 +404,6 @@ yieldMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'>
 
 yieldMethod.form = yieldMethodForm
 
-const ListingController = { index, stats, summary, yieldMethod, yield: yieldMethod }
+const ListingController = { filter, index, stats, summary, yieldMethod, yield: yieldMethod }
 
 export default ListingController

@@ -1,7 +1,88 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+export const downloadFiltered = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: downloadFiltered.url(options),
+    method: 'get',
+})
+
+downloadFiltered.definition = {
+    methods: ["get","head"],
+    url: '/api/v1/exports/filtered',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+downloadFiltered.url = (options?: RouteQueryOptions) => {
+    return downloadFiltered.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+downloadFiltered.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: downloadFiltered.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+downloadFiltered.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: downloadFiltered.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+const downloadFilteredForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: downloadFiltered.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+downloadFilteredForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: downloadFiltered.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ExportController::downloadFiltered
+* @see app/Modules/Scraper/Api/ExportController.php:85
+* @route '/api/v1/exports/filtered'
+*/
+downloadFilteredForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: downloadFiltered.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+downloadFiltered.form = downloadFilteredForm
+
+/**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 export const downloadAll = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +97,7 @@ downloadAll.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 downloadAll.url = (options?: RouteQueryOptions) => {
@@ -25,7 +106,7 @@ downloadAll.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 downloadAll.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +116,7 @@ downloadAll.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 downloadAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +126,7 @@ downloadAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 const downloadAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +136,7 @@ const downloadAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 downloadAllForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +146,7 @@ downloadAllForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::downloadAll
-* @see app/Modules/Scraper/Api/ExportController.php:49
+* @see app/Modules/Scraper/Api/ExportController.php:50
 * @route '/api/v1/exports'
 */
 downloadAllForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +163,7 @@ downloadAll.form = downloadAllForm
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 const download534ae370af8f48177af87a435c6b19de = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +178,7 @@ download534ae370af8f48177af87a435c6b19de.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 download534ae370af8f48177af87a435c6b19de.url = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -124,7 +205,7 @@ download534ae370af8f48177af87a435c6b19de.url = (args: { source: string | number 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 download534ae370af8f48177af87a435c6b19de.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -134,7 +215,7 @@ download534ae370af8f48177af87a435c6b19de.get = (args: { source: string | number 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 download534ae370af8f48177af87a435c6b19de.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -144,7 +225,7 @@ download534ae370af8f48177af87a435c6b19de.head = (args: { source: string | number
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 const download534ae370af8f48177af87a435c6b19deForm = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -154,7 +235,7 @@ const download534ae370af8f48177af87a435c6b19deForm = (args: { source: string | n
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 download534ae370af8f48177af87a435c6b19deForm.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -164,7 +245,7 @@ download534ae370af8f48177af87a435c6b19deForm.get = (args: { source: string | num
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/api/v1/exports/{source}'
 */
 download534ae370af8f48177af87a435c6b19deForm.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -180,7 +261,7 @@ download534ae370af8f48177af87a435c6b19deForm.head = (args: { source: string | nu
 download534ae370af8f48177af87a435c6b19de.form = download534ae370af8f48177af87a435c6b19deForm
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 const download3f82479f52863b7797be4a7fdbf508ba = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -195,7 +276,7 @@ download3f82479f52863b7797be4a7fdbf508ba.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 download3f82479f52863b7797be4a7fdbf508ba.url = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -222,7 +303,7 @@ download3f82479f52863b7797be4a7fdbf508ba.url = (args: { source: string | number 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 download3f82479f52863b7797be4a7fdbf508ba.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -232,7 +313,7 @@ download3f82479f52863b7797be4a7fdbf508ba.get = (args: { source: string | number 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 download3f82479f52863b7797be4a7fdbf508ba.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -242,7 +323,7 @@ download3f82479f52863b7797be4a7fdbf508ba.head = (args: { source: string | number
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 const download3f82479f52863b7797be4a7fdbf508baForm = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -252,7 +333,7 @@ const download3f82479f52863b7797be4a7fdbf508baForm = (args: { source: string | n
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 download3f82479f52863b7797be4a7fdbf508baForm.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -262,7 +343,7 @@ download3f82479f52863b7797be4a7fdbf508baForm.get = (args: { source: string | num
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:30
+* @see app/Modules/Scraper/Api/ExportController.php:31
 * @route '/admin/exports/{source}'
 */
 download3f82479f52863b7797be4a7fdbf508baForm.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -282,6 +363,6 @@ export const download = {
     '/admin/exports/{source}': download3f82479f52863b7797be4a7fdbf508ba,
 }
 
-const ExportController = { downloadAll, download }
+const ExportController = { downloadFiltered, downloadAll, download }
 
 export default ExportController

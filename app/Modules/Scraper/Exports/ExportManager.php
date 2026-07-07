@@ -117,4 +117,23 @@ class ExportManager
 
         return $paths;
     }
+
+    /**
+     * Run exporters for a filtered subset of listings.
+     * Used by the Data Hub filtered download.
+     */
+    public function runForSourceFiltered(string $source, array $filters = []): array
+    {
+        $profileClass = config('scraper.profiles.'.$source);
+        $profile = app($profileClass);
+
+        $paginator = $this->repository->filterListings($filters, 999999);
+        $listings = collect($paginator->items());
+
+        if ($listings->isEmpty()) {
+            return [];
+        }
+
+        return $this->runExporters($profile, $source, $listings, onlySpreadsheets: true);
+    }
 }

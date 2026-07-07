@@ -41,3 +41,60 @@ test('it generates a real spreadsheet file from current DB data, skipping json w
     expect(file_exists($paths[0]))->toBeTrue();
     expect($paths[0])->toEndWith('.xlsx');
 });
+
+test('it generates filtered export with only matching listings', function () {
+    Storage::fake('local');
+
+    $repository = app(ListingRepository::class);
+
+    $repository->updateOrCreate([
+        'external_id' => 'filter-1',
+        'source_profile_name' => 'listam_commercial_rent',
+        'url' => 'https://list.am/en/item/filter-1',
+        'listing_type' => 'rent',
+        'property_type' => 'commercial',
+        'price' => 300.0,
+        'currency' => 'USD',
+        'price_per_sqm' => 6.0,
+        'area' => 50.0,
+        'district' => 'Kentron',
+        'images' => [],
+        'extras' => [],
+        'scraped_at' => now()->toDateTimeString(),
+    ]);
+
+    $repository->updateOrCreate([
+        'external_id' => 'filter-2',
+        'source_profile_name' => 'listam_commercial_rent',
+        'url' => 'https://list.am/en/item/filter-2',
+        'listing_type' => 'rent',
+        'property_type' => 'commercial',
+        'price' => 800.0,
+        'currency' => 'USD',
+        'price_per_sqm' => 16.0,
+        'area' => 50.0,
+        'district' => 'Arabkir',
+        'images' => [],
+        'extras' => [],
+        'scraped_at' => now()->toDateTimeString(),
+    ]);
+
+    $paths = app(ExportManager::class)->runForSourceFiltered(
+        'listam_commercial_rent',
+        ['source' => 'listam_commercial_rent', 'district' => 'Kentron'],
+    );
+
+    expect($paths)->toHaveCount(1);
+    expect(file_exists($paths[0]))->toBeTrue();
+});
+
+test('it returns empty paths when filtered listings are empty', function () {
+    Storage::fake('local');
+
+    $paths = app(ExportManager::class)->runForSourceFiltered(
+        'listam_commercial_rent',
+        ['source' => 'listam_commercial_rent', 'district' => 'Kentron'],
+    );
+
+    expect($paths)->toBe([]);
+});
