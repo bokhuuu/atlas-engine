@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Console\Commands;
 
+use App\Modules\Scraper\Browser\ProxyResolver;
 use App\Modules\Scraper\Models\Listing;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -74,9 +75,18 @@ class CheckListingsCommand extends Command
             }
 
             try {
+                $proxy = app(ProxyResolver::class)->resolve();
+
+                $options = ['stream' => true];
+
+                if ($proxy !== null) {
+                    $options['proxy'] = $proxy;
+                }
+
                 $response = Http::timeout(10)
                     ->withHeaders(['User-Agent' => config('scraper.user_agent')])
-                    ->head($listing->url);
+                    ->withOptions($options)
+                    ->get($listing->url);
 
                 $now = now();
 
