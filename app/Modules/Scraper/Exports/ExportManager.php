@@ -128,7 +128,7 @@ class ExportManager
         $profile = app($profileClass);
 
         $paginator = $this->repository->filterListings($filters, 999999);
-        $listings = collect($paginator->items());
+        $listings = $paginator->getCollection();
 
         if ($listings->isEmpty()) {
             return [];

@@ -1,6 +1,6 @@
 # 🗺️ Atlas - Yerevan Real Estate Market Intelligence Platform
 
-Atlas scrapes Armenian real estate listings from list.am, cleans the data automatically and turns it into tools a real estate analyst can use: a public market snapshot, an internal dashboard, an AI assistant that answers questions from real scraped data, AI-generated market summaries per category, a filterable Data Hub with Excel exports, and automated listing lifecycle tracking.
+Atlas scrapes Armenian real estate listings from list.am, cleans the data automatically and turns it into tools a real estate analyst can use: a public market snapshot, an internal dashboard, an AI assistant that answers questions from real scraped data, AI-generated market summaries per category, a filterable Data Hub with Excel exports and automated listing lifecycle tracking.
 
 Built by merging three internal templates - a scraping engine, an AI/LLM integration layer and an admin dashboard skeleton - into one single Laravel application.
 
@@ -13,9 +13,9 @@ Built by merging three internal templates - a scraping engine, an AI/LLM integra
 | Screen                     | URL                   | Description                                                                                                                                                                                                                                                                                  |
 | -------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Screen 0 - Public Snapshot | `/`                   | Public market snapshot. No login. 7 category cards with median price/sqm, listing counts, animated count-up, live badge.                                                                                                                                                                     |
-| Screen 1 - Dashboard       | `/admin/dashboard`    | Scraper control panel. Start/stop scrapes, live status, listing volume trend chart, Excel exports.                                                                                                                                                                                           |
+| Screen 1 - Dashboard       | `/admin/dashboard`    | Scraper control panel. Start scrapes, live status, listing volume trend chart, Excel exports.                                                                                                                                                                                                |
 | Screen 2 - Market Stats    | `/admin/market-stats` | District-level price breakdown by category. Median + average price/sqm, heat-shaded ranking, price reductions, disappeared and stale listing counts per district, commercial rental yield, AI market summary.                                                                                |
-| Screen 3 - Data Hub        | `/admin/data-hub`     | Filterable listing explorer. Filter by category, district, status (active/stale/disappeared), rooms, price range, area range, agency/owner, and date range. Live count updates with race-condition protection. Download filtered Excel export instantly.                                     |
+| Screen 3 - Data Hub        | `/admin/data-hub`     | Filterable listing explorer. Filter by category, district, status (active/stale/disappeared), rooms, price range, area range, agency/owner and date range. Live count updates with race-condition protection. Download filtered Excel export instantly.                                      |
 | Screen 4 - AI Assistant    | `/admin/assistant`    | Chat interface powered by Claude Haiku. 8 callable tools: category stats, district breakdown, comparable-listing finder, Excel export, price change detection, rental yield estimate, semantic search. Persistent per-user conversation history (survives page reloads and device switches). |
 
 ---
@@ -47,7 +47,7 @@ npm install && npm run build
 
 Then visit `http://localhost:8080`.
 
-The setup script handles environment file creation, app key generation, migrations, database seeding, and storage linking in one pass.
+The setup script handles environment file creation, app key generation, migrations, database seeding and storage linking in one pass.
 
 **Default credentials (change before any client-facing use):**
 
@@ -102,17 +102,17 @@ Every listing is tracked through its full lifecycle:
 | `days_on_market`  | Computed at export time from scraped_at → disappeared_at |
 | `status`          | Active / Stale (90+ days) / Disappeared                  |
 
-The `atlas:check-listings` command runs nightly on off-scrape days, checking 5% of active listings per run via lightweight HTTP HEAD requests. Full DB cycle completes in ~20 days.
+The `atlas:check-listings` command checks 5% of active listings per run via HTTP GET requests. Full DB cycle completes in ~20 days. Currently disabled - requires residential proxies (list.am returns 403 to non-browser requests from server IPs).
 
 ---
 
 ## Scheduled Jobs
 
-| Command                     | Schedule                      | Description                               |
-| --------------------------- | ----------------------------- | ----------------------------------------- |
-| `scraper:run [category]`    | Mon/Wed/Fri 05:00 Tbilisi     | Scrape one category from list.am          |
-| `atlas:check-listings`      | Tue/Thu/Sat/Sun 10:00 Tbilisi | HTTP HEAD check for disappeared listings  |
-| `atlas:capture-screenshots` | Tue/Thu/Sat 05:00 Tbilisi     | Screenshot new listings to B2 (Thread 14) |
+| Command                     | Schedule                                     | Description                             |
+| --------------------------- | -------------------------------------------- | --------------------------------------- |
+| `scraper:run [category]`    | Mon/Wed/Fri 05:00 Tbilisi                    | Scrape one category from list.am        |
+| `atlas:check-listings`      | Commented out (requires residential proxies) | HTTP GET check for disappeared listings |
+| `atlas:capture-screenshots` | Commented out (deferred to Thread 14)        | Screenshot new listings to B2           |
 
 ---
 
