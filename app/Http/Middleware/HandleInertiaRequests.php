@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Models\Setting;
+use App\Services\MarketRegistry;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -107,6 +108,10 @@ class HandleInertiaRequests extends Middleware
             'translations' => fn () => [
                 'posts' => trans('posts'),
             ],
+            'currentMarket' => $request->segment(1) && app(MarketRegistry::class)->isValid($request->segment(1))
+                ? $request->segment(1)
+                : null,
+            'markets' => app(MarketRegistry::class)->all(),
         ];
     }
 }
