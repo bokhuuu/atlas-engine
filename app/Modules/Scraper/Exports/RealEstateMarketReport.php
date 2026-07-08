@@ -181,7 +181,7 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
             $end = $row['disappeared_at'] ?? now()->toDateTimeString();
 
             $row['days_on_market'] = $start
-                ? (int) Carbon::parse($start)->diffInDays(Carbon::parse($end))
+                ? (int) Carbon::parse((string) $start)->diffInDays(Carbon::parse((string) $end))
                 : null;
 
             if (! empty($row['disappeared_at'])) {
