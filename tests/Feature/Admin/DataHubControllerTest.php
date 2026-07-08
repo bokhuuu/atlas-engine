@@ -16,7 +16,7 @@ beforeEach(function () {
 });
 
 test('data hub page loads successfully', function () {
-    $this->get('/admin/data-hub')
+    $this->get('/yerevan/admin/data-hub')
         ->assertOk()
         ->assertInertia(
             fn ($page) => $page
