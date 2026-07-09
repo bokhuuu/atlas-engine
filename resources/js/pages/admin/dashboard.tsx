@@ -22,9 +22,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson, postJson } from '@/lib/scraper-api';
+
 import type { BreadcrumbItem } from '@/types';
 
 interface Stats {
@@ -48,6 +48,10 @@ interface TrendPoint {
     cumulative_listings: number;
     encountered: number;
 }
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/admin/dashboard' },
+];
 
 const POLL_INTERVAL_MS = 5000;
 
@@ -136,11 +140,6 @@ export default function Dashboard({
 
         return () => clearInterval(interval);
     }, [refreshStatuses]);
-
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: adminUrl('/dashboard') },
-    ];
 
     const handleStart = async (source: string, pages: number) => {
         setIsBusy(true);
