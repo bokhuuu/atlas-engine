@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     Settings,
     Users,
@@ -32,11 +32,24 @@ import {
 import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { formatCost } from '@/lib/format-cost';
-import { dashboard } from '@/routes/admin';
 import type { NavItem } from '@/types';
 
 interface NavItemWithRoles extends NavItem {
     roles: string[];
+}
+
+interface Market {
+    label: string;
+    country: string;
+    flag: string;
+    source_prefixes: string[];
+    currency: string;
+}
+
+interface SharedProps {
+    currentMarket: string | null;
+    markets: Record<string, Market>;
+    [key: string]: unknown;
 }
 
 const footerNavItems: NavItem[] = [];
@@ -46,80 +59,88 @@ interface SystemUsage {
     all_time: { tokens: number; cost_usd: number };
 }
 
-const intelligenceItems: NavItemWithRoles[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-        roles: ['super_admin', 'admin', 'editor'],
-    },
-    {
-        title: 'Market Stats',
-        href: '/admin/market-stats',
-        icon: ChartNoAxesColumn,
-        roles: ['super_admin', 'admin', 'editor'],
-    },
-    {
-        title: 'Data Hub',
-        href: '/admin/data-hub',
-        icon: Database,
-        roles: ['super_admin', 'admin'],
-    },
-    {
-        title: 'AI Assistant',
-        href: '/admin/assistant',
-        icon: Bot,
-        roles: ['super_admin', 'admin', 'editor'],
-    },
-    {
-        title: 'AI Feedback',
-        href: '/admin/ai-feedback',
-        icon: ThumbsUp,
-        roles: ['super_admin', 'admin'],
-    },
-];
+function buildNavItems(market: string): {
+    intelligence: NavItemWithRoles[];
+    administration: NavItemWithRoles[];
+    system: NavItemWithRoles[];
+} {
+    const base = `/${market}/admin`;
 
-const administrationItems: NavItemWithRoles[] = [
-    {
-        title: 'Users',
-        href: '/admin/users',
-        icon: Users,
-        roles: ['super_admin', 'admin'],
-    },
-    {
-        title: 'Roles & Permissions',
-        href: '/admin/roles',
-        icon: ShieldCheck,
-        roles: ['super_admin'],
-    },
-    {
-        title: 'Site Settings',
-        href: '/admin/settings',
-        icon: Settings,
-        roles: ['super_admin', 'admin'],
-    },
-    {
-        title: 'Activity Log',
-        href: '/admin/activity-log',
-        icon: Activity,
-        roles: ['super_admin', 'admin'],
-    },
-];
-
-const systemItems: NavItemWithRoles[] = [
-    {
-        title: 'System Health',
-        href: '/admin/system-health',
-        icon: Activity,
-        roles: ['super_admin', 'admin'],
-    },
-    {
-        title: 'API Tokens',
-        href: '/admin/tokens',
-        icon: Key,
-        roles: ['super_admin', 'admin', 'editor'],
-    },
-];
+    return {
+        intelligence: [
+            {
+                title: 'Dashboard',
+                href: `${base}/dashboard`,
+                icon: LayoutGrid,
+                roles: ['super_admin', 'admin', 'editor'],
+            },
+            {
+                title: 'Market Stats',
+                href: `${base}/market-stats`,
+                icon: ChartNoAxesColumn,
+                roles: ['super_admin', 'admin', 'editor'],
+            },
+            {
+                title: 'Data Hub',
+                href: `${base}/data-hub`,
+                icon: Database,
+                roles: ['super_admin', 'admin'],
+            },
+            {
+                title: 'AI Assistant',
+                href: `${base}/assistant`,
+                icon: Bot,
+                roles: ['super_admin', 'admin', 'editor'],
+            },
+            {
+                title: 'AI Feedback',
+                href: `${base}/ai-feedback`,
+                icon: ThumbsUp,
+                roles: ['super_admin', 'admin'],
+            },
+        ],
+        administration: [
+            {
+                title: 'Users',
+                href: `${base}/users`,
+                icon: Users,
+                roles: ['super_admin', 'admin'],
+            },
+            {
+                title: 'Roles & Permissions',
+                href: `${base}/roles`,
+                icon: ShieldCheck,
+                roles: ['super_admin'],
+            },
+            {
+                title: 'Site Settings',
+                href: `${base}/settings`,
+                icon: Settings,
+                roles: ['super_admin', 'admin'],
+            },
+            {
+                title: 'Activity Log',
+                href: `${base}/activity-log`,
+                icon: Activity,
+                roles: ['super_admin', 'admin'],
+            },
+        ],
+        system: [
+            {
+                title: 'System Health',
+                href: `${base}/system-health`,
+                icon: Activity,
+                roles: ['super_admin', 'admin'],
+            },
+            {
+                title: 'API Tokens',
+                href: `${base}/tokens`,
+                icon: Key,
+                roles: ['super_admin', 'admin', 'editor'],
+            },
+        ],
+    };
+}
 
 function NavGroup({
     label,
@@ -131,7 +152,6 @@ function NavGroup({
     role: string;
 }) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
-
     const filtered = items.filter((item) => item.roles.includes(role));
 
     if (filtered.length === 0) {
@@ -167,9 +187,41 @@ function NavGroup({
     );
 }
 
+function MarketSwitcher({
+    currentMarket,
+    markets,
+}: {
+    currentMarket: string;
+    markets: Record<string, Market>;
+}) {
+    return (
+        <div className="mx-3 mb-2 flex flex-wrap gap-1">
+            {Object.entries(markets).map(([slug, market]) => (
+                <Link
+                    key={slug}
+                    href={`/${slug}/admin/dashboard`}
+                    className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors ${
+                        slug === currentMarket
+                            ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
+                            : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground'
+                    }`}
+                    title={market.label}
+                >
+                    <span>{market.flag}</span>
+                    <span>{market.label}</span>
+                </Link>
+            ))}
+        </div>
+    );
+}
+
 export function AppSidebar() {
     const { role } = useAuth();
+    const { currentMarket, markets } = usePage<SharedProps>().props;
     const [systemUsage, setSystemUsage] = useState<SystemUsage | null>(null);
+
+    const market = currentMarket ?? 'yerevan';
+    const navItems = buildNavItems(market);
 
     useEffect(() => {
         if (!['admin', 'super_admin'].includes(role)) {
@@ -184,13 +236,7 @@ export function AppSidebar() {
                 ),
             },
         })
-            .then((r) => {
-                if (!r.ok) {
-                    return null;
-                }
-
-                return r.json();
-            })
+            .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
                 if (data?.this_month && data?.all_time) {
                     setSystemUsage(data);
@@ -205,7 +251,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={`/${market}/admin/dashboard`} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -213,9 +259,14 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
+                <MarketSwitcher
+                    currentMarket={market}
+                    markets={markets ?? {}}
+                />
+
                 <NavGroup
                     label="Intelligence & Data"
-                    items={intelligenceItems}
+                    items={navItems.intelligence}
                     role={role}
                 />
 
@@ -224,7 +275,7 @@ export function AppSidebar() {
                 <div className="opacity-60">
                     <NavGroup
                         label="Administration"
-                        items={administrationItems}
+                        items={navItems.administration}
                         role={role}
                     />
                 </div>
@@ -232,7 +283,11 @@ export function AppSidebar() {
                 <div className="mx-4 my-1 border-t border-sidebar-border/50" />
 
                 <div className="opacity-60">
-                    <NavGroup label="System" items={systemItems} role={role} />
+                    <NavGroup
+                        label="System"
+                        items={navItems.system}
+                        role={role}
+                    />
                 </div>
             </SidebarContent>
             <SidebarFooter>
@@ -246,27 +301,21 @@ export function AppSidebar() {
                                 <span className="text-[10px] text-muted-foreground">
                                     This month
                                 </span>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-emerald-400 tabular-nums">
-                                        <DollarSign className="h-2.5 w-2.5 text-emerald-400" />
-                                        {formatCost(
-                                            systemUsage.this_month.cost_usd,
-                                        )}
-                                    </span>
-                                </div>
+                                <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-emerald-400 tabular-nums">
+                                    <DollarSign className="h-2.5 w-2.5 text-emerald-400" />
+                                    {formatCost(
+                                        systemUsage.this_month.cost_usd,
+                                    )}
+                                </span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-[10px] text-muted-foreground">
                                     All time
                                 </span>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-amber-400 tabular-nums">
-                                        <DollarSign className="h-2.5 w-2.5 text-amber-400" />
-                                        {formatCost(
-                                            systemUsage.all_time.cost_usd,
-                                        )}
-                                    </span>
-                                </div>
+                                <span className="flex animate-pulse items-center gap-0.5 text-[10px] text-amber-400 tabular-nums">
+                                    <DollarSign className="h-2.5 w-2.5 text-amber-400" />
+                                    {formatCost(systemUsage.all_time.cost_usd)}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -274,7 +323,7 @@ export function AppSidebar() {
 
                 <div className="mx-3 mt-4 mb-2">
                     <a
-                        href="/"
+                        href={`/${market}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-blue-400 transition-colors hover:text-blue-300"
@@ -284,6 +333,7 @@ export function AppSidebar() {
                         <ExternalLink className="ml-auto h-3 w-3 opacity-50" />
                     </a>
                 </div>
+
                 <NavFooter items={footerNavItems} className="mt-auto" />
 
                 <div className="px-2 pb-1">
