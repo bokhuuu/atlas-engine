@@ -61,9 +61,10 @@ class ChatController extends Controller
         }
 
         $sessionKey = 'atlas_assistant_'.$userId;
+        $market = $request->input('market', config('scraper.default_market', 'yerevan'));
 
         try {
-            $agent = new PropertyAssistantAgent($sessionKey);
+            $agent = new PropertyAssistantAgent($sessionKey, $market);
             $response = $agent->message($message)->respond();
 
             $this->rateLimiter->increment('chat', $userId);

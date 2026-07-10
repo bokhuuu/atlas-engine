@@ -10,6 +10,7 @@ use App\Modules\AI\Services\PromptService;
 use App\Modules\Scraper\Exports\ExportManager;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Support\CategoryLabels;
+use App\Services\MarketRegistry;
 use LarAgent\Agent;
 use LarAgent\Attributes\Tool;
 
@@ -26,6 +27,8 @@ class PropertyAssistantAgent extends Agent
     protected ?int $lastPromptTokens = null;
 
     protected ?int $lastCompletionTokens = null;
+
+    protected string $market = 'yerevan';
 
     public function getLastPromptTokens(): ?int
     {
@@ -50,8 +53,9 @@ class PropertyAssistantAgent extends Agent
         }
     }
 
-    public function __construct(string $sessionId)
+    public function __construct(string $sessionId, $market = 'yerevan')
     {
+        $this->market = $market;
         $this->provider = config('ai.providers.default', 'openrouter');
         parent::__construct($sessionId);
     }
@@ -158,12 +162,19 @@ class PropertyAssistantAgent extends Agent
     #[Tool('List all real estate categories available in Atlas. Use this when the user asks what data is available or which source key to use for another tool.')]
     public function getCategoryList(): string
     {
-        $labels = CategoryLabels::all();
-        $categories = collect($labels)->map(fn ($label, $source) => [
-            'source' => $source,
-            'label' => $label,
-            'deal_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
-        ])->values();
+        $registry = app(MarketRegistry::class);
+        $marketConfig = $registry->fromSlug($this->market);
+        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+        $allLabels = CategoryLabels::all();
+        $categories = collect($allLabels)
+            ->filter(fn ($label, $source) => collect($sourcePrefixes)
+                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_')))
+            ->map(fn ($label, $source) => [
+                'source' => $source,
+                'label' => $label,
+                'deal_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
+            ])->values();
 
         return json_encode(['categories' => $categories]);
     }
@@ -183,7 +194,7 @@ class PropertyAssistantAgent extends Agent
 
             return json_encode([
                 'message' => 'Export ready.',
-                'download_url' => url('/admin/exports/'.$source),
+                'download_url' => url("/{$this->market}/admin/exports/{$source}"),
                 'category' => $labels[$source],
             ]);
         } catch (\Throwable $e) {
@@ -228,9 +239,13 @@ class PropertyAssistantAgent extends Agent
     {
         $repo = app(ListingRepository::class);
 
+        $registry = app(MarketRegistry::class);
+        $marketConfig = $registry->fromSlug($this->market);
+        $prefix = $marketConfig['source_prefixes'][0] ?? 'listam';
+
         [$saleSource, $rentSource] = match ($pair) {
-            'commercial' => ['listam_commercial_sale', 'listam_commercial_rent'],
-            default => ['listam_apartments_sale', 'listam_apartments_rent'],
+            'commercial' => ["{$prefix}_commercial_sale", "{$prefix}_commercial_rent"],
+            default => ["{$prefix}_apartments_sale", "{$prefix}_apartments_rent"],
         };
 
         $minListings = (int) config('scraper.yield_min_listings', 5);
@@ -312,26 +327,32 @@ class PropertyAssistantAgent extends Agent
 
     private function defaultSystemPrompt(): string
     {
-        return <<<'PROMPT'
-    You are a real estate market intelligence assistant for the Yerevan real estate market.
+        $registry = app(MarketRegistry::class);
+        $marketConfig = $registry->fromSlug($this->market);
+        $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+        $sourcePrefixes = $marketConfig['source_prefixes'] ?? ['listam'];
+        $primarySource = $sourcePrefixes[0] ?? 'listam';
 
-    You have access to tools that query a live database of real property listings scraped from list.am. Every figure you provide must come from calling one of these tools — never from your general knowledge.
+        return <<<PROMPT
+You are a real estate market intelligence assistant for the {$marketLabel} real estate market.
 
-    Rules you must follow without exception:
-    - Never invent, estimate, or guess a price, count, or market figure.
-    - If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
-    - Never compare Yerevan data to other cities unless the user provides those figures themselves.
-    - Always state which category and district a figure applies to.
-    - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
-    - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
-    - When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
-    - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
-    - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
-    - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
+You have access to tools that query a live database of real property listings scraped from {$primarySource}. Every figure you provide must come from calling one of these tools — never from your general knowledge.
 
-    When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
+Rules you must follow without exception:
+- Never invent, estimate, or guess a price, count, or market figure.
+- If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
+- Never compare {$marketLabel} data to other cities unless the user provides those figures themselves.
+- Always state which category and district a figure applies to.
+- When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
+- When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
+- When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
+- When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
+- When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
+- When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
 
-    You are a data reporting tool. The professional judgment about what the data means belongs to the analyst you are assisting.
-    PROMPT;
+When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
+
+You are a data reporting tool. The professional judgment about what the data means belongs to the analyst you are assisting.
+PROMPT;
     }
 }

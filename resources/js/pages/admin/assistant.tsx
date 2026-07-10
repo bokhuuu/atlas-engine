@@ -143,7 +143,7 @@ export default function Assistant() {
         fetchUsage();
     }, []);
 
-    const { adminUrl } = useMarket();
+    const { market, adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'AI Assistant', href: adminUrl('/assistant') },
     ];
@@ -182,7 +182,7 @@ export default function Assistant() {
                         document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
                     ),
                 },
-                body: JSON.stringify({ message: text.trim() }),
+                body: JSON.stringify({ message: text.trim(), market }),
             });
 
             const data = await response.json();
@@ -377,7 +377,9 @@ export default function Assistant() {
                         )}
                         {!usage && (
                             <span className="ml-auto text-xs text-muted-foreground">
-                                Yerevan market data
+                                {market.charAt(0).toUpperCase() +
+                                    market.slice(1)}{' '}
+                                market data
                             </span>
                         )}
                     </div>
@@ -530,7 +532,7 @@ export default function Assistant() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Ask anything about the Yerevan market…"
+                                placeholder={`Ask anything about the ${market.charAt(0).toUpperCase() + market.slice(1)} market…`}
                                 disabled={streaming}
                                 className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-50"
                             />
