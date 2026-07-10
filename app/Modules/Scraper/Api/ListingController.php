@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Api;
 use App\Http\Controllers\Controller;
 use App\Modules\AI\Services\MarketSummaryService;
 use App\Modules\Scraper\Repositories\ListingRepository;
+use App\Services\MarketRegistry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,7 @@ class ListingController extends Controller
      */
     public function __construct(
         private readonly ListingRepository $listingRepository,
+        private readonly MarketRegistry $marketRegistry,
     ) {}
 
     /**
@@ -100,10 +102,13 @@ class ListingController extends Controller
     public function yield(Request $request): JsonResponse
     {
         $pair = $request->query('pair', 'residential');
+        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
+        $marketConfig = $this->marketRegistry->fromSlug($market);
+        $prefix = $marketConfig['source_prefixes'][0] ?? 'listam';
 
         [$saleSource, $rentSource] = match ($pair) {
-            'commercial' => ['listam_commercial_sale', 'listam_commercial_rent'],
-            default => ['listam_apartments_sale', 'listam_apartments_rent'],
+            'commercial' => ["{$prefix}_commercial_sale", "{$prefix}_commercial_rent"],
+            default => ["{$prefix}_apartments_sale", "{$prefix}_apartments_rent"],
         };
 
         $minListings = (int) config('scraper.yield_min_listings', 5);

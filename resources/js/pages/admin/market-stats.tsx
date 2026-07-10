@@ -72,6 +72,8 @@ function intensityClass(rank: number, total: number): string {
 }
 
 export default function MarketStats({ categories }: Props) {
+    const { adminUrl, market } = useMarket();
+
     const [selectedSource, setSelectedSource] = useState(
         categories[0]?.source ?? '',
     );
@@ -140,14 +142,15 @@ export default function MarketStats({ categories }: Props) {
     }, [selectedSource]);
 
     useEffect(() => {
-        const pair =
-            selectedSource === 'listam_commercial_sale' ? 'commercial' : null;
+        const pair = selectedSource.endsWith('_commercial_sale')
+            ? 'commercial'
+            : null;
 
         let active = true;
 
         if (pair) {
             fetchJson<{ pair: string; rows: YieldRow[] }>(
-                `/api/v1/listings/yield?pair=${pair}`,
+                `/api/v1/listings/yield?pair=${pair}&market=${market}`,
             )
                 .then((res) => {
                     if (active) {
@@ -170,16 +173,15 @@ export default function MarketStats({ categories }: Props) {
         return () => {
             active = false;
         };
-    }, [selectedSource]);
+    }, [selectedSource, market]);
 
-    const { adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: adminUrl('/dashboard') },
     ];
 
     const error = errorSource === selectedSource;
     const rows = result?.source === selectedSource ? result.rows : null;
-    const showYield = selectedSource === 'listam_commercial_sale';
+    const showYield = selectedSource.endsWith('_commercial_sale');
 
     const sortedRows = rows
         ? [...rows].sort(
