@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/admin/users',
+    url: '/yerevan/admin/users',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -56,7 +56,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -66,7 +66,169 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/users',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/users',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -83,7 +245,7 @@ index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
@@ -92,13 +254,13 @@ export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 
 create.definition = {
     methods: ["get","head"],
-    url: '/admin/users/create',
+    url: '/yerevan/admin/users/create',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
@@ -107,7 +269,7 @@ create.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
@@ -117,7 +279,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
@@ -127,7 +289,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
@@ -137,7 +299,7 @@ const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
 */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
@@ -147,7 +309,169 @@ createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/admin/users/create'
+* @route '/yerevan/admin/users/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/users/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create.form = createForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/users/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
 */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url({
@@ -164,7 +488,7 @@ create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 export const trashed = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: trashed.url(options),
@@ -173,13 +497,13 @@ export const trashed = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 
 trashed.definition = {
     methods: ["get","head"],
-    url: '/admin/users/trashed',
+    url: '/yerevan/admin/users/trashed',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 trashed.url = (options?: RouteQueryOptions) => {
     return trashed.definition.url + queryParams(options)
@@ -188,7 +512,7 @@ trashed.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 trashed.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: trashed.url(options),
@@ -198,7 +522,7 @@ trashed.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 trashed.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: trashed.url(options),
@@ -208,7 +532,7 @@ trashed.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 const trashedForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: trashed.url(options),
@@ -218,7 +542,7 @@ const trashedForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
 */
 trashedForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: trashed.url(options),
@@ -228,7 +552,169 @@ trashedForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/admin/users/trashed'
+* @route '/yerevan/admin/users/trashed'
+*/
+trashedForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+trashed.form = trashedForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+export const trashed = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
+    method: 'get',
+})
+
+trashed.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/users/trashed',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashed.url = (options?: RouteQueryOptions) => {
+    return trashed.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashed.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashed.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: trashed.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+const trashedForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashedForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashedForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+trashed.form = trashedForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+export const trashed = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
+    method: 'get',
+})
+
+trashed.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/users/trashed',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashed.url = (options?: RouteQueryOptions) => {
+    return trashed.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashed.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashed.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: trashed.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+const trashedForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashedForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
 */
 trashedForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: trashed.url({
@@ -245,7 +731,7 @@ trashed.form = trashedForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -254,13 +740,13 @@ export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 store.definition = {
     methods: ["post"],
-    url: '/admin/users',
+    url: '/yerevan/admin/users',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
@@ -269,7 +755,7 @@ store.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -279,7 +765,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
@@ -289,7 +775,119 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/admin/users'
+* @route '/yerevan/admin/users'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/baku/admin/users',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+store.form = storeForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/tbilisi/admin/users',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
@@ -301,7 +899,7 @@ store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 export const edit = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
@@ -310,13 +908,13 @@ export const edit = (args: { user: string | number } | [user: string | number ] 
 
 edit.definition = {
     methods: ["get","head"],
-    url: '/admin/users/{user}/edit',
+    url: '/yerevan/admin/users/{user}/edit',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 edit.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -343,7 +941,7 @@ edit.url = (args: { user: string | number } | [user: string | number ] | string 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 edit.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
@@ -353,7 +951,7 @@ edit.get = (args: { user: string | number } | [user: string | number ] | string 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 edit.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
@@ -363,7 +961,7 @@ edit.head = (args: { user: string | number } | [user: string | number ] | string
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 const editForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
@@ -373,7 +971,7 @@ const editForm = (args: { user: string | number } | [user: string | number ] | s
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
 */
 editForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
@@ -383,7 +981,205 @@ editForm.get = (args: { user: string | number } | [user: string | number ] | str
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/admin/users/{user}/edit'
+* @route '/yerevan/admin/users/{user}/edit'
+*/
+editForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+export const edit = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
+    method: 'get',
+})
+
+edit.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/users/{user}/edit',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+edit.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return edit.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+edit.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+edit.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: edit.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+const editForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+editForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+editForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit.form = editForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+export const edit = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
+    method: 'get',
+})
+
+edit.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/users/{user}/edit',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+edit.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return edit.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+edit.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+edit.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: edit.url(args, options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+const editForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+editForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
 */
 editForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
@@ -400,7 +1196,7 @@ edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 export const update = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -409,13 +1205,13 @@ export const update = (args: { user: string | number } | [user: string | number 
 
 update.definition = {
     methods: ["put"],
-    url: '/admin/users/{user}',
+    url: '/yerevan/admin/users/{user}',
 } satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 update.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -442,7 +1238,7 @@ update.url = (args: { user: string | number } | [user: string | number ] | strin
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 update.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -452,7 +1248,7 @@ update.put = (args: { user: string | number } | [user: string | number ] | strin
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 const updateForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -467,7 +1263,175 @@ const updateForm = (args: { user: string | number } | [user: string | number ] |
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
+*/
+updateForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+export const update = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+update.definition = {
+    methods: ["put"],
+    url: '/baku/admin/users/{user}',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+update.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return update.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+update.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+const updateForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+updateForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+export const update = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+update.definition = {
+    methods: ["put"],
+    url: '/tbilisi/admin/users/{user}',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+update.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return update.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+update.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+const updateForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
 */
 updateForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -484,7 +1448,7 @@ update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::deleteMethod
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 export const deleteMethod = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
@@ -493,13 +1457,13 @@ export const deleteMethod = (args: { user: string | number } | [user: string | n
 
 deleteMethod.definition = {
     methods: ["delete"],
-    url: '/admin/users/{user}',
+    url: '/yerevan/admin/users/{user}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::deleteMethod
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 deleteMethod.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -526,7 +1490,7 @@ deleteMethod.url = (args: { user: string | number } | [user: string | number ] |
 /**
 * @see \App\Http\Controllers\Admin\UserController::deleteMethod
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 deleteMethod.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
@@ -536,7 +1500,7 @@ deleteMethod.delete = (args: { user: string | number } | [user: string | number 
 /**
 * @see \App\Http\Controllers\Admin\UserController::deleteMethod
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
 */
 const deleteMethodForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: deleteMethod.url(args, {
@@ -551,7 +1515,175 @@ const deleteMethodForm = (args: { user: string | number } | [user: string | numb
 /**
 * @see \App\Http\Controllers\Admin\UserController::deleteMethod
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/admin/users/{user}'
+* @route '/yerevan/admin/users/{user}'
+*/
+deleteMethodForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: deleteMethod.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+deleteMethod.form = deleteMethodForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+export const deleteMethod = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: deleteMethod.url(args, options),
+    method: 'delete',
+})
+
+deleteMethod.definition = {
+    methods: ["delete"],
+    url: '/baku/admin/users/{user}',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+deleteMethod.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return deleteMethod.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+deleteMethod.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: deleteMethod.url(args, options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+const deleteMethodForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: deleteMethod.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+deleteMethodForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: deleteMethod.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+deleteMethod.form = deleteMethodForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+export const deleteMethod = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: deleteMethod.url(args, options),
+    method: 'delete',
+})
+
+deleteMethod.definition = {
+    methods: ["delete"],
+    url: '/tbilisi/admin/users/{user}',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+deleteMethod.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return deleteMethod.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+deleteMethod.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: deleteMethod.url(args, options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+const deleteMethodForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: deleteMethod.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::deleteMethod
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
 */
 deleteMethodForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: deleteMethod.url(args, {
@@ -568,7 +1700,7 @@ deleteMethod.form = deleteMethodForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/admin/users/{user}/restore'
+* @route '/yerevan/admin/users/{user}/restore'
 */
 export const restore = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: restore.url(args, options),
@@ -577,13 +1709,13 @@ export const restore = (args: { user: string | number } | [user: string | number
 
 restore.definition = {
     methods: ["patch"],
-    url: '/admin/users/{user}/restore',
+    url: '/yerevan/admin/users/{user}/restore',
 } satisfies RouteDefinition<["patch"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/admin/users/{user}/restore'
+* @route '/yerevan/admin/users/{user}/restore'
 */
 restore.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -610,7 +1742,7 @@ restore.url = (args: { user: string | number } | [user: string | number ] | stri
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/admin/users/{user}/restore'
+* @route '/yerevan/admin/users/{user}/restore'
 */
 restore.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: restore.url(args, options),
@@ -620,7 +1752,7 @@ restore.patch = (args: { user: string | number } | [user: string | number ] | st
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/admin/users/{user}/restore'
+* @route '/yerevan/admin/users/{user}/restore'
 */
 const restoreForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: restore.url(args, {
@@ -635,7 +1767,175 @@ const restoreForm = (args: { user: string | number } | [user: string | number ] 
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/admin/users/{user}/restore'
+* @route '/yerevan/admin/users/{user}/restore'
+*/
+restoreForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+restore.form = restoreForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+export const restore = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
+    method: 'patch',
+})
+
+restore.definition = {
+    methods: ["patch"],
+    url: '/baku/admin/users/{user}/restore',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+restore.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return restore.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+restore.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
+    method: 'patch',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+const restoreForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+restoreForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+restore.form = restoreForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+export const restore = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
+    method: 'patch',
+})
+
+restore.definition = {
+    methods: ["patch"],
+    url: '/tbilisi/admin/users/{user}/restore',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+restore.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return restore.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+restore.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
+    method: 'patch',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+const restoreForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
 */
 restoreForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: restore.url(args, {
@@ -652,7 +1952,7 @@ restore.form = restoreForm
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/admin/users/{user}/force-delete'
+* @route '/yerevan/admin/users/{user}/force-delete'
 */
 export const forceDelete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: forceDelete.url(args, options),
@@ -661,13 +1961,13 @@ export const forceDelete = (args: { user: string | number } | [user: string | nu
 
 forceDelete.definition = {
     methods: ["delete"],
-    url: '/admin/users/{user}/force-delete',
+    url: '/yerevan/admin/users/{user}/force-delete',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/admin/users/{user}/force-delete'
+* @route '/yerevan/admin/users/{user}/force-delete'
 */
 forceDelete.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -694,7 +1994,7 @@ forceDelete.url = (args: { user: string | number } | [user: string | number ] | 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/admin/users/{user}/force-delete'
+* @route '/yerevan/admin/users/{user}/force-delete'
 */
 forceDelete.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: forceDelete.url(args, options),
@@ -704,7 +2004,7 @@ forceDelete.delete = (args: { user: string | number } | [user: string | number ]
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/admin/users/{user}/force-delete'
+* @route '/yerevan/admin/users/{user}/force-delete'
 */
 const forceDeleteForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: forceDelete.url(args, {
@@ -719,7 +2019,175 @@ const forceDeleteForm = (args: { user: string | number } | [user: string | numbe
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/admin/users/{user}/force-delete'
+* @route '/yerevan/admin/users/{user}/force-delete'
+*/
+forceDeleteForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+forceDelete.form = forceDeleteForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+export const forceDelete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
+    method: 'delete',
+})
+
+forceDelete.definition = {
+    methods: ["delete"],
+    url: '/baku/admin/users/{user}/force-delete',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+forceDelete.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return forceDelete.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+forceDelete.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+const forceDeleteForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+forceDeleteForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+forceDelete.form = forceDeleteForm
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+export const forceDelete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
+    method: 'delete',
+})
+
+forceDelete.definition = {
+    methods: ["delete"],
+    url: '/tbilisi/admin/users/{user}/force-delete',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+forceDelete.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { user: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            user: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        user: args.user,
+    }
+
+    return forceDelete.definition.url
+            .replace('{user}', parsedArgs.user.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+forceDelete.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+const forceDeleteForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
 */
 forceDeleteForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: forceDelete.url(args, {

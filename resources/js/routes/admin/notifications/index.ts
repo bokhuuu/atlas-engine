@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::read
 * @see app/Http/Controllers/Admin/NotificationController.php:26
-* @route '/admin/notifications/{id}/read'
+* @route '/yerevan/admin/notifications/{id}/read'
 */
 export const read = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: read.url(args, options),
@@ -11,13 +11,13 @@ export const read = (args: { id: string | number } | [id: string | number ] | st
 
 read.definition = {
     methods: ["post"],
-    url: '/admin/notifications/{id}/read',
+    url: '/yerevan/admin/notifications/{id}/read',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::read
 * @see app/Http/Controllers/Admin/NotificationController.php:26
-* @route '/admin/notifications/{id}/read'
+* @route '/yerevan/admin/notifications/{id}/read'
 */
 read.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -44,7 +44,7 @@ read.url = (args: { id: string | number } | [id: string | number ] | string | nu
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::read
 * @see app/Http/Controllers/Admin/NotificationController.php:26
-* @route '/admin/notifications/{id}/read'
+* @route '/yerevan/admin/notifications/{id}/read'
 */
 read.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: read.url(args, options),
@@ -54,7 +54,7 @@ read.post = (args: { id: string | number } | [id: string | number ] | string | n
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::read
 * @see app/Http/Controllers/Admin/NotificationController.php:26
-* @route '/admin/notifications/{id}/read'
+* @route '/yerevan/admin/notifications/{id}/read'
 */
 const readForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: read.url(args, options),
@@ -64,7 +64,155 @@ const readForm = (args: { id: string | number } | [id: string | number ] | strin
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::read
 * @see app/Http/Controllers/Admin/NotificationController.php:26
-* @route '/admin/notifications/{id}/read'
+* @route '/yerevan/admin/notifications/{id}/read'
+*/
+readForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: read.url(args, options),
+    method: 'post',
+})
+
+read.form = readForm
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/baku/admin/notifications/{id}/read'
+*/
+export const read = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: read.url(args, options),
+    method: 'post',
+})
+
+read.definition = {
+    methods: ["post"],
+    url: '/baku/admin/notifications/{id}/read',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/baku/admin/notifications/{id}/read'
+*/
+read.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { id: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            id: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        id: args.id,
+    }
+
+    return read.definition.url
+            .replace('{id}', parsedArgs.id.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/baku/admin/notifications/{id}/read'
+*/
+read.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: read.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/baku/admin/notifications/{id}/read'
+*/
+const readForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: read.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/baku/admin/notifications/{id}/read'
+*/
+readForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: read.url(args, options),
+    method: 'post',
+})
+
+read.form = readForm
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/tbilisi/admin/notifications/{id}/read'
+*/
+export const read = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: read.url(args, options),
+    method: 'post',
+})
+
+read.definition = {
+    methods: ["post"],
+    url: '/tbilisi/admin/notifications/{id}/read',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/tbilisi/admin/notifications/{id}/read'
+*/
+read.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { id: args }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            id: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        id: args.id,
+    }
+
+    return read.definition.url
+            .replace('{id}', parsedArgs.id.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/tbilisi/admin/notifications/{id}/read'
+*/
+read.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: read.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/tbilisi/admin/notifications/{id}/read'
+*/
+const readForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: read.url(args, options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::read
+* @see app/Http/Controllers/Admin/NotificationController.php:26
+* @route '/tbilisi/admin/notifications/{id}/read'
 */
 readForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: read.url(args, options),
@@ -76,7 +224,7 @@ read.form = readForm
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::readAll
 * @see app/Http/Controllers/Admin/NotificationController.php:40
-* @route '/admin/notifications/read-all'
+* @route '/yerevan/admin/notifications/read-all'
 */
 export const readAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: readAll.url(options),
@@ -85,13 +233,13 @@ export const readAll = (options?: RouteQueryOptions): RouteDefinition<'post'> =>
 
 readAll.definition = {
     methods: ["post"],
-    url: '/admin/notifications/read-all',
+    url: '/yerevan/admin/notifications/read-all',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::readAll
 * @see app/Http/Controllers/Admin/NotificationController.php:40
-* @route '/admin/notifications/read-all'
+* @route '/yerevan/admin/notifications/read-all'
 */
 readAll.url = (options?: RouteQueryOptions) => {
     return readAll.definition.url + queryParams(options)
@@ -100,7 +248,7 @@ readAll.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::readAll
 * @see app/Http/Controllers/Admin/NotificationController.php:40
-* @route '/admin/notifications/read-all'
+* @route '/yerevan/admin/notifications/read-all'
 */
 readAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: readAll.url(options),
@@ -110,7 +258,7 @@ readAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::readAll
 * @see app/Http/Controllers/Admin/NotificationController.php:40
-* @route '/admin/notifications/read-all'
+* @route '/yerevan/admin/notifications/read-all'
 */
 const readAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: readAll.url(options),
@@ -120,7 +268,119 @@ const readAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 /**
 * @see \App\Http\Controllers\Admin\NotificationController::readAll
 * @see app/Http/Controllers/Admin/NotificationController.php:40
-* @route '/admin/notifications/read-all'
+* @route '/yerevan/admin/notifications/read-all'
+*/
+readAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: readAll.url(options),
+    method: 'post',
+})
+
+readAll.form = readAllForm
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/baku/admin/notifications/read-all'
+*/
+export const readAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: readAll.url(options),
+    method: 'post',
+})
+
+readAll.definition = {
+    methods: ["post"],
+    url: '/baku/admin/notifications/read-all',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/baku/admin/notifications/read-all'
+*/
+readAll.url = (options?: RouteQueryOptions) => {
+    return readAll.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/baku/admin/notifications/read-all'
+*/
+readAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: readAll.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/baku/admin/notifications/read-all'
+*/
+const readAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: readAll.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/baku/admin/notifications/read-all'
+*/
+readAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: readAll.url(options),
+    method: 'post',
+})
+
+readAll.form = readAllForm
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/tbilisi/admin/notifications/read-all'
+*/
+export const readAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: readAll.url(options),
+    method: 'post',
+})
+
+readAll.definition = {
+    methods: ["post"],
+    url: '/tbilisi/admin/notifications/read-all',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/tbilisi/admin/notifications/read-all'
+*/
+readAll.url = (options?: RouteQueryOptions) => {
+    return readAll.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/tbilisi/admin/notifications/read-all'
+*/
+readAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: readAll.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/tbilisi/admin/notifications/read-all'
+*/
+const readAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: readAll.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\NotificationController::readAll
+* @see app/Http/Controllers/Admin/NotificationController.php:40
+* @route '/tbilisi/admin/notifications/read-all'
 */
 readAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: readAll.url(options),

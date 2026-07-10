@@ -12,7 +12,7 @@ import dataHub from './data-hub'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: dashboard.url(options),
@@ -21,13 +21,13 @@ export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> =
 
 dashboard.definition = {
     methods: ["get","head"],
-    url: '/admin/dashboard',
+    url: '/yerevan/admin/dashboard',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
     return dashboard.definition.url + queryParams(options)
@@ -36,7 +36,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: dashboard.url(options),
@@ -46,7 +46,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: dashboard.url(options),
@@ -56,7 +56,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: dashboard.url(options),
@@ -66,7 +66,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: dashboard.url(options),
@@ -76,7 +76,169 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
 * @see app/Http/Controllers/Admin/DashboardController.php:33
-* @route '/admin/dashboard'
+* @route '/yerevan/admin/dashboard'
+*/
+dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+dashboard.form = dashboardForm
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+dashboard.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/dashboard',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+dashboard.url = (options?: RouteQueryOptions) => {
+    return dashboard.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: dashboard.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/baku/admin/dashboard'
+*/
+dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+dashboard.form = dashboardForm
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+dashboard.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/dashboard',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+dashboard.url = (options?: RouteQueryOptions) => {
+    return dashboard.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: dashboard.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
+*/
+dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: dashboard.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DashboardController::dashboard
+* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @route '/tbilisi/admin/dashboard'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: dashboard.url({
@@ -93,7 +255,7 @@ dashboard.form = dashboardForm
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: marketStats.url(options),
@@ -102,13 +264,13 @@ export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'>
 
 marketStats.definition = {
     methods: ["get","head"],
-    url: '/admin/market-stats',
+    url: '/yerevan/admin/market-stats',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 marketStats.url = (options?: RouteQueryOptions) => {
     return marketStats.definition.url + queryParams(options)
@@ -117,7 +279,7 @@ marketStats.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: marketStats.url(options),
@@ -127,7 +289,7 @@ marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: marketStats.url(options),
@@ -137,7 +299,7 @@ marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: marketStats.url(options),
@@ -147,7 +309,7 @@ const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
 */
 marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: marketStats.url(options),
@@ -157,7 +319,169 @@ marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
 * @see app/Http/Controllers/Admin/MarketStatsController.php:21
-* @route '/admin/market-stats'
+* @route '/yerevan/admin/market-stats'
+*/
+marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+marketStats.form = marketStatsForm
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+marketStats.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/market-stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+marketStats.url = (options?: RouteQueryOptions) => {
+    return marketStats.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: marketStats.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/baku/admin/market-stats'
+*/
+marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+marketStats.form = marketStatsForm
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+marketStats.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/market-stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+marketStats.url = (options?: RouteQueryOptions) => {
+    return marketStats.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: marketStats.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
+*/
+marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @route '/tbilisi/admin/market-stats'
 */
 marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: marketStats.url({
@@ -174,7 +498,7 @@ marketStats.form = marketStatsForm
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: assistant.url(options),
@@ -183,13 +507,13 @@ export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> =
 
 assistant.definition = {
     methods: ["get","head"],
-    url: '/admin/assistant',
+    url: '/yerevan/admin/assistant',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 assistant.url = (options?: RouteQueryOptions) => {
     return assistant.definition.url + queryParams(options)
@@ -198,7 +522,7 @@ assistant.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: assistant.url(options),
@@ -208,7 +532,7 @@ assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: assistant.url(options),
@@ -218,7 +542,7 @@ assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: assistant.url(options),
@@ -228,7 +552,7 @@ const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
 */
 assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: assistant.url(options),
@@ -238,7 +562,169 @@ assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
 * @see app/Http/Controllers/Admin/AssistantController.php:19
-* @route '/admin/assistant'
+* @route '/yerevan/admin/assistant'
+*/
+assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+assistant.form = assistantForm
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+assistant.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/assistant',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+assistant.url = (options?: RouteQueryOptions) => {
+    return assistant.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: assistant.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+assistant.form = assistantForm
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+assistant.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/assistant',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+assistant.url = (options?: RouteQueryOptions) => {
+    return assistant.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: assistant.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: assistant.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::assistant
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
 */
 assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: assistant.url({
