@@ -324,6 +324,25 @@ export default function DataHub({ categories, districts }: Props) {
     const countChanged =
         prevTotal !== null && result !== null && prevTotal !== result.total;
 
+    if (categories.length === 0) {
+        return (
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <Head title="Data Hub" />
+                <div className="flex flex-col items-center justify-center py-32 text-center">
+                    <p className="mb-2 text-2xl">🗄️</p>
+                    <h2 className="mb-1 text-lg font-semibold">
+                        No data available yet
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Data collection for the{' '}
+                        {market.charAt(0).toUpperCase() + market.slice(1)}{' '}
+                        market has not started yet.
+                    </p>
+                </div>
+            </AppLayout>
+        );
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Data Hub" />

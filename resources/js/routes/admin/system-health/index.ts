@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 import cache from './cache'
 import maintenance from './maintenance'
 /**
@@ -48,43 +48,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::index
 * @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/yerevan/admin/system-health'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/yerevan/admin/system-health'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/yerevan/admin/system-health'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
 * @route '/baku/admin/system-health'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -129,43 +92,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::index
 * @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/baku/admin/system-health'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/baku/admin/system-health'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/baku/admin/system-health'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
 * @route '/tbilisi/admin/system-health'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -206,43 +132,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/tbilisi/admin/system-health'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/tbilisi/admin/system-health'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\SystemHealthController::index
-* @see app/Http/Controllers/Admin/SystemHealthController.php:30
-* @route '/tbilisi/admin/system-health'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
 
 const systemHealth = {
     index: Object.assign(index, index),

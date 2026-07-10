@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\TokenController::index
 * @see app/Http/Controllers/Admin/TokenController.php:28
@@ -42,43 +42,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/yerevan/admin/tokens'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/yerevan/admin/tokens'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/yerevan/admin/tokens'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Admin\TokenController::index
@@ -127,43 +90,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\TokenController::index
 * @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/baku/admin/tokens'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/baku/admin/tokens'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/baku/admin/tokens'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
 * @route '/tbilisi/admin/tokens'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -206,43 +132,6 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/tbilisi/admin/tokens'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/tbilisi/admin/tokens'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::index
-* @see app/Http/Controllers/Admin/TokenController.php:28
-* @route '/tbilisi/admin/tokens'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
 * @see \App\Http\Controllers\Admin\TokenController::store
 * @see app/Http/Controllers/Admin/TokenController.php:53
 * @route '/yerevan/admin/tokens'
@@ -275,28 +164,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/yerevan/admin/tokens'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/yerevan/admin/tokens'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Admin\TokenController::store
@@ -335,28 +202,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\Admin\TokenController::store
 * @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/baku/admin/tokens'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/baku/admin/tokens'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
 * @route '/tbilisi/admin/tokens'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -387,28 +232,6 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/tbilisi/admin/tokens'
-*/
-const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::store
-* @see app/Http/Controllers/Admin/TokenController.php:53
-* @route '/tbilisi/admin/tokens'
-*/
-storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store.url(options),
-    method: 'post',
-})
-
-store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Admin\TokenController::destroy
@@ -465,38 +288,6 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
 /**
 * @see \App\Http\Controllers\Admin\TokenController::destroy
 * @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/yerevan/admin/tokens/{id}'
-*/
-const destroyForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/yerevan/admin/tokens/{id}'
-*/
-destroyForm.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
 * @route '/baku/admin/tokens/{id}'
 */
 export const destroy = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -549,38 +340,6 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
 /**
 * @see \App\Http\Controllers\Admin\TokenController::destroy
 * @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/baku/admin/tokens/{id}'
-*/
-const destroyForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/baku/admin/tokens/{id}'
-*/
-destroyForm.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
 * @route '/tbilisi/admin/tokens/{id}'
 */
 export const destroy = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -629,38 +388,6 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
     url: destroy.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/tbilisi/admin/tokens/{id}'
-*/
-const destroyForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\TokenController::destroy
-* @see app/Http/Controllers/Admin/TokenController.php:68
-* @route '/tbilisi/admin/tokens/{id}'
-*/
-destroyForm.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy.form = destroyForm
 
 const tokens = {
     index: Object.assign(index, index),

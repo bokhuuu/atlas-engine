@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
 * @see app/Modules/Scraper/Api/ScrapeController.php:54
@@ -32,28 +32,6 @@ start.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: start.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:54
-* @route '/api/v1/scrape/start'
-*/
-const startForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: start.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:54
-* @route '/api/v1/scrape/start'
-*/
-startForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: start.url(options),
-    method: 'post',
-})
-
-start.form = startForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
@@ -100,43 +78,6 @@ status.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:125
-* @route '/api/v1/scrape/status'
-*/
-const statusForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: status.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:125
-* @route '/api/v1/scrape/status'
-*/
-statusForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: status.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:125
-* @route '/api/v1/scrape/status'
-*/
-statusForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: status.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-status.form = statusForm
-
-/**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
 * @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
@@ -171,28 +112,6 @@ cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:228
-* @route '/api/v1/scrape/cancel'
-*/
-const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: cancel.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:228
-* @route '/api/v1/scrape/cancel'
-*/
-cancelForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: cancel.url(options),
-    method: 'post',
-})
-
-cancel.form = cancelForm
-
-/**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
 * @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
@@ -225,28 +144,6 @@ startAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: startAll.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:83
-* @route '/api/v1/scrape/start-all'
-*/
-const startAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: startAll.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:83
-* @route '/api/v1/scrape/start-all'
-*/
-startAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: startAll.url(options),
-    method: 'post',
-})
-
-startAll.form = startAllForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
@@ -293,43 +190,6 @@ statusAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:154
-* @route '/api/v1/scrape/status-all'
-*/
-const statusAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: statusAll.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:154
-* @route '/api/v1/scrape/status-all'
-*/
-statusAllForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: statusAll.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:154
-* @route '/api/v1/scrape/status-all'
-*/
-statusAllForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: statusAll.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-statusAll.form = statusAllForm
-
-/**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
 * @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
@@ -374,43 +234,6 @@ trend.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:197
-* @route '/api/v1/scrape/trend'
-*/
-const trendForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trend.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:197
-* @route '/api/v1/scrape/trend'
-*/
-trendForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trend.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:197
-* @route '/api/v1/scrape/trend'
-*/
-trendForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trend.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-trend.form = trendForm
-
-/**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
 * @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
@@ -443,28 +266,6 @@ cancelAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancelAll.url(options),
     method: 'post',
 })
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:248
-* @route '/api/v1/scrape/cancel-all'
-*/
-const cancelAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: cancelAll.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:248
-* @route '/api/v1/scrape/cancel-all'
-*/
-cancelAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: cancelAll.url(options),
-    method: 'post',
-})
-
-cancelAll.form = cancelAllForm
 
 const ScrapeController = { start, status, cancel, startAll, statusAll, trend, cancelAll }
 
