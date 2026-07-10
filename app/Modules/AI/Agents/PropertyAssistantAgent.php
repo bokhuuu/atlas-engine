@@ -53,6 +53,19 @@ class PropertyAssistantAgent extends Agent
         }
     }
 
+    /**
+     * Returns true if the given source profile belongs to the current market.
+     */
+    private function sourceBelongsToMarket(string $source): bool
+    {
+        $registry = app(MarketRegistry::class);
+        $marketConfig = $registry->fromSlug($this->market);
+        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+        return collect($sourcePrefixes)
+            ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'));
+    }
+
     public function __construct(string $sessionId, $market = 'yerevan')
     {
         $this->market = $market;
@@ -82,6 +95,15 @@ class PropertyAssistantAgent extends Agent
     public function getCategoryStats(string $source): string
     {
         $labels = CategoryLabels::all();
+
+        if (! $this->sourceBelongsToMarket($source)) {
+            $registry = app(MarketRegistry::class);
+            $marketConfig = $registry->fromSlug($this->market);
+            $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+            return json_encode(['error' => "Source '{$source}' does not belong to the {$marketLabel} market. Use getCategoryList to see available categories."]);
+        }
+
         if (! array_key_exists($source, $labels)) {
             return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
         }
@@ -100,9 +122,19 @@ class PropertyAssistantAgent extends Agent
     public function getDistrictBreakdown(string $source): string
     {
         $labels = CategoryLabels::all();
+
         if (! array_key_exists($source, $labels)) {
             return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
         }
+
+        if (! $this->sourceBelongsToMarket($source)) {
+            $registry = app(MarketRegistry::class);
+            $marketConfig = $registry->fromSlug($this->market);
+            $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+            return json_encode(['error' => "Source '{$source}' does not belong to the {$marketLabel} market. Use getCategoryList to see available categories."]);
+        }
+
         $repo = app(ListingRepository::class);
         $avg = $repo->getDistrictPriceStats($source)->keyBy('district');
         $median = $repo->getMedianPricePerSqmByDistrict($source)->keyBy('district');
@@ -127,9 +159,19 @@ class PropertyAssistantAgent extends Agent
         ?int $rooms = null,
     ): string {
         $labels = CategoryLabels::all();
+
         if (! array_key_exists($source, $labels)) {
             return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
         }
+
+        if (! $this->sourceBelongsToMarket($source)) {
+            $registry = app(MarketRegistry::class);
+            $marketConfig = $registry->fromSlug($this->market);
+            $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+            return json_encode(['error' => "Source '{$source}' does not belong to the {$marketLabel} market. Use getCategoryList to see available categories."]);
+        }
+
         $filters = array_filter([
             'district' => $district,
             'min_price' => $minPrice,
@@ -176,6 +218,15 @@ class PropertyAssistantAgent extends Agent
                 'deal_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
             ])->values();
 
+        $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+        if ($categories->isEmpty()) {
+            return json_encode([
+                'message' => "No data is available for the {$marketLabel} market yet. Data collection for this market has not started.",
+                'categories' => [],
+            ]);
+        }
+
         return json_encode(['categories' => $categories]);
     }
 
@@ -183,9 +234,19 @@ class PropertyAssistantAgent extends Agent
     public function exportToExcel(string $source): string
     {
         $labels = CategoryLabels::all();
+
         if (! array_key_exists($source, $labels)) {
             return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
         }
+
+        if (! $this->sourceBelongsToMarket($source)) {
+            $registry = app(MarketRegistry::class);
+            $marketConfig = $registry->fromSlug($this->market);
+            $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+            return json_encode(['error' => "Source '{$source}' does not belong to the {$marketLabel} market. Use getCategoryList to see available categories."]);
+        }
+
         try {
             $paths = app(ExportManager::class)->runForSource($source, onlySpreadsheets: true);
             if (empty($paths)) {
@@ -209,6 +270,14 @@ class PropertyAssistantAgent extends Agent
 
         if (! array_key_exists($source, $labels)) {
             return json_encode(['error' => 'Unknown category. Available: '.implode(', ', array_keys($labels))]);
+        }
+
+        if (! $this->sourceBelongsToMarket($source)) {
+            $registry = app(MarketRegistry::class);
+            $marketConfig = $registry->fromSlug($this->market);
+            $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+
+            return json_encode(['error' => "Source '{$source}' does not belong to the {$marketLabel} market. Use getCategoryList to see available categories."]);
         }
 
         $repo = app(ListingRepository::class);
@@ -345,6 +414,7 @@ Rules you must follow without exception:
 - Always state which category and district a figure applies to.
 - When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
 - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
+- If getCategoryList returns an empty categories list or a "no data available" message, immediately inform the user that no data is available for this market yet and stop — do not call any other tools.
 - When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
 - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
 - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.

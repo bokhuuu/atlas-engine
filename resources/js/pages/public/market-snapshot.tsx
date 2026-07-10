@@ -36,27 +36,27 @@ const getIcon = (source: string): string => {
         source.endsWith('_apartments_sale') ||
         source.endsWith('_apartments_rent')
     ) {
-return '🏙️';
-}
+        return '🏙️';
+    }
 
     if (source.endsWith('_houses_sale')) {
-return '🏠';
-}
+        return '🏠';
+    }
 
     if (
         source.endsWith('_commercial_sale') ||
         source.endsWith('_commercial_rent')
     ) {
-return '🏢';
-}
+        return '🏢';
+    }
 
     if (source.endsWith('_land_sale')) {
-return '🌍';
-}
+        return '🌍';
+    }
 
     if (source.endsWith('_new_developments_sale')) {
-return '🏗️';
-}
+        return '🏗️';
+    }
 
     return '🏘️';
 };
@@ -574,7 +574,10 @@ export default function MarketSnapshot() {
                                 flexWrap: 'wrap',
                             }}
                         >
-                            <span>7 asset classes</span>
+                            <span>
+                                {data ? data.categories.length : 7} asset
+                                classes
+                            </span>
                             <span style={{ color: 'rgba(255,255,255,.14)' }}>
                                 |
                             </span>
