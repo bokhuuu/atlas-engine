@@ -5,7 +5,7 @@
  */
 export function formatCost(usd: number): string {
     if (usd === 0) {
-        return '$0.00';
+        return '0.00';
     }
 
     if (usd < 0.01) {
