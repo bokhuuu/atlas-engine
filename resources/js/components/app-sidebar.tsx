@@ -195,22 +195,45 @@ function MarketSwitcher({
     markets: Record<string, Market>;
 }) {
     return (
-        <div className="mx-3 mb-2 flex flex-wrap gap-1">
-            {Object.entries(markets).map(([slug, market]) => (
-                <Link
-                    key={slug}
-                    href={`/${slug}/admin/dashboard`}
-                    className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors ${
-                        slug === currentMarket
-                            ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                            : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground'
-                    }`}
-                    title={market.label}
-                >
-                    <span>{market.flag}</span>
-                    <span>{market.label}</span>
-                </Link>
-            ))}
+        <div className="mx-3 mb-3 grid auto-cols-fr grid-flow-col gap-1.5 rounded-xl border border-sidebar-border/40 bg-sidebar-accent/10 p-1.5">
+            {Object.entries(markets).map(([slug, market]) => {
+                const isActive = slug === currentMarket;
+
+                return (
+                    <Link
+                        key={slug}
+                        href={`/${slug}/admin/dashboard`}
+                        title={market.label}
+                        className={`group relative flex flex-col items-center gap-1 rounded-lg py-2 transition-all duration-200 ${
+                            isActive
+                                ? 'bg-sidebar-accent shadow-sm'
+                                : 'hover:bg-sidebar-accent/50'
+                        }`}
+                    >
+                        <span
+                            className={`text-2xl transition-transform duration-200 ${
+                                isActive
+                                    ? 'scale-110 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]'
+                                    : 'scale-90 opacity-50 group-hover:scale-100 group-hover:opacity-75'
+                            }`}
+                        >
+                            {market.flag}
+                        </span>
+                        <span
+                            className={`text-[9px] font-semibold tracking-widest uppercase transition-all duration-200 ${
+                                isActive
+                                    ? 'text-foreground opacity-100'
+                                    : 'text-muted-foreground opacity-0 group-hover:opacity-60'
+                            }`}
+                        >
+                            {market.label}
+                        </span>
+                        {isActive && (
+                            <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary" />
+                        )}
+                    </Link>
+                );
+            })}
         </div>
     );
 }

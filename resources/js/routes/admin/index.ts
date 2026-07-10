@@ -11,7 +11,7 @@ import aiFeedback from './ai-feedback'
 import dataHub from './data-hub'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -26,7 +26,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -35,7 +35,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -45,7 +45,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -55,7 +55,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -75,7 +75,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/yerevan/admin/dashboard'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -92,7 +92,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -107,7 +107,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -116,7 +116,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -126,7 +126,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -136,7 +136,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -156,7 +156,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/baku/admin/dashboard'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -173,7 +173,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -188,7 +188,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -197,7 +197,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -207,7 +207,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -217,7 +217,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +227,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -237,7 +237,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
-* @see app/Http/Controllers/Admin/DashboardController.php:33
+* @see app/Http/Controllers/Admin/DashboardController.php:35
 * @route '/tbilisi/admin/dashboard'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
