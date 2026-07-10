@@ -43,7 +43,7 @@ class SnapshotController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        $marketSlug = request()->segment(1) ?? $this->marketRegistry->defaultSlug();
+        $marketSlug = request()->query('market') ?? $this->marketRegistry->defaultSlug();
         $marketConfig = $this->marketRegistry->fromSlug($marketSlug);
         $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
 

@@ -207,7 +207,7 @@ export default function MarketSnapshot() {
     };
 
     useEffect(() => {
-        fetch('/api/v1/public/snapshot')
+        fetch(`/api/v1/public/snapshot?market=${currentMarket ?? 'yerevan'}`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('Snapshot request failed');
@@ -217,7 +217,7 @@ export default function MarketSnapshot() {
             })
             .then(setData)
             .catch(() => setError(true));
-    }, []);
+    }, [currentMarket]);
 
     useEffect(() => {
         if (!data) {
