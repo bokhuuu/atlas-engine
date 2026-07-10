@@ -194,7 +194,8 @@ export default function MarketSnapshot() {
     const [copied, setCopied] = useState(false);
     const [entered, setEntered] = useState(false);
     const [progress, setProgress] = useState(0);
-    const { auth, siteSettings } = usePage().props as unknown as {
+    const { auth, siteSettings, currentMarket } = usePage()
+        .props as unknown as {
         auth: { user: { name: string } | null };
         siteSettings: {
             site_name: string;
@@ -202,6 +203,7 @@ export default function MarketSnapshot() {
             site_email: string;
             logo: string | null;
         };
+        currentMarket: string | null;
     };
 
     useEffect(() => {
@@ -383,7 +385,7 @@ export default function MarketSnapshot() {
                     >
                         {auth.user ? (
                             <Link
-                                href="/admin/dashboard"
+                                href={`/${currentMarket ?? 'yerevan'}/admin/dashboard`}
                                 style={{
                                     fontSize: '14px',
                                     color: '#fff',

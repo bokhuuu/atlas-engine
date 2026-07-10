@@ -9,6 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
@@ -38,10 +39,6 @@ interface YieldRow {
 interface Props {
     categories: Category[];
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Market Stats', href: '/admin/market-stats' },
-];
 
 /**
  * Background intensity scales with median price/sqm rank among the
@@ -174,6 +171,11 @@ export default function MarketStats({ categories }: Props) {
             active = false;
         };
     }, [selectedSource]);
+
+    const { adminUrl } = useMarket();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Dashboard', href: adminUrl('/dashboard') },
+    ];
 
     const error = errorSource === selectedSource;
     const rows = result?.source === selectedSource ? result.rows : null;

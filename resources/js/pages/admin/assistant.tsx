@@ -16,14 +16,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { formatCost } from '@/lib/format-cost';
 import { postJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'AI Assistant', href: '/admin/assistant' },
-];
 
 interface Message {
     id: string;
@@ -145,6 +142,11 @@ export default function Assistant() {
     useEffect(() => {
         fetchUsage();
     }, []);
+
+    const { adminUrl } = useMarket();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'AI Assistant', href: adminUrl('/assistant') },
+    ];
 
     const sendMessage = async (text: string) => {
         if (!text.trim() || streaming) {
