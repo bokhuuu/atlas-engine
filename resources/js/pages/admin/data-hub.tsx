@@ -7,13 +7,9 @@ import {
     RotateCcw,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Data Hub', href: '/admin/data-hub' },
-];
 
 interface Category {
     source: string;
@@ -254,6 +250,12 @@ export default function DataHub({ categories, districts }: Props) {
 
         setActiveFilterCount(count);
     }, [filters]);
+
+    const { adminUrl } = useMarket();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Data Hub', href: adminUrl('/data-hub') },
+    ];
 
     const toggleMulti = (field: 'status' | 'rooms', value: string) => {
         setFilters((prev) => {
