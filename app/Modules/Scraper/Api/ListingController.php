@@ -164,6 +164,8 @@ class ListingController extends Controller
             'scraped_from',
             'scraped_to',
             'status',
+            'listing_date_from',
+            'listing_date_to',
         ]);
 
         $listings = $this->listingRepository->filterListings($filters, 20);

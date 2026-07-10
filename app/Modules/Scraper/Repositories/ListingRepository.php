@@ -176,6 +176,14 @@ class ListingRepository
             $query->where('scraped_at', '<=', $filters['scraped_to'].' 23:59:59');
         }
 
+        if (! empty($filters['listing_date_from'])) {
+            $query->where('listing_date', '>=', $filters['listing_date_from']);
+        }
+
+        if (! empty($filters['listing_date_to'])) {
+            $query->where('listing_date', '<=', $filters['listing_date_to'].' 23:59:59');
+        }
+
         if (! empty($filters['status'])) {
             $statuses = (array) $filters['status'];
             $query->where(function ($q) use ($statuses, $staleDays) {

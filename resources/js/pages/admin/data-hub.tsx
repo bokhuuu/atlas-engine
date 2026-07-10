@@ -7,14 +7,9 @@ import {
     RotateCcw,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Data Hub', href: '/admin/data-hub' },
-];
-
 interface Category {
     source: string;
     label: string;
@@ -37,6 +32,8 @@ interface FilterState {
     agency: string;
     scraped_from: string;
     scraped_to: string;
+    listing_date_from: string;
+    listing_date_to: string;
 }
 
 interface FilterResult {
@@ -48,6 +45,7 @@ interface ValidationErrors {
     area?: string;
     date?: string;
     status?: string;
+    listing_date?: string;
 }
 
 const makeDefault = (categories: Category[]): FilterState => ({
@@ -62,6 +60,8 @@ const makeDefault = (categories: Category[]): FilterState => ({
     agency: '',
     scraped_from: '',
     scraped_to: '',
+    listing_date_from: '',
+    listing_date_to: '',
 });
 
 function validate(f: FilterState): ValidationErrors {
@@ -87,6 +87,14 @@ function validate(f: FilterState): ValidationErrors {
         errors.date = 'Start date cannot be after end date';
     }
 
+    if (
+        f.listing_date_from &&
+        f.listing_date_to &&
+        f.listing_date_from > f.listing_date_to
+    ) {
+        errors.listing_date = 'Posted date start cannot be after end date';
+    }
+
     if (f.status.length === 0) {
         errors.status = 'At least one status must be selected';
     }
@@ -105,6 +113,11 @@ export default function DataHub({ categories, districts }: Props) {
     const [prevTotal, setPrevTotal] = useState<number | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
+
+    const { adminUrl } = useMarket();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Data Hub', href: adminUrl('/data-hub') },
+    ];
 
     const buildQueryString = useCallback((f: FilterState) => {
         const params = new URLSearchParams();
@@ -147,6 +160,14 @@ export default function DataHub({ categories, districts }: Props) {
 
         if (f.scraped_to) {
             params.set('scraped_to', f.scraped_to);
+        }
+
+        if (f.listing_date_from) {
+            params.set('listing_date_from', f.listing_date_from);
+        }
+
+        if (f.listing_date_to) {
+            params.set('listing_date_to', f.listing_date_to);
         }
 
         return params.toString();
@@ -249,6 +270,10 @@ export default function DataHub({ categories, districts }: Props) {
         }
 
         if (filters.scraped_from || filters.scraped_to) {
+            count++;
+        }
+
+        if (filters.listing_date_from || filters.listing_date_to) {
             count++;
         }
 
@@ -530,34 +555,70 @@ export default function DataHub({ categories, districts }: Props) {
                             {errors.area && errorMsg(errors.area)}
                         </div>
 
-                        <div>
-                            {sectionLabel('Scraped from')}
-                            <input
-                                type="date"
-                                value={filters.scraped_from}
-                                onChange={(e) =>
-                                    setFilters((p) => ({
-                                        ...p,
-                                        scraped_from: e.target.value,
-                                    }))
-                                }
-                                className={inputCls(!!errors.date)}
-                            />
+                        {/* Posted on list.am - primary date filter */}
+                        <div className="sm:col-span-2">
+                            <label className="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-emerald-600 uppercase dark:text-emerald-400">
+                                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                Posted on list.am
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <input
+                                    type="date"
+                                    value={filters.listing_date_from}
+                                    onChange={(e) =>
+                                        setFilters((p) => ({
+                                            ...p,
+                                            listing_date_from: e.target.value,
+                                        }))
+                                    }
+                                    className={inputCls(!!errors.listing_date)}
+                                />
+                                <input
+                                    type="date"
+                                    value={filters.listing_date_to}
+                                    onChange={(e) =>
+                                        setFilters((p) => ({
+                                            ...p,
+                                            listing_date_to: e.target.value,
+                                        }))
+                                    }
+                                    className={inputCls(!!errors.listing_date)}
+                                />
+                            </div>
+                            {errors.listing_date &&
+                                errorMsg(errors.listing_date)}
                         </div>
 
-                        <div>
-                            {sectionLabel('Scraped to')}
-                            <input
-                                type="date"
-                                value={filters.scraped_to}
-                                onChange={(e) =>
-                                    setFilters((p) => ({
-                                        ...p,
-                                        scraped_to: e.target.value,
-                                    }))
-                                }
-                                className={inputCls(!!errors.date)}
-                            />
+                        {/* Collected by Atlas - secondary date filter */}
+                        <div className="sm:col-span-2">
+                            <label className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                                <span className="h-2 w-2 rounded-full bg-blue-400" />
+                                Collected by Atlas
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <input
+                                    type="date"
+                                    value={filters.scraped_from}
+                                    onChange={(e) =>
+                                        setFilters((p) => ({
+                                            ...p,
+                                            scraped_from: e.target.value,
+                                        }))
+                                    }
+                                    className={inputCls(!!errors.date)}
+                                />
+                                <input
+                                    type="date"
+                                    value={filters.scraped_to}
+                                    onChange={(e) =>
+                                        setFilters((p) => ({
+                                            ...p,
+                                            scraped_to: e.target.value,
+                                        }))
+                                    }
+                                    className={inputCls(!!errors.date)}
+                                />
+                            </div>
                             {errors.date && errorMsg(errors.date)}
                         </div>
                     </div>

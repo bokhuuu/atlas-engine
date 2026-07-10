@@ -102,6 +102,8 @@ class ExportController extends Controller
             'scraped_from',
             'scraped_to',
             'status',
+            'listing_date_from',
+            'listing_date_to',
         ]);
 
         $paths = $this->exportManager->runForSourceFiltered($source, $filters);
