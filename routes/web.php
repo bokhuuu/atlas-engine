@@ -24,15 +24,18 @@ Route::redirect('/admin', '/'.config('scraper.default_market').'/admin/dashboard
 Route::redirect('/admin/dashboard', '/'.config('scraper.default_market').'/admin/dashboard');
 
 foreach (app(MarketRegistry::class)->allSlugs() as $slug) {
+    $isDefault = $slug === config('scraper.default_market', 'yerevan');
+
     Route::middleware(['market'])
         ->prefix($slug)
-        ->group(function () use ($slug) {
+        ->group(function () use ($slug, $isDefault) {
 
-            Route::inertia('/', 'public/market-snapshot')->name("market.{$slug}.home");
+            Route::inertia('/', 'public/market-snapshot')
+                ->name($isDefault ? "market.{$slug}.home" : "market.{$slug}.home.unnamed");
 
             Route::middleware(['auth', 'admin'])
                 ->prefix('admin')
-                ->name('admin.')
+                ->name($isDefault ? 'admin.' : "{$slug}.admin.")
                 ->group(function () {
                     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
                     Route::get('market-stats', [MarketStatsController::class, 'index'])->name('market-stats');

@@ -156,13 +156,4 @@ show.form = showForm
 
 const QueueBatchesController = { index, show }
 
-export default QueueBatchesController       }
-    }),
-    method: 'get',
-})
-
-show.form = showForm
-
-const QueueBatchesController = { index, show }
-
 export default QueueBatchesController
