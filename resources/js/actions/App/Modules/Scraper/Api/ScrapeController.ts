@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:35
+* @see app/Modules/Scraper/Api/ScrapeController.php:54
 * @route '/api/v1/scrape/start'
 */
 export const start = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ start.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:35
+* @see app/Modules/Scraper/Api/ScrapeController.php:54
 * @route '/api/v1/scrape/start'
 */
 start.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ start.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:35
+* @see app/Modules/Scraper/Api/ScrapeController.php:54
 * @route '/api/v1/scrape/start'
 */
 start.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ start.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:35
+* @see app/Modules/Scraper/Api/ScrapeController.php:54
 * @route '/api/v1/scrape/start'
 */
 const startForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const startForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::start
-* @see app/Modules/Scraper/Api/ScrapeController.php:35
+* @see app/Modules/Scraper/Api/ScrapeController.php:54
 * @route '/api/v1/scrape/start'
 */
 startForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -57,7 +57,7 @@ start.form = startForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 export const status = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -72,7 +72,7 @@ status.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 status.url = (options?: RouteQueryOptions) => {
@@ -81,7 +81,7 @@ status.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 status.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -91,7 +91,7 @@ status.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 status.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -101,7 +101,7 @@ status.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 const statusForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -111,7 +111,7 @@ const statusForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 statusForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -121,7 +121,7 @@ statusForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::status
-* @see app/Modules/Scraper/Api/ScrapeController.php:106
+* @see app/Modules/Scraper/Api/ScrapeController.php:125
 * @route '/api/v1/scrape/status'
 */
 statusForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -138,7 +138,7 @@ status.form = statusForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:209
+* @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
 */
 export const cancel = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -153,7 +153,7 @@ cancel.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:209
+* @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
 */
 cancel.url = (options?: RouteQueryOptions) => {
@@ -162,7 +162,7 @@ cancel.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:209
+* @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
 */
 cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:209
+* @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
 */
 const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -182,7 +182,7 @@ const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancel
-* @see app/Modules/Scraper/Api/ScrapeController.php:209
+* @see app/Modules/Scraper/Api/ScrapeController.php:228
 * @route '/api/v1/scrape/cancel'
 */
 cancelForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -194,7 +194,7 @@ cancel.form = cancelForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:64
+* @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
 */
 export const startAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -209,7 +209,7 @@ startAll.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:64
+* @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
 */
 startAll.url = (options?: RouteQueryOptions) => {
@@ -218,7 +218,7 @@ startAll.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:64
+* @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
 */
 startAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -228,7 +228,7 @@ startAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:64
+* @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
 */
 const startAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -238,7 +238,7 @@ const startAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> 
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::startAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:64
+* @see app/Modules/Scraper/Api/ScrapeController.php:83
 * @route '/api/v1/scrape/start-all'
 */
 startAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -250,7 +250,7 @@ startAll.form = startAllForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 export const statusAll = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -265,7 +265,7 @@ statusAll.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 statusAll.url = (options?: RouteQueryOptions) => {
@@ -274,7 +274,7 @@ statusAll.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 statusAll.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -284,7 +284,7 @@ statusAll.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 statusAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -294,7 +294,7 @@ statusAll.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 const statusAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -304,7 +304,7 @@ const statusAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 statusAllForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ statusAllForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::statusAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:135
+* @see app/Modules/Scraper/Api/ScrapeController.php:154
 * @route '/api/v1/scrape/status-all'
 */
 statusAllForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -331,7 +331,7 @@ statusAll.form = statusAllForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 export const trend = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -346,7 +346,7 @@ trend.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 trend.url = (options?: RouteQueryOptions) => {
@@ -355,7 +355,7 @@ trend.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 trend.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -365,7 +365,7 @@ trend.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 trend.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -375,7 +375,7 @@ trend.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 const trendForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -385,7 +385,7 @@ const trendForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 trendForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -395,7 +395,7 @@ trendForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::trend
-* @see app/Modules/Scraper/Api/ScrapeController.php:178
+* @see app/Modules/Scraper/Api/ScrapeController.php:197
 * @route '/api/v1/scrape/trend'
 */
 trendForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -412,7 +412,7 @@ trend.form = trendForm
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:229
+* @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
 */
 export const cancelAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -427,7 +427,7 @@ cancelAll.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:229
+* @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
 */
 cancelAll.url = (options?: RouteQueryOptions) => {
@@ -436,7 +436,7 @@ cancelAll.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:229
+* @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
 */
 cancelAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -446,7 +446,7 @@ cancelAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:229
+* @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
 */
 const cancelAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -456,7 +456,7 @@ const cancelAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'>
 
 /**
 * @see \App\Modules\Scraper\Api\ScrapeController::cancelAll
-* @see app/Modules/Scraper/Api/ScrapeController.php:229
+* @see app/Modules/Scraper/Api/ScrapeController.php:248
 * @route '/api/v1/scrape/cancel-all'
 */
 cancelAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

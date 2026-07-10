@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Exports;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Concerns\CalculatesMedian;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
+use App\Services\MarketRegistry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -239,7 +240,7 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
 
         return [
             ['Report Date',                now()->format('d/m/Y H:i')],
-            ['Data Source',                'list.am - Yerevan '.($this->data[0]['property_type'] ?? 'Real Estate')],
+            ['Data Source', $this->resolveDataSource().($this->data[0]['property_type'] ?? 'Real Estate')],
             ['', ''],
             ['--- SUPPLY ---',             ''],
             ['Total Active Listings',      count($this->data)],
@@ -260,6 +261,22 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['Agency Listings',            count($agencies)],
             ['Owner Listings',             count($this->data) - count($agencies)],
         ];
+    }
+
+    /**
+     * Derives the data source label from the first listing's source profile name.
+     * Returns a market-aware string like "listam - Yerevan " or "binaz - Baku ".
+     */
+    private function resolveDataSource(): string
+    {
+        $source = $this->data[0]['source_profile_name'] ?? '';
+        $prefix = explode('_', $source)[0];
+        $registry = app(MarketRegistry::class);
+        $marketSlug = $registry->fromSourcePrefix($prefix);
+        $marketConfig = $marketSlug ? $registry->fromSlug($marketSlug) : null;
+        $label = $marketConfig['label'] ?? ucfirst($prefix);
+
+        return "{$prefix} - {$label} ";
     }
 }
 

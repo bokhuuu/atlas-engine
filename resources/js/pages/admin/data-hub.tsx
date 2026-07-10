@@ -7,8 +7,10 @@ import {
     RotateCcw,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+
 interface Category {
     source: string;
     label: string;
@@ -102,6 +104,7 @@ function validate(f: FilterState): ValidationErrors {
 }
 
 export default function DataHub({ categories, districts }: Props) {
+    const { adminUrl, market } = useMarket();
     const [filters, setFilters] = useState<FilterState>(
         makeDefault(categories),
     );
@@ -113,63 +116,55 @@ export default function DataHub({ categories, districts }: Props) {
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Data Hub', href: '/admin/data-hub' },
-    ];
+    const buildQueryString = useCallback(
+        (f: FilterState) => {
+            const params = new URLSearchParams();
+            params.set('market', market);
 
-    const buildQueryString = useCallback((f: FilterState) => {
-        const params = new URLSearchParams();
+            if (f.source) {
+                params.set('source', f.source);
+            }
 
-        if (f.source) {
-            params.set('source', f.source);
-        }
+            if (f.district) {
+                params.set('district', f.district);
+            }
 
-        if (f.district) {
-            params.set('district', f.district);
-        }
+            f.status.forEach((s) => params.append('status[]', s));
 
-        f.status.forEach((s) => params.append('status[]', s));
+            if (f.min_price) {
+                params.set('min_price', f.min_price);
+            }
 
-        if (f.min_price) {
-            params.set('min_price', f.min_price);
-        }
+            if (f.max_price) {
+                params.set('max_price', f.max_price);
+            }
 
-        if (f.max_price) {
-            params.set('max_price', f.max_price);
-        }
+            if (f.min_area) {
+                params.set('min_area', f.min_area);
+            }
 
-        if (f.min_area) {
-            params.set('min_area', f.min_area);
-        }
+            if (f.max_area) {
+                params.set('max_area', f.max_area);
+            }
 
-        if (f.max_area) {
-            params.set('max_area', f.max_area);
-        }
+            f.rooms.forEach((r) => params.append('rooms[]', r));
 
-        f.rooms.forEach((r) => params.append('rooms[]', r));
+            if (f.agency) {
+                params.set('agency', f.agency);
+            }
 
-        if (f.agency) {
-            params.set('agency', f.agency);
-        }
+            if (f.scraped_from) {
+                params.set('scraped_from', f.scraped_from);
+            }
 
-        if (f.scraped_from) {
-            params.set('scraped_from', f.scraped_from);
-        }
+            if (f.scraped_to) {
+                params.set('scraped_to', f.scraped_to);
+            }
 
-        if (f.scraped_to) {
-            params.set('scraped_to', f.scraped_to);
-        }
-
-        if (f.listing_date_from) {
-            params.set('listing_date_from', f.listing_date_from);
-        }
-
-        if (f.listing_date_to) {
-            params.set('listing_date_to', f.listing_date_to);
-        }
-
-        return params.toString();
-    }, []);
+            return params.toString();
+        },
+        [market],
+    );
 
     const fetchCount = useCallback(
         async (f: FilterState) => {
@@ -190,10 +185,13 @@ export default function DataHub({ categories, districts }: Props) {
 
             try {
                 const qs = buildQueryString(f);
-                const response = await fetch(`/api/v1/listings/filter?${qs}`, {
-                    headers: { Accept: 'application/json' },
-                    signal: abortRef.current.signal,
-                });
+                const response = await fetch(
+                    `/api/v1/listings/filter?${qs}&market=${market}`,
+                    {
+                        headers: { Accept: 'application/json' },
+                        signal: abortRef.current.signal,
+                    },
+                );
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -219,7 +217,7 @@ export default function DataHub({ categories, districts }: Props) {
                 setLoading(false);
             }
         },
-        [buildQueryString],
+        [buildQueryString, market],
     );
 
     useEffect(() => {
@@ -278,6 +276,10 @@ export default function DataHub({ categories, districts }: Props) {
         setActiveFilterCount(count);
     }, [filters]);
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Data Hub', href: adminUrl('/data-hub') },
+    ];
+
     const toggleMulti = (field: 'status' | 'rooms', value: string) => {
         setFilters((prev) => {
             const arr = prev[field] as string[];
@@ -300,7 +302,10 @@ export default function DataHub({ categories, districts }: Props) {
 
         const qs = buildQueryString(filters);
 
-        window.open(`/api/v1/exports/filtered?${qs}`, '_blank');
+        window.open(
+            `/api/v1/exports/filtered?${qs}&market=${market}`,
+            '_blank',
+        );
     };
 
     const chipCls = (active: boolean, hasError = false) =>
@@ -335,6 +340,25 @@ export default function DataHub({ categories, districts }: Props) {
 
     const countChanged =
         prevTotal !== null && result !== null && prevTotal !== result.total;
+
+    if (categories.length === 0) {
+        return (
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <Head title="Data Hub" />
+                <div className="flex flex-col items-center justify-center py-32 text-center">
+                    <p className="mb-2 text-2xl">🗄️</p>
+                    <h2 className="mb-1 text-lg font-semibold">
+                        No data available yet
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Data collection for the{' '}
+                        {market.charAt(0).toUpperCase() + market.slice(1)}{' '}
+                        market has not started yet.
+                    </p>
+                </div>
+            </AppLayout>
+        );
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -12,6 +12,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/hooks/use-auth';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { formatRole } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
@@ -51,15 +52,16 @@ interface Props {
     filters: Filters;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Users', href: '/admin/users' },
-];
-
 export default function UsersIndex({ users, filters }: Props) {
     const [userToDelete, setUserToDelete] = useState<number | null>(null);
     const searchRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [searchValue, setSearchValue] = useState(filters.search ?? '');
     const { isSuperAdmin, canManageUser } = useAuth();
+
+    const { adminUrl } = useMarket();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Users', href: adminUrl('/users') },
+    ];
 
     function handleSearch(value: string) {
         if (searchRef.current) {
@@ -68,7 +70,7 @@ export default function UsersIndex({ users, filters }: Props) {
 
         searchRef.current = setTimeout(() => {
             router.get(
-                '/admin/users',
+                adminUrl('/users'),
                 {
                     search: value,
                     role: filters.role ?? '',
@@ -85,7 +87,7 @@ export default function UsersIndex({ users, filters }: Props) {
 
     function handleFilter(key: string, value: string) {
         router.get(
-            '/admin/users',
+            adminUrl('/users'),
             {
                 search: filters.search ?? '',
                 role: key === 'role' ? value : (filters.role ?? ''),
@@ -107,7 +109,7 @@ export default function UsersIndex({ users, filters }: Props) {
                     <h1 className="text-2xl font-semibold">Users</h1>
                     <div className="flex items-center gap-3">
                         <Link
-                            href="/admin/users/trashed"
+                            href={adminUrl('/users/trashed')}
                             className="flex items-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
                         >
                             <Trash className="h-4 w-4" />
@@ -115,7 +117,7 @@ export default function UsersIndex({ users, filters }: Props) {
                         </Link>
 
                         <Link
-                            href="/admin/users/create"
+                            href={adminUrl('/users/create')}
                             className="flex items-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
                         >
                             <UserPlus className="h-4 w-4" />
@@ -168,7 +170,7 @@ export default function UsersIndex({ users, filters }: Props) {
                             onClick={() => {
                                 setSearchValue('');
                                 router.get(
-                                    '/admin/users',
+                                    adminUrl('/users'),
                                     {},
                                     { preserveState: true, replace: true },
                                 );
@@ -262,7 +264,9 @@ export default function UsersIndex({ users, filters }: Props) {
                                                 !isSuperAdmin
                                             ) && (
                                                 <Link
-                                                    href={`/admin/users/${user.id}/edit`}
+                                                    href={adminUrl(
+                                                        `/users/${user.id}/edit`,
+                                                    )}
                                                     className="text-muted-foreground hover:text-foreground"
                                                     title="Edit"
                                                 >
@@ -302,7 +306,9 @@ export default function UsersIndex({ users, filters }: Props) {
                     <div className="mt-4 flex items-center justify-center gap-2">
                         {users.current_page > 1 && (
                             <Link
-                                href={`/admin/users?page=${users.current_page - 1}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`}
+                                href={adminUrl(
+                                    `/users?page=${users.current_page - 1}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`,
+                                )}
                                 className="rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
                             >
                                 Previous
@@ -315,7 +321,9 @@ export default function UsersIndex({ users, filters }: Props) {
                         ).map((page) => (
                             <Link
                                 key={page}
-                                href={`/admin/users?page=${page}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`}
+                                href={adminUrl(
+                                    `/users?page=${page}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`,
+                                )}
                                 className={`rounded-md border px-3 py-1.5 text-sm ${
                                     page === users.current_page
                                         ? 'bg-primary text-primary-foreground'
@@ -328,7 +336,9 @@ export default function UsersIndex({ users, filters }: Props) {
 
                         {users.current_page < users.last_page && (
                             <Link
-                                href={`/admin/users?page=${users.current_page + 1}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`}
+                                href={adminUrl(
+                                    `/users?page=${users.current_page + 1}&search=${filters.search ?? ''}&role=${filters.role ?? ''}&status=${filters.status ?? ''}`,
+                                )}
                                 className="rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
                             >
                                 Next
@@ -355,7 +365,7 @@ export default function UsersIndex({ users, filters }: Props) {
                                 onClick={() => {
                                     if (userToDelete) {
                                         router.delete(
-                                            `/admin/users/${userToDelete}`,
+                                            adminUrl(`/users/${userToDelete}`),
                                         );
                                         setUserToDelete(null);
                                     }

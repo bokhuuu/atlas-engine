@@ -60,10 +60,11 @@ class ChatController extends Controller
             ], 429);
         }
 
-        $sessionKey = 'atlas_assistant_'.$userId;
+        $market = $request->input('market', config('scraper.default_market', 'yerevan'));
+        $sessionKey = 'atlas_assistant_'.$userId.'_'.$market;
 
         try {
-            $agent = new PropertyAssistantAgent($sessionKey);
+            $agent = new PropertyAssistantAgent($sessionKey, $market);
             $response = $agent->message($message)->respond();
 
             $this->rateLimiter->increment('chat', $userId);
@@ -88,7 +89,7 @@ class ChatController extends Controller
                 $fallback = app(AIFallbackService::class);
                 $fallbackText = $fallback->generateText(
                     prompt: $message,
-                    systemPrompt: 'You are a real estate market assistant for Yerevan, Armenia. '
+                    systemPrompt: 'You are a real estate market assistant for the '.$market.' real estate market. '
                         .'The primary AI system is temporarily unavailable. '
                         .'Answer as helpfully as possible with general knowledge, '
                         .'and note that live market data tools are currently unavailable.'
@@ -115,7 +116,8 @@ class ChatController extends Controller
     public function history(Request $request): JsonResponse
     {
         $userId = (string) $request->user()->id;
-        $sessionKey = 'chatHistory_PropertyAssistantAgent_atlas_assistant_'.$userId;
+        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
+        $sessionKey = 'chatHistory_PropertyAssistantAgent_atlas_assistant_'.$userId.'_'.$market;
 
         $rows = DB::table('laragent_messages')
             ->where('session_key', $sessionKey)
