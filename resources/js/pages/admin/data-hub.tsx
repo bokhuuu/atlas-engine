@@ -7,7 +7,6 @@ import {
     RotateCcw,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 interface Category {
@@ -114,9 +113,8 @@ export default function DataHub({ categories, districts }: Props) {
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
 
-    const { adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Data Hub', href: adminUrl('/data-hub') },
+        { title: 'Data Hub', href: '/admin/data-hub' },
     ];
 
     const buildQueryString = useCallback((f: FilterState) => {
