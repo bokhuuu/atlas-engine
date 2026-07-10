@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Modules\Scraper\Api\ListingController::filter
 * @see app/Modules/Scraper/Api/ListingController.php:164
@@ -42,6 +42,43 @@ filter.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: filter.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:164
+* @route '/api/v1/listings/filter'
+*/
+const filterForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:164
+* @route '/api/v1/listings/filter'
+*/
+filterForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::filter
+* @see app/Modules/Scraper/Api/ListingController.php:164
+* @route '/api/v1/listings/filter'
+*/
+filterForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: filter.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+filter.form = filterForm
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::index
@@ -88,6 +125,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Modules\Scraper\Api\ListingController::index
+* @see app/Modules/Scraper/Api/ListingController.php:33
+* @route '/api/v1/listings'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::index
+* @see app/Modules/Scraper/Api/ListingController.php:33
+* @route '/api/v1/listings'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::index
+* @see app/Modules/Scraper/Api/ListingController.php:33
+* @route '/api/v1/listings'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
 * @see \App\Modules\Scraper\Api\ListingController::stats
 * @see app/Modules/Scraper/Api/ListingController.php:54
 * @route '/api/v1/listings/stats'
@@ -130,6 +204,43 @@ stats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: stats.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::stats
+* @see app/Modules/Scraper/Api/ListingController.php:54
+* @route '/api/v1/listings/stats'
+*/
+const statsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::stats
+* @see app/Modules/Scraper/Api/ListingController.php:54
+* @route '/api/v1/listings/stats'
+*/
+statsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::stats
+* @see app/Modules/Scraper/Api/ListingController.php:54
+* @route '/api/v1/listings/stats'
+*/
+statsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: stats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+stats.form = statsForm
 
 /**
 * @see \App\Modules\Scraper\Api\ListingController::summary
@@ -176,6 +287,43 @@ summary.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
+* @see \App\Modules\Scraper\Api\ListingController::summary
+* @see app/Modules/Scraper/Api/ListingController.php:86
+* @route '/api/v1/listings/summary'
+*/
+const summaryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: summary.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::summary
+* @see app/Modules/Scraper/Api/ListingController.php:86
+* @route '/api/v1/listings/summary'
+*/
+summaryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: summary.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::summary
+* @see app/Modules/Scraper/Api/ListingController.php:86
+* @route '/api/v1/listings/summary'
+*/
+summaryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: summary.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+summary.form = summaryForm
+
+/**
 * @see \App\Modules\Scraper\Api\ListingController::yieldMethod
 * @see app/Modules/Scraper/Api/ListingController.php:108
 * @route '/api/v1/listings/yield'
@@ -218,6 +366,43 @@ yieldMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: yieldMethod.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:108
+* @route '/api/v1/listings/yield'
+*/
+const yieldMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:108
+* @route '/api/v1/listings/yield'
+*/
+yieldMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Modules\Scraper\Api\ListingController::yieldMethod
+* @see app/Modules/Scraper/Api/ListingController.php:108
+* @route '/api/v1/listings/yield'
+*/
+yieldMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: yieldMethod.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+yieldMethod.form = yieldMethodForm
 
 const ListingController = { filter, index, stats, summary, yieldMethod, yield: yieldMethod }
 

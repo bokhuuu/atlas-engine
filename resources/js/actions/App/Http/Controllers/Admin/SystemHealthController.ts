@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::index
 * @see app/Http/Controllers/Admin/SystemHealthController.php:30
@@ -46,6 +46,42 @@ index68dfa0b605d3e482e342013ae6926e04.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::index
 * @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/yerevan/admin/system-health'
+*/
+const index68dfa0b605d3e482e342013ae6926e04Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index68dfa0b605d3e482e342013ae6926e04.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/yerevan/admin/system-health'
+*/
+index68dfa0b605d3e482e342013ae6926e04Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index68dfa0b605d3e482e342013ae6926e04.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/yerevan/admin/system-health'
+*/
+index68dfa0b605d3e482e342013ae6926e04Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index68dfa0b605d3e482e342013ae6926e04.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index68dfa0b605d3e482e342013ae6926e04.form = index68dfa0b605d3e482e342013ae6926e04Form
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
 * @route '/baku/admin/system-health'
 */
 const indexb5716b69222db923d42b6c16a9f164c2 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -90,6 +126,42 @@ indexb5716b69222db923d42b6c16a9f164c2.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::index
 * @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/baku/admin/system-health'
+*/
+const indexb5716b69222db923d42b6c16a9f164c2Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexb5716b69222db923d42b6c16a9f164c2.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/baku/admin/system-health'
+*/
+indexb5716b69222db923d42b6c16a9f164c2Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexb5716b69222db923d42b6c16a9f164c2.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/baku/admin/system-health'
+*/
+indexb5716b69222db923d42b6c16a9f164c2Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexb5716b69222db923d42b6c16a9f164c2.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+indexb5716b69222db923d42b6c16a9f164c2.form = indexb5716b69222db923d42b6c16a9f164c2Form
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
 * @route '/tbilisi/admin/system-health'
 */
 const index6e5819aea45fd3082263954b7d0d2aec = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -130,6 +202,43 @@ index6e5819aea45fd3082263954b7d0d2aec.head = (options?: RouteQueryOptions): Rout
     url: index6e5819aea45fd3082263954b7d0d2aec.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/tbilisi/admin/system-health'
+*/
+const index6e5819aea45fd3082263954b7d0d2aecForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index6e5819aea45fd3082263954b7d0d2aec.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/tbilisi/admin/system-health'
+*/
+index6e5819aea45fd3082263954b7d0d2aecForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index6e5819aea45fd3082263954b7d0d2aec.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::index
+* @see app/Http/Controllers/Admin/SystemHealthController.php:30
+* @route '/tbilisi/admin/system-health'
+*/
+index6e5819aea45fd3082263954b7d0d2aecForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index6e5819aea45fd3082263954b7d0d2aec.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index6e5819aea45fd3082263954b7d0d2aec.form = index6e5819aea45fd3082263954b7d0d2aecForm
 
 export const index = {
     '/yerevan/admin/system-health': index68dfa0b605d3e482e342013ae6926e04,
@@ -174,6 +283,27 @@ clearCache3167365731acaf1fb80f64f51360464c.post = (options?: RouteQueryOptions):
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/yerevan/admin/system-health/cache'
+*/
+const clearCache3167365731acaf1fb80f64f51360464cForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache3167365731acaf1fb80f64f51360464c.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/yerevan/admin/system-health/cache'
+*/
+clearCache3167365731acaf1fb80f64f51360464cForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache3167365731acaf1fb80f64f51360464c.url(options),
+    method: 'post',
+})
+
+clearCache3167365731acaf1fb80f64f51360464c.form = clearCache3167365731acaf1fb80f64f51360464cForm
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
 * @route '/baku/admin/system-health/cache'
 */
 const clearCache9a6df52fa3ce951438bb3fe78a967c13 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -208,6 +338,27 @@ clearCache9a6df52fa3ce951438bb3fe78a967c13.post = (options?: RouteQueryOptions):
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+const clearCache9a6df52fa3ce951438bb3fe78a967c13Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache9a6df52fa3ce951438bb3fe78a967c13.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+clearCache9a6df52fa3ce951438bb3fe78a967c13Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache9a6df52fa3ce951438bb3fe78a967c13.url(options),
+    method: 'post',
+})
+
+clearCache9a6df52fa3ce951438bb3fe78a967c13.form = clearCache9a6df52fa3ce951438bb3fe78a967c13Form
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
 * @route '/tbilisi/admin/system-health/cache'
 */
 const clearCache8595f3d9de01d43000b6d33a0db31e81 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -238,6 +389,28 @@ clearCache8595f3d9de01d43000b6d33a0db31e81.post = (options?: RouteQueryOptions):
     url: clearCache8595f3d9de01d43000b6d33a0db31e81.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+const clearCache8595f3d9de01d43000b6d33a0db31e81Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache8595f3d9de01d43000b6d33a0db31e81.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clearCache
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+clearCache8595f3d9de01d43000b6d33a0db31e81Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearCache8595f3d9de01d43000b6d33a0db31e81.url(options),
+    method: 'post',
+})
+
+clearCache8595f3d9de01d43000b6d33a0db31e81.form = clearCache8595f3d9de01d43000b6d33a0db31e81Form
 
 export const clearCache = {
     '/yerevan/admin/system-health/cache': clearCache3167365731acaf1fb80f64f51360464c,
@@ -282,6 +455,27 @@ toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89.post = (options?: RouteQueryOp
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
 * @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/yerevan/admin/system-health/maintenance'
+*/
+const toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/yerevan/admin/system-health/maintenance'
+*/
+toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89.url(options),
+    method: 'post',
+})
+
+toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89.form = toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89Form
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
 * @route '/baku/admin/system-health/maintenance'
 */
 const toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961a = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -316,6 +510,27 @@ toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961a.post = (options?: RouteQueryOp
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
 * @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/baku/admin/system-health/maintenance'
+*/
+const toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961aForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961a.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/baku/admin/system-health/maintenance'
+*/
+toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961aForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961a.url(options),
+    method: 'post',
+})
+
+toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961a.form = toggleMaintenancee18ef9302e2d5d92ef7153dd30bf961aForm
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
 * @route '/tbilisi/admin/system-health/maintenance'
 */
 const toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -346,6 +561,28 @@ toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51.post = (options?: RouteQueryOp
     url: toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/tbilisi/admin/system-health/maintenance'
+*/
+const toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::toggleMaintenance
+* @see app/Http/Controllers/Admin/SystemHealthController.php:69
+* @route '/tbilisi/admin/system-health/maintenance'
+*/
+toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51.url(options),
+    method: 'post',
+})
+
+toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51.form = toggleMaintenance78f38cfd8010b7e6f6e7ae55c86a3e51Form
 
 export const toggleMaintenance = {
     '/yerevan/admin/system-health/maintenance': toggleMaintenance0c6a1d9fc148dbe38e14323d798c1d89,

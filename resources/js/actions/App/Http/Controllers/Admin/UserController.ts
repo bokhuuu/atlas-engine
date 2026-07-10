@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
@@ -46,6 +46,42 @@ indexe38f12b144573eb0f8822cbb74bdf665.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/yerevan/admin/users'
+*/
+const indexe38f12b144573eb0f8822cbb74bdf665Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/yerevan/admin/users'
+*/
+indexe38f12b144573eb0f8822cbb74bdf665Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/yerevan/admin/users'
+*/
+indexe38f12b144573eb0f8822cbb74bdf665Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: indexe38f12b144573eb0f8822cbb74bdf665.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+indexe38f12b144573eb0f8822cbb74bdf665.form = indexe38f12b144573eb0f8822cbb74bdf665Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
 * @route '/baku/admin/users'
 */
 const index761de714b18569c72c4d5aae740322b7 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -90,6 +126,42 @@ index761de714b18569c72c4d5aae740322b7.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+const index761de714b18569c72c4d5aae740322b7Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index761de714b18569c72c4d5aae740322b7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+index761de714b18569c72c4d5aae740322b7Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index761de714b18569c72c4d5aae740322b7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/baku/admin/users'
+*/
+index761de714b18569c72c4d5aae740322b7Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index761de714b18569c72c4d5aae740322b7.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index761de714b18569c72c4d5aae740322b7.form = index761de714b18569c72c4d5aae740322b7Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
 * @route '/tbilisi/admin/users'
 */
 const index1b67194e790cc5a7d0e08a7564efbfb4 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -130,6 +202,43 @@ index1b67194e790cc5a7d0e08a7564efbfb4.head = (options?: RouteQueryOptions): Rout
     url: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+const index1b67194e790cc5a7d0e08a7564efbfb4Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+index1b67194e790cc5a7d0e08a7564efbfb4Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::index
+* @see app/Http/Controllers/Admin/UserController.php:28
+* @route '/tbilisi/admin/users'
+*/
+index1b67194e790cc5a7d0e08a7564efbfb4Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index1b67194e790cc5a7d0e08a7564efbfb4.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index1b67194e790cc5a7d0e08a7564efbfb4.form = index1b67194e790cc5a7d0e08a7564efbfb4Form
 
 export const index = {
     '/yerevan/admin/users': indexe38f12b144573eb0f8822cbb74bdf665,
@@ -184,6 +293,42 @@ create144385697db0cb43b4a2519ab74955e4.head = (options?: RouteQueryOptions): Rou
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/yerevan/admin/users/create'
+*/
+const create144385697db0cb43b4a2519ab74955e4Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create144385697db0cb43b4a2519ab74955e4.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/yerevan/admin/users/create'
+*/
+create144385697db0cb43b4a2519ab74955e4Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create144385697db0cb43b4a2519ab74955e4.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/yerevan/admin/users/create'
+*/
+create144385697db0cb43b4a2519ab74955e4Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create144385697db0cb43b4a2519ab74955e4.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create144385697db0cb43b4a2519ab74955e4.form = create144385697db0cb43b4a2519ab74955e4Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
 * @route '/baku/admin/users/create'
 */
 const create0b8244a7c83672186963dd86b41e7b72 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -228,6 +373,42 @@ create0b8244a7c83672186963dd86b41e7b72.head = (options?: RouteQueryOptions): Rou
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
 * @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+const create0b8244a7c83672186963dd86b41e7b72Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create0b8244a7c83672186963dd86b41e7b72.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+create0b8244a7c83672186963dd86b41e7b72Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create0b8244a7c83672186963dd86b41e7b72.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/baku/admin/users/create'
+*/
+create0b8244a7c83672186963dd86b41e7b72Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create0b8244a7c83672186963dd86b41e7b72.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create0b8244a7c83672186963dd86b41e7b72.form = create0b8244a7c83672186963dd86b41e7b72Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
 * @route '/tbilisi/admin/users/create'
 */
 const create745a220651b0f528f324a29b84b495c5 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -268,6 +449,43 @@ create745a220651b0f528f324a29b84b495c5.head = (options?: RouteQueryOptions): Rou
     url: create745a220651b0f528f324a29b84b495c5.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+const create745a220651b0f528f324a29b84b495c5Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create745a220651b0f528f324a29b84b495c5.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+create745a220651b0f528f324a29b84b495c5Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create745a220651b0f528f324a29b84b495c5.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/tbilisi/admin/users/create'
+*/
+create745a220651b0f528f324a29b84b495c5Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create745a220651b0f528f324a29b84b495c5.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+create745a220651b0f528f324a29b84b495c5.form = create745a220651b0f528f324a29b84b495c5Form
 
 export const create = {
     '/yerevan/admin/users/create': create144385697db0cb43b4a2519ab74955e4,
@@ -322,6 +540,42 @@ trashed7344a5f648fe8c7e4c38cdd4ffe02740.head = (options?: RouteQueryOptions): Ro
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/yerevan/admin/users/trashed'
+*/
+const trashed7344a5f648fe8c7e4c38cdd4ffe02740Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/yerevan/admin/users/trashed'
+*/
+trashed7344a5f648fe8c7e4c38cdd4ffe02740Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/yerevan/admin/users/trashed'
+*/
+trashed7344a5f648fe8c7e4c38cdd4ffe02740Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+trashed7344a5f648fe8c7e4c38cdd4ffe02740.form = trashed7344a5f648fe8c7e4c38cdd4ffe02740Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
 * @route '/baku/admin/users/trashed'
 */
 const trashed833cd300f3827c1d3824d1568ea1e083 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -366,6 +620,42 @@ trashed833cd300f3827c1d3824d1568ea1e083.head = (options?: RouteQueryOptions): Ro
 /**
 * @see \App\Http\Controllers\Admin\UserController::trashed
 * @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+const trashed833cd300f3827c1d3824d1568ea1e083Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashed833cd300f3827c1d3824d1568ea1e083Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/baku/admin/users/trashed'
+*/
+trashed833cd300f3827c1d3824d1568ea1e083Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed833cd300f3827c1d3824d1568ea1e083.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+trashed833cd300f3827c1d3824d1568ea1e083.form = trashed833cd300f3827c1d3824d1568ea1e083Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
 * @route '/tbilisi/admin/users/trashed'
 */
 const trashed4c759b2684ed20053ad60facd9939b9f = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -406,6 +696,43 @@ trashed4c759b2684ed20053ad60facd9939b9f.head = (options?: RouteQueryOptions): Ro
     url: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+const trashed4c759b2684ed20053ad60facd9939b9fForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashed4c759b2684ed20053ad60facd9939b9fForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/tbilisi/admin/users/trashed'
+*/
+trashed4c759b2684ed20053ad60facd9939b9fForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed4c759b2684ed20053ad60facd9939b9f.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+trashed4c759b2684ed20053ad60facd9939b9f.form = trashed4c759b2684ed20053ad60facd9939b9fForm
 
 export const trashed = {
     '/yerevan/admin/users/trashed': trashed7344a5f648fe8c7e4c38cdd4ffe02740,
@@ -450,6 +777,27 @@ storee38f12b144573eb0f8822cbb74bdf665.post = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/yerevan/admin/users'
+*/
+const storee38f12b144573eb0f8822cbb74bdf665Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/yerevan/admin/users'
+*/
+storee38f12b144573eb0f8822cbb74bdf665Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+    method: 'post',
+})
+
+storee38f12b144573eb0f8822cbb74bdf665.form = storee38f12b144573eb0f8822cbb74bdf665Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
 * @route '/baku/admin/users'
 */
 const store761de714b18569c72c4d5aae740322b7 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -484,6 +832,27 @@ store761de714b18569c72c4d5aae740322b7.post = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+const store761de714b18569c72c4d5aae740322b7Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store761de714b18569c72c4d5aae740322b7.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/baku/admin/users'
+*/
+store761de714b18569c72c4d5aae740322b7Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store761de714b18569c72c4d5aae740322b7.url(options),
+    method: 'post',
+})
+
+store761de714b18569c72c4d5aae740322b7.form = store761de714b18569c72c4d5aae740322b7Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
 * @route '/tbilisi/admin/users'
 */
 const store1b67194e790cc5a7d0e08a7564efbfb4 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -514,6 +883,28 @@ store1b67194e790cc5a7d0e08a7564efbfb4.post = (options?: RouteQueryOptions): Rout
     url: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
     method: 'post',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+const store1b67194e790cc5a7d0e08a7564efbfb4Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::store
+* @see app/Http/Controllers/Admin/UserController.php:75
+* @route '/tbilisi/admin/users'
+*/
+store1b67194e790cc5a7d0e08a7564efbfb4Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+    method: 'post',
+})
+
+store1b67194e790cc5a7d0e08a7564efbfb4.form = store1b67194e790cc5a7d0e08a7564efbfb4Form
 
 export const store = {
     '/yerevan/admin/users': storee38f12b144573eb0f8822cbb74bdf665,
@@ -586,6 +977,42 @@ edit188d3b82b7e7e62d8fc3c04f6db57a6f.head = (args: { user: string | number } | [
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/yerevan/admin/users/{user}/edit'
+*/
+const edit188d3b82b7e7e62d8fc3c04f6db57a6fForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/yerevan/admin/users/{user}/edit'
+*/
+edit188d3b82b7e7e62d8fc3c04f6db57a6fForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/yerevan/admin/users/{user}/edit'
+*/
+edit188d3b82b7e7e62d8fc3c04f6db57a6fForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit188d3b82b7e7e62d8fc3c04f6db57a6f.form = edit188d3b82b7e7e62d8fc3c04f6db57a6fForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/baku/admin/users/{user}/edit'
 */
 const edit3fcb35ca732f82782a0baca46da3d11d = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -648,6 +1075,42 @@ edit3fcb35ca732f82782a0baca46da3d11d.head = (args: { user: string | number } | [
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+const edit3fcb35ca732f82782a0baca46da3d11dForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+edit3fcb35ca732f82782a0baca46da3d11dForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/baku/admin/users/{user}/edit'
+*/
+edit3fcb35ca732f82782a0baca46da3d11dForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit3fcb35ca732f82782a0baca46da3d11d.form = edit3fcb35ca732f82782a0baca46da3d11dForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/tbilisi/admin/users/{user}/edit'
 */
 const edit03f855fe84c32682ae8091e07154400b = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -706,6 +1169,43 @@ edit03f855fe84c32682ae8091e07154400b.head = (args: { user: string | number } | [
     url: edit03f855fe84c32682ae8091e07154400b.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+const edit03f855fe84c32682ae8091e07154400bForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit03f855fe84c32682ae8091e07154400b.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+edit03f855fe84c32682ae8091e07154400bForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit03f855fe84c32682ae8091e07154400b.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::edit
+* @see app/Http/Controllers/Admin/UserController.php:94
+* @route '/tbilisi/admin/users/{user}/edit'
+*/
+edit03f855fe84c32682ae8091e07154400bForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit03f855fe84c32682ae8091e07154400b.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+edit03f855fe84c32682ae8091e07154400b.form = edit03f855fe84c32682ae8091e07154400bForm
 
 export const edit = {
     '/yerevan/admin/users/{user}/edit': edit188d3b82b7e7e62d8fc3c04f6db57a6f,
@@ -768,6 +1268,37 @@ update8a872ec8ba4b9b69faede74a365fffcc.put = (args: { user: string | number } | 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/yerevan/admin/users/{user}'
+*/
+const update8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/yerevan/admin/users/{user}'
+*/
+update8a872ec8ba4b9b69faede74a365fffccForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update8a872ec8ba4b9b69faede74a365fffcc.form = update8a872ec8ba4b9b69faede74a365fffccForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
 * @route '/baku/admin/users/{user}'
 */
 const update1a06d795c6c6fb4eace6ff4705f7285e = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -820,6 +1351,37 @@ update1a06d795c6c6fb4eace6ff4705f7285e.put = (args: { user: string | number } | 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+const update1a06d795c6c6fb4eace6ff4705f7285eForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/baku/admin/users/{user}'
+*/
+update1a06d795c6c6fb4eace6ff4705f7285eForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update1a06d795c6c6fb4eace6ff4705f7285e.form = update1a06d795c6c6fb4eace6ff4705f7285eForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
 * @route '/tbilisi/admin/users/{user}'
 */
 const update085a59e45f1a6318e7383026589d48c9 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -868,6 +1430,38 @@ update085a59e45f1a6318e7383026589d48c9.put = (args: { user: string | number } | 
     url: update085a59e45f1a6318e7383026589d48c9.url(args, options),
     method: 'put',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+const update085a59e45f1a6318e7383026589d48c9Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update085a59e45f1a6318e7383026589d48c9.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::update
+* @see app/Http/Controllers/Admin/UserController.php:121
+* @route '/tbilisi/admin/users/{user}'
+*/
+update085a59e45f1a6318e7383026589d48c9Form.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update085a59e45f1a6318e7383026589d48c9.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update085a59e45f1a6318e7383026589d48c9.form = update085a59e45f1a6318e7383026589d48c9Form
 
 export const update = {
     '/yerevan/admin/users/{user}': update8a872ec8ba4b9b69faede74a365fffcc,
@@ -930,6 +1524,37 @@ destroy8a872ec8ba4b9b69faede74a365fffcc.delete = (args: { user: string | number 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/yerevan/admin/users/{user}'
+*/
+const destroy8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/yerevan/admin/users/{user}'
+*/
+destroy8a872ec8ba4b9b69faede74a365fffccForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy8a872ec8ba4b9b69faede74a365fffcc.form = destroy8a872ec8ba4b9b69faede74a365fffccForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
 * @route '/baku/admin/users/{user}'
 */
 const destroy1a06d795c6c6fb4eace6ff4705f7285e = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -982,6 +1607,37 @@ destroy1a06d795c6c6fb4eace6ff4705f7285e.delete = (args: { user: string | number 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+const destroy1a06d795c6c6fb4eace6ff4705f7285eForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/baku/admin/users/{user}'
+*/
+destroy1a06d795c6c6fb4eace6ff4705f7285eForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy1a06d795c6c6fb4eace6ff4705f7285e.form = destroy1a06d795c6c6fb4eace6ff4705f7285eForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
 * @route '/tbilisi/admin/users/{user}'
 */
 const destroy085a59e45f1a6318e7383026589d48c9 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1030,6 +1686,38 @@ destroy085a59e45f1a6318e7383026589d48c9.delete = (args: { user: string | number 
     url: destroy085a59e45f1a6318e7383026589d48c9.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+const destroy085a59e45f1a6318e7383026589d48c9Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy085a59e45f1a6318e7383026589d48c9.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::destroy
+* @see app/Http/Controllers/Admin/UserController.php:136
+* @route '/tbilisi/admin/users/{user}'
+*/
+destroy085a59e45f1a6318e7383026589d48c9Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy085a59e45f1a6318e7383026589d48c9.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+destroy085a59e45f1a6318e7383026589d48c9.form = destroy085a59e45f1a6318e7383026589d48c9Form
 
 export const destroy = {
     '/yerevan/admin/users/{user}': destroy8a872ec8ba4b9b69faede74a365fffcc,
@@ -1092,6 +1780,37 @@ restore37beb7524207d6760d5037316b1a3644.patch = (args: { user: string | number }
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/yerevan/admin/users/{user}/restore'
+*/
+const restore37beb7524207d6760d5037316b1a3644Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore37beb7524207d6760d5037316b1a3644.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/yerevan/admin/users/{user}/restore'
+*/
+restore37beb7524207d6760d5037316b1a3644Form.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore37beb7524207d6760d5037316b1a3644.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+restore37beb7524207d6760d5037316b1a3644.form = restore37beb7524207d6760d5037316b1a3644Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
 * @route '/baku/admin/users/{user}/restore'
 */
 const restore8ebfa34e6fdd939e324d8cad7b03c1e6 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -1144,6 +1863,37 @@ restore8ebfa34e6fdd939e324d8cad7b03c1e6.patch = (args: { user: string | number }
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+const restore8ebfa34e6fdd939e324d8cad7b03c1e6Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/baku/admin/users/{user}/restore'
+*/
+restore8ebfa34e6fdd939e324d8cad7b03c1e6Form.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+restore8ebfa34e6fdd939e324d8cad7b03c1e6.form = restore8ebfa34e6fdd939e324d8cad7b03c1e6Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
 * @route '/tbilisi/admin/users/{user}/restore'
 */
 const restorec9b9859f72d101878af7ab9491ff896f = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -1192,6 +1942,38 @@ restorec9b9859f72d101878af7ab9491ff896f.patch = (args: { user: string | number }
     url: restorec9b9859f72d101878af7ab9491ff896f.url(args, options),
     method: 'patch',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+const restorec9b9859f72d101878af7ab9491ff896fForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restorec9b9859f72d101878af7ab9491ff896f.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::restore
+* @see app/Http/Controllers/Admin/UserController.php:150
+* @route '/tbilisi/admin/users/{user}/restore'
+*/
+restorec9b9859f72d101878af7ab9491ff896fForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restorec9b9859f72d101878af7ab9491ff896f.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PATCH',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+restorec9b9859f72d101878af7ab9491ff896f.form = restorec9b9859f72d101878af7ab9491ff896fForm
 
 export const restore = {
     '/yerevan/admin/users/{user}/restore': restore37beb7524207d6760d5037316b1a3644,
@@ -1254,6 +2036,37 @@ forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.delete = (args: { user: string | num
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/yerevan/admin/users/{user}/force-delete'
+*/
+const forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/yerevan/admin/users/{user}/force-delete'
+*/
+forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.form = forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
 * @route '/baku/admin/users/{user}/force-delete'
 */
 const forceDelete2b8df150ec5dd36d05323546256cc267 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1306,6 +2119,37 @@ forceDelete2b8df150ec5dd36d05323546256cc267.delete = (args: { user: string | num
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+const forceDelete2b8df150ec5dd36d05323546256cc267Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/baku/admin/users/{user}/force-delete'
+*/
+forceDelete2b8df150ec5dd36d05323546256cc267Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+forceDelete2b8df150ec5dd36d05323546256cc267.form = forceDelete2b8df150ec5dd36d05323546256cc267Form
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
 * @route '/tbilisi/admin/users/{user}/force-delete'
 */
 const forceDelete613769948fc141603dccdd5264a6d945 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -1354,6 +2198,38 @@ forceDelete613769948fc141603dccdd5264a6d945.delete = (args: { user: string | num
     url: forceDelete613769948fc141603dccdd5264a6d945.url(args, options),
     method: 'delete',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+const forceDelete613769948fc141603dccdd5264a6d945Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete613769948fc141603dccdd5264a6d945.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\UserController::forceDelete
+* @see app/Http/Controllers/Admin/UserController.php:164
+* @route '/tbilisi/admin/users/{user}/force-delete'
+*/
+forceDelete613769948fc141603dccdd5264a6d945Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete613769948fc141603dccdd5264a6d945.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+forceDelete613769948fc141603dccdd5264a6d945.form = forceDelete613769948fc141603dccdd5264a6d945Form
 
 export const forceDelete = {
     '/yerevan/admin/users/{user}/force-delete': forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c,

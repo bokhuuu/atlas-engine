@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::index
 * @see app/Http/Controllers/Admin/AssistantController.php:19
@@ -46,6 +46,42 @@ index95d0824a2a9cd02bdc3ebf4f32a90b95.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::index
 * @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/yerevan/admin/assistant'
+*/
+const index95d0824a2a9cd02bdc3ebf4f32a90b95Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index95d0824a2a9cd02bdc3ebf4f32a90b95.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/yerevan/admin/assistant'
+*/
+index95d0824a2a9cd02bdc3ebf4f32a90b95Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index95d0824a2a9cd02bdc3ebf4f32a90b95.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/yerevan/admin/assistant'
+*/
+index95d0824a2a9cd02bdc3ebf4f32a90b95Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index95d0824a2a9cd02bdc3ebf4f32a90b95.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index95d0824a2a9cd02bdc3ebf4f32a90b95.form = index95d0824a2a9cd02bdc3ebf4f32a90b95Form
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
 * @route '/baku/admin/assistant'
 */
 const index582b7e437676ca232891422d98c6f85c = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -90,6 +126,42 @@ index582b7e437676ca232891422d98c6f85c.head = (options?: RouteQueryOptions): Rout
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::index
 * @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+const index582b7e437676ca232891422d98c6f85cForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index582b7e437676ca232891422d98c6f85c.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+index582b7e437676ca232891422d98c6f85cForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index582b7e437676ca232891422d98c6f85c.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/baku/admin/assistant'
+*/
+index582b7e437676ca232891422d98c6f85cForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index582b7e437676ca232891422d98c6f85c.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index582b7e437676ca232891422d98c6f85c.form = index582b7e437676ca232891422d98c6f85cForm
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
 * @route '/tbilisi/admin/assistant'
 */
 const index5e32ba440ba2d04330381ae215b137a7 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -130,6 +202,43 @@ index5e32ba440ba2d04330381ae215b137a7.head = (options?: RouteQueryOptions): Rout
     url: index5e32ba440ba2d04330381ae215b137a7.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+const index5e32ba440ba2d04330381ae215b137a7Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index5e32ba440ba2d04330381ae215b137a7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+index5e32ba440ba2d04330381ae215b137a7Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index5e32ba440ba2d04330381ae215b137a7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/tbilisi/admin/assistant'
+*/
+index5e32ba440ba2d04330381ae215b137a7Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index5e32ba440ba2d04330381ae215b137a7.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index5e32ba440ba2d04330381ae215b137a7.form = index5e32ba440ba2d04330381ae215b137a7Form
 
 export const index = {
     '/yerevan/admin/assistant': index95d0824a2a9cd02bdc3ebf4f32a90b95,

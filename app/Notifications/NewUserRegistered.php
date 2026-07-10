@@ -38,7 +38,7 @@ class NewUserRegistered extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject(config('larakit.notifications.new_user_subject'))
             ->line("{$this->user->name} ({$this->user->email}) just created an account.")
-            ->action('View User', route('admin.users.edit', $this->user->id))
+            ->action('View User', route('admin.users.edit', ['market' => config('scraper.default_market', 'yerevan'), 'user' => $this->user->id]))
             ->line(config('larakit.notifications.footer'));
     }
 

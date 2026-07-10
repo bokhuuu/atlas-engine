@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
@@ -46,6 +46,42 @@ Controllerfa0d9bcf13905998cd6f7d6975205e5f.head = (options?: RouteQueryOptions):
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/yerevan'
+*/
+const Controllerfa0d9bcf13905998cd6f7d6975205e5fForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerfa0d9bcf13905998cd6f7d6975205e5f.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/yerevan'
+*/
+Controllerfa0d9bcf13905998cd6f7d6975205e5fForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerfa0d9bcf13905998cd6f7d6975205e5f.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/yerevan'
+*/
+Controllerfa0d9bcf13905998cd6f7d6975205e5fForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerfa0d9bcf13905998cd6f7d6975205e5f.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllerfa0d9bcf13905998cd6f7d6975205e5f.form = Controllerfa0d9bcf13905998cd6f7d6975205e5fForm
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/baku'
 */
 const Controllerdc33ed48a6d886b3caaebf2823e282fe = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -87,6 +123,42 @@ Controllerdc33ed48a6d886b3caaebf2823e282fe.head = (options?: RouteQueryOptions):
     method: 'head',
 })
 
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/baku'
+*/
+const Controllerdc33ed48a6d886b3caaebf2823e282feForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerdc33ed48a6d886b3caaebf2823e282fe.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/baku'
+*/
+Controllerdc33ed48a6d886b3caaebf2823e282feForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerdc33ed48a6d886b3caaebf2823e282fe.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/baku'
+*/
+Controllerdc33ed48a6d886b3caaebf2823e282feForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllerdc33ed48a6d886b3caaebf2823e282fe.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllerdc33ed48a6d886b3caaebf2823e282fe.form = Controllerdc33ed48a6d886b3caaebf2823e282feForm
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
@@ -134,6 +206,42 @@ Controller674b46e24f32b6f0dbca062ed86770f7.head = (options?: RouteQueryOptions):
 /**
 * @see \Inertia\Controller::__invoke
 * @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tbilisi'
+*/
+const Controller674b46e24f32b6f0dbca062ed86770f7Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller674b46e24f32b6f0dbca062ed86770f7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tbilisi'
+*/
+Controller674b46e24f32b6f0dbca062ed86770f7Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller674b46e24f32b6f0dbca062ed86770f7.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/tbilisi'
+*/
+Controller674b46e24f32b6f0dbca062ed86770f7Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controller674b46e24f32b6f0dbca062ed86770f7.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controller674b46e24f32b6f0dbca062ed86770f7.form = Controller674b46e24f32b6f0dbca062ed86770f7Form
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
 * @route '/settings/appearance'
 */
 const Controllere19ee86e9cf603ce1a59a1ec5d21dec5 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -174,6 +282,43 @@ Controllere19ee86e9cf603ce1a59a1ec5d21dec5.head = (options?: RouteQueryOptions):
     url: Controllere19ee86e9cf603ce1a59a1ec5d21dec5.url(options),
     method: 'head',
 })
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/settings/appearance'
+*/
+const Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllere19ee86e9cf603ce1a59a1ec5d21dec5.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/settings/appearance'
+*/
+Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllere19ee86e9cf603ce1a59a1ec5d21dec5.url(options),
+    method: 'get',
+})
+
+/**
+* @see \Inertia\Controller::__invoke
+* @see vendor/inertiajs/inertia-laravel/src/Controller.php:13
+* @route '/settings/appearance'
+*/
+Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: Controllere19ee86e9cf603ce1a59a1ec5d21dec5.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+Controllere19ee86e9cf603ce1a59a1ec5d21dec5.form = Controllere19ee86e9cf603ce1a59a1ec5d21dec5Form
 
 const Controller = {
     '/yerevan': Controllerfa0d9bcf13905998cd6f7d6975205e5f,

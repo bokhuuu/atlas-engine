@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults, validateParameters } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../../wayfinder'
 /**
 * @see \Laravel\Dusk\Http\Controllers\UserController::login
 * @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:38
@@ -63,6 +63,43 @@ login.head = (args: { userId: string | number, guard?: string | number } | [user
     url: login.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::login
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:38
+* @route '/_dusk/login/{userId}/{guard?}'
+*/
+const loginForm = (args: { userId: string | number, guard?: string | number } | [userId: string | number, guard: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: login.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::login
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:38
+* @route '/_dusk/login/{userId}/{guard?}'
+*/
+loginForm.get = (args: { userId: string | number, guard?: string | number } | [userId: string | number, guard: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: login.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::login
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:38
+* @route '/_dusk/login/{userId}/{guard?}'
+*/
+loginForm.head = (args: { userId: string | number, guard?: string | number } | [userId: string | number, guard: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: login.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+login.form = loginForm
 
 /**
 * @see \Laravel\Dusk\Http\Controllers\UserController::logout
@@ -131,6 +168,43 @@ logout.head = (args?: { guard?: string | number } | [guard: string | number ] | 
 })
 
 /**
+* @see \Laravel\Dusk\Http\Controllers\UserController::logout
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:57
+* @route '/_dusk/logout/{guard?}'
+*/
+const logoutForm = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logout.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::logout
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:57
+* @route '/_dusk/logout/{guard?}'
+*/
+logoutForm.get = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logout.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::logout
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:57
+* @route '/_dusk/logout/{guard?}'
+*/
+logoutForm.head = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: logout.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+logout.form = logoutForm
+
+/**
 * @see \Laravel\Dusk\Http\Controllers\UserController::user
 * @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:17
 * @route '/_dusk/user/{guard?}'
@@ -195,6 +269,43 @@ user.head = (args?: { guard?: string | number } | [guard: string | number ] | st
     url: user.url(args, options),
     method: 'head',
 })
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::user
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:17
+* @route '/_dusk/user/{guard?}'
+*/
+const userForm = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: user.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::user
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:17
+* @route '/_dusk/user/{guard?}'
+*/
+userForm.get = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: user.url(args, options),
+    method: 'get',
+})
+
+/**
+* @see \Laravel\Dusk\Http\Controllers\UserController::user
+* @see vendor/laravel/dusk/src/Http/Controllers/UserController.php:17
+* @route '/_dusk/user/{guard?}'
+*/
+userForm.head = (args?: { guard?: string | number } | [guard: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: user.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+user.form = userForm
 
 const dusk = {
     login: Object.assign(login, login),

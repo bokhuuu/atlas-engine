@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
 * @see app/Http/Controllers/Admin/DataHubController.php:23
@@ -42,6 +42,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/yerevan/admin/data-hub'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/yerevan/admin/data-hub'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/yerevan/admin/data-hub'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
@@ -90,6 +127,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
 * @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/baku/admin/data-hub'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/baku/admin/data-hub'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/baku/admin/data-hub'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -130,6 +204,43 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
 })
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/tbilisi/admin/data-hub'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/tbilisi/admin/data-hub'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\DataHubController::index
+* @see app/Http/Controllers/Admin/DataHubController.php:23
+* @route '/tbilisi/admin/data-hub'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
 
 const dataHub = {
     index: Object.assign(index, index),
