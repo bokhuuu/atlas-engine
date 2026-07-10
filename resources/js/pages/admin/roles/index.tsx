@@ -6,9 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/admin/dashboard' },
+    { title: 'Roles & Permissions', href: '/admin/roles' },
+];
 
 interface Permission {
     id: number;
@@ -44,12 +48,6 @@ export default function RolesIndex({ allRoles, allPermissions }: Props) {
 
     const [saving, setSaving] = useState<number | null>(null);
 
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: adminUrl('/dashboard') },
-        { title: 'Roles & Permissions', href: adminUrl('/roles') },
-    ];
-
     const grouped = allPermissions.reduce(
         (acc, perm) => {
             const [group] = perm.name.split('.');
@@ -82,7 +80,7 @@ export default function RolesIndex({ allRoles, allPermissions }: Props) {
     const handleSave = (role: Role) => {
         setSaving(role.id);
         router.put(
-            adminUrl(`/roles/${role.id}`),
+            `/admin/roles/${role.id}`,
             { permissions: rolePermissions[role.id] ?? [] },
             { onFinish: () => setSaving(null) },
         );

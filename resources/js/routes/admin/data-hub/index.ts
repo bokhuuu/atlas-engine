@@ -1,8 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/yerevan/admin/data-hub',
+    url: '/admin/data-hub',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -25,8 +25,8 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -35,8 +35,8 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -45,8 +45,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -55,8 +55,8 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -65,170 +65,8 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/yerevan/admin/data-hub'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/baku/admin/data-hub',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-index.url = (options?: RouteQueryOptions) => {
-    return index.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/baku/admin/data-hub'
-*/
-indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index.form = indexForm
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/tbilisi/admin/data-hub',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-index.url = (options?: RouteQueryOptions) => {
-    return index.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
-*/
-indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:23
-* @route '/tbilisi/admin/data-hub'
+* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @route '/admin/data-hub'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({

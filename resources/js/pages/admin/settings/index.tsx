@@ -1,7 +1,6 @@
 import { Head, useForm, router } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -21,6 +20,10 @@ interface Props {
     groups: string[];
     fileUrls: Record<string, string>;
 }
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Settings', href: '/admin/settings' },
+];
 
 function formatGroup(group: string): string {
     return group.charAt(0).toUpperCase() + group.slice(1);
@@ -49,11 +52,6 @@ export default function SettingsIndex({ settings, groups, fileUrls }: Props) {
         {},
     );
 
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'AI Feedback', href: adminUrl('/ai-feedback') },
-    ];
-
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
@@ -70,7 +68,7 @@ export default function SettingsIndex({ settings, groups, fileUrls }: Props) {
             }
         });
 
-        router.post(adminUrl('/settings'), formData, {
+        router.post('/admin/settings', formData, {
             forceFormData: true,
         });
     }

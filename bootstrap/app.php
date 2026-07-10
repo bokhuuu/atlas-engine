@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Http\Middleware\Admin\EnsureUserIsAdmin;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\MarketMiddleware;
 use App\Http\Middleware\SecureHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -43,7 +42,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => EnsureUserIsAdmin::class,
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
-            'market' => MarketMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

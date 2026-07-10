@@ -84,7 +84,7 @@ class SettingController extends Controller
 
         Setting::invalidateCache();
 
-        return redirect()->route('admin.settings.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.settings.index')
             ->with('success', 'Site settings updated successfully.');
     }
 }

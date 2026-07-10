@@ -181,45 +181,6 @@ return [
     ],
 
     /*
-|--------------------------------------------------------------------------
-| Market Registry
-|--------------------------------------------------------------------------
-|
-| Defines all markets Atlas supports. Each market has a slug (used in URLs),
-| a label, country, flag emoji, currency, and the source_profile_name
-| prefixes that belong to it. One market can have multiple prefixes
-| (e.g. two data sources for the same city).
-|
-| 'global' is a reserved slug — do not use it as a market key.
-|
-*/
-    'markets' => [
-        'yerevan' => [
-            'label' => 'Yerevan',
-            'country' => 'Armenia',
-            'flag' => '🇦🇲',
-            'source_prefixes' => ['listam'],
-            'currency' => 'USD',
-        ],
-        'baku' => [
-            'label' => 'Baku',
-            'country' => 'Azerbaijan',
-            'flag' => '🇦🇿',
-            'source_prefixes' => ['binaz'],
-            'currency' => 'AZN',
-        ],
-        'tbilisi' => [
-            'label' => 'Tbilisi',
-            'country' => 'Georgia',
-            'flag' => '🇬🇪',
-            'source_prefixes' => ['myhome', 'ss'],
-            'currency' => 'USD',
-        ],
-    ],
-
-    'default_market' => env('DEFAULT_MARKET', 'yerevan'),
-
-    /*
     |--------------------------------------------------------------------------
     | Job Middleware
     |--------------------------------------------------------------------------

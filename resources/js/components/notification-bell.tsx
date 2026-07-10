@@ -6,28 +6,19 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useMarket } from '@/hooks/use-market';
+import { read, readAll } from '@/routes/admin/notifications';
 import type { AdminNotification } from '@/types/notifications';
 
 export function NotificationBell() {
     const { notifications } = usePage().props;
     const unreadCount = notifications.length;
-    const { adminUrl } = useMarket();
 
     function markAsRead(id: string) {
-        router.post(
-            adminUrl(`/notifications/${id}/read`),
-            {},
-            { preserveScroll: true },
-        );
+        router.post(read(id).url, {}, { preserveScroll: true });
     }
 
     function markAllAsRead() {
-        router.post(
-            adminUrl('/notifications/read-all'),
-            {},
-            { preserveScroll: true },
-        );
+        router.post(readAll().url, {}, { preserveScroll: true });
     }
 
     return (

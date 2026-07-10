@@ -9,7 +9,6 @@ import {
     SelectItem,
     SelectValue,
 } from '@/components/ui/select';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 interface Role {
@@ -21,6 +20,11 @@ interface Role {
 interface Props {
     roles: Role[];
 }
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Users', href: '/admin/users' },
+    { title: 'Create', href: '/admin/users/create' },
+];
 
 export default function CreateUser({ roles }: Props) {
     const { data, setData, post, processing, errors } = useForm({
@@ -35,15 +39,9 @@ export default function CreateUser({ roles }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
 
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Users', href: adminUrl('/users') },
-        { title: 'Create', href: adminUrl('/users/create') },
-    ];
-
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post(adminUrl('/users'), { forceFormData: true });
+        post('/admin/users', { forceFormData: true });
     }
 
     function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +64,7 @@ export default function CreateUser({ roles }: Props) {
                     <div className="mb-6 flex items-center justify-between">
                         <h1 className="text-2xl font-semibold">Create User</h1>
                         <Link
-                            href={adminUrl('/users')}
+                            href="/admin/users"
                             className="text-sm text-muted-foreground hover:text-foreground"
                         >
                             ← Back to Users

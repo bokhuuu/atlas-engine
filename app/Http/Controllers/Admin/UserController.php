@@ -82,7 +82,7 @@ class UserController extends Controller
             return back()->withErrors(['general' => $e->getMessage()]);
         }
 
-        return redirect()->route('admin.users.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
     }
 
@@ -129,7 +129,7 @@ class UserController extends Controller
             return back()->withErrors(['general' => $e->getMessage()]);
         }
 
-        return redirect()->route('admin.users.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');
     }
 
@@ -143,7 +143,7 @@ class UserController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('admin.users.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
     }
 
@@ -157,7 +157,7 @@ class UserController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('admin.users.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.users.index')
             ->with('success', 'User was restored successfully.');
     }
 
@@ -171,7 +171,7 @@ class UserController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('admin.users.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.users.index')
             ->with('success', 'User was force deleted successfully.');
     }
 }

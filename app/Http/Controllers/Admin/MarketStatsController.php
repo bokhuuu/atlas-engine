@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Support\CategoryLabels;
-use App\Services\MarketRegistry;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,24 +18,11 @@ use Inertia\Response;
  */
 class MarketStatsController extends Controller
 {
-    public function __construct(private readonly MarketRegistry $marketRegistry) {}
-
     public function index(): Response
     {
-        $market = app('market') ?? $this->marketRegistry->defaultSlug();
-        $marketConfig = $this->marketRegistry->fromSlug($market);
-        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
-
         $categories = [];
 
         foreach (config('scraper.profiles', []) as $source => $profileClass) {
-            $belongsToMarket = collect($sourcePrefixes)
-                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'));
-
-            if (! $belongsToMarket) {
-                continue;
-            }
-
             $categories[] = [
                 'source' => $source,
                 'label' => CategoryLabels::forSource($source),

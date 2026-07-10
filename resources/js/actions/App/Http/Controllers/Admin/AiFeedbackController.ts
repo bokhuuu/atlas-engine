@@ -2,74 +2,74 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-const indexa4d043f191a98b5d0f912b2c828ce03e = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: indexa4d043f191a98b5d0f912b2c828ce03e.url(options),
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
     method: 'get',
 })
 
-indexa4d043f191a98b5d0f912b2c828ce03e.definition = {
+index.definition = {
     methods: ["get","head"],
-    url: '/yerevan/admin/ai-feedback',
+    url: '/admin/ai-feedback',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-indexa4d043f191a98b5d0f912b2c828ce03e.url = (options?: RouteQueryOptions) => {
-    return indexa4d043f191a98b5d0f912b2c828ce03e.definition.url + queryParams(options)
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-indexa4d043f191a98b5d0f912b2c828ce03e.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: indexa4d043f191a98b5d0f912b2c828ce03e.url(options),
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-indexa4d043f191a98b5d0f912b2c828ce03e.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: indexa4d043f191a98b5d0f912b2c828ce03e.url(options),
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-const indexa4d043f191a98b5d0f912b2c828ce03eForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexa4d043f191a98b5d0f912b2c828ce03e.url(options),
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-indexa4d043f191a98b5d0f912b2c828ce03eForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexa4d043f191a98b5d0f912b2c828ce03e.url(options),
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AiFeedbackController::index
 * @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/yerevan/admin/ai-feedback'
+* @route '/admin/ai-feedback'
 */
-indexa4d043f191a98b5d0f912b2c828ce03eForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexa4d043f191a98b5d0f912b2c828ce03e.url({
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -78,173 +78,7 @@ indexa4d043f191a98b5d0f912b2c828ce03eForm.head = (options?: RouteQueryOptions): 
     method: 'get',
 })
 
-indexa4d043f191a98b5d0f912b2c828ce03e.form = indexa4d043f191a98b5d0f912b2c828ce03eForm
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-const index4120fd36f38453ae9c9b1aa9bc4cdf8e = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url(options),
-    method: 'get',
-})
-
-index4120fd36f38453ae9c9b1aa9bc4cdf8e.definition = {
-    methods: ["get","head"],
-    url: '/baku/admin/ai-feedback',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-index4120fd36f38453ae9c9b1aa9bc4cdf8e.url = (options?: RouteQueryOptions) => {
-    return index4120fd36f38453ae9c9b1aa9bc4cdf8e.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-index4120fd36f38453ae9c9b1aa9bc4cdf8e.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-index4120fd36f38453ae9c9b1aa9bc4cdf8e.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-const index4120fd36f38453ae9c9b1aa9bc4cdf8eForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-index4120fd36f38453ae9c9b1aa9bc4cdf8eForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/baku/admin/ai-feedback'
-*/
-index4120fd36f38453ae9c9b1aa9bc4cdf8eForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index4120fd36f38453ae9c9b1aa9bc4cdf8e.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index4120fd36f38453ae9c9b1aa9bc4cdf8e.form = index4120fd36f38453ae9c9b1aa9bc4cdf8eForm
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-const index145b2905f9eff2fef9d2e486046a6e33 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index145b2905f9eff2fef9d2e486046a6e33.url(options),
-    method: 'get',
-})
-
-index145b2905f9eff2fef9d2e486046a6e33.definition = {
-    methods: ["get","head"],
-    url: '/tbilisi/admin/ai-feedback',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-index145b2905f9eff2fef9d2e486046a6e33.url = (options?: RouteQueryOptions) => {
-    return index145b2905f9eff2fef9d2e486046a6e33.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-index145b2905f9eff2fef9d2e486046a6e33.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index145b2905f9eff2fef9d2e486046a6e33.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-index145b2905f9eff2fef9d2e486046a6e33.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index145b2905f9eff2fef9d2e486046a6e33.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-const index145b2905f9eff2fef9d2e486046a6e33Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index145b2905f9eff2fef9d2e486046a6e33.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-index145b2905f9eff2fef9d2e486046a6e33Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index145b2905f9eff2fef9d2e486046a6e33.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\AiFeedbackController::index
-* @see app/Http/Controllers/Admin/AiFeedbackController.php:20
-* @route '/tbilisi/admin/ai-feedback'
-*/
-index145b2905f9eff2fef9d2e486046a6e33Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index145b2905f9eff2fef9d2e486046a6e33.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-index145b2905f9eff2fef9d2e486046a6e33.form = index145b2905f9eff2fef9d2e486046a6e33Form
-
-export const index = {
-    '/yerevan/admin/ai-feedback': indexa4d043f191a98b5d0f912b2c828ce03e,
-    '/baku/admin/ai-feedback': index4120fd36f38453ae9c9b1aa9bc4cdf8e,
-    '/tbilisi/admin/ai-feedback': index145b2905f9eff2fef9d2e486046a6e33,
-}
+index.form = indexForm
 
 const AiFeedbackController = { index }
 

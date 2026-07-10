@@ -58,7 +58,7 @@ class TokenController extends Controller
 
         $token = $request->user()->createToken($request->name);
 
-        return redirect()->route('admin.tokens.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.tokens.index')
             ->with('newToken', $token->plainTextToken);
     }
 
@@ -69,7 +69,7 @@ class TokenController extends Controller
     {
         $request->user()->tokens()->findOrFail($id)->delete();
 
-        return redirect()->route('admin.tokens.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.tokens.index')
             ->with('success', 'Token revoked.');
     }
 }

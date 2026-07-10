@@ -1,6 +1,5 @@
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -18,6 +17,10 @@ interface Snapshot {
 interface Props {
     snapshot: Snapshot;
 }
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'System Health', href: '/admin/system-health' },
+];
 
 function HorizonBadge({ status }: { status: Snapshot['horizon'] }) {
     const styles: Record<Snapshot['horizon'], string> = {
@@ -39,15 +42,10 @@ function HorizonBadge({ status }: { status: Snapshot['horizon'] }) {
 export default function SystemHealthIndex({ snapshot }: Props) {
     const [processing, setProcessing] = useState<string | null>(null);
 
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'System Health', href: adminUrl('/system-health') },
-    ];
-
     function clearCache(type: 'config' | 'route' | 'view') {
         setProcessing(type);
         router.post(
-            adminUrl('/system-health/cache'),
+            '/admin/system-health/cache',
             { type },
             { onFinish: () => setProcessing(null) },
         );
@@ -56,7 +54,7 @@ export default function SystemHealthIndex({ snapshot }: Props) {
     function toggleMaintenance() {
         setProcessing('maintenance');
         router.post(
-            adminUrl('/system-health/maintenance'),
+            '/admin/system-health/maintenance',
             {},
             { onFinish: () => setProcessing(null) },
         );

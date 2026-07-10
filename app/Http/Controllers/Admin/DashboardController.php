@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Support\CategoryLabels;
-use App\Services\MarketRegistry;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Activitylog\Models\Activity;
@@ -24,7 +23,6 @@ class DashboardController extends Controller
 {
     public function __construct(
         private readonly ListingRepository $listingRepository,
-        private readonly MarketRegistry $marketRegistry,
     ) {}
 
     /**
@@ -43,21 +41,10 @@ class DashboardController extends Controller
             'today_activities' => Activity::whereDate('created_at', today())->count(),
         ];
 
-        $market = app('market') ?? $this->marketRegistry->defaultSlug();
-        $marketConfig = $this->marketRegistry->fromSlug($market);
-        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
-
         $scraperCategories = [];
         $grandTotalListings = 0;
 
         foreach (config('scraper.profiles', []) as $source => $profileClass) {
-            $belongsToMarket = collect($sourcePrefixes)
-                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'));
-
-            if (! $belongsToMarket) {
-                continue;
-            }
-
             $totalListings = $this->listingRepository->countDistinctBySource($source);
             $grandTotalListings += $totalListings;
 

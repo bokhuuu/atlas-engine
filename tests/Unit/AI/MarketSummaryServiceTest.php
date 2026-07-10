@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Modules\AI\Services\MarketSummaryService;
 use App\Modules\AI\Services\TextGenerationService;
 use App\Modules\Scraper\Repositories\ListingRepository;
-use App\Services\MarketRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 
@@ -16,7 +15,7 @@ test('summarize returns null when source has no listings', function () {
     $textGenerator = Mockery::mock(TextGenerationService::class);
     $textGenerator->shouldNotReceive('generate');
 
-    $service = new MarketSummaryService($listingRepo, $textGenerator, app(MarketRegistry::class));
+    $service = new MarketSummaryService($listingRepo, $textGenerator);
 
     expect($service->summarize('listam_apartments_sale'))->toBeNull();
 });
@@ -28,7 +27,7 @@ test('summarize returns cached value on second call without calling AI again', f
     $textGenerator = Mockery::mock(TextGenerationService::class);
     $textGenerator->shouldNotReceive('generate');
 
-    $service = new MarketSummaryService($listingRepo, $textGenerator, app(MarketRegistry::class));
+    $service = new MarketSummaryService($listingRepo, $textGenerator);
 
     expect($service->summarize('listam_apartments_sale'))->toBe('cached summary');
 });
@@ -46,7 +45,7 @@ test('summarize calls text generator and returns summary when data exists', func
     $textGenerator = Mockery::mock(TextGenerationService::class);
     $textGenerator->shouldReceive('generate')->once()->andReturn('The Apartments for Sale market is active.');
 
-    $service = new MarketSummaryService($listingRepo, $textGenerator, app(MarketRegistry::class));
+    $service = new MarketSummaryService($listingRepo, $textGenerator);
     $result = $service->summarize('listam_apartments_sale');
 
     expect($result)->toBe('The Apartments for Sale market is active.');

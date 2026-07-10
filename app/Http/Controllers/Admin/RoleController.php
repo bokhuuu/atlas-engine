@@ -52,7 +52,7 @@ class RoleController extends Controller
         $permissions = $request->validated();
         $this->roleService->syncPermissions($role, $permissions);
 
-        return redirect()->route('admin.roles.index', ['market' => $this->currentMarket()])
+        return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully.');
     }
 }

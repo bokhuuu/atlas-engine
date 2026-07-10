@@ -6,8 +6,6 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Repositories\ListingRepository;
-use App\Modules\Scraper\Support\CategoryLabels;
-use App\Services\MarketRegistry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
@@ -31,9 +29,23 @@ use Illuminate\Support\Str;
  */
 class SnapshotController extends Controller
 {
+    /**
+     * Real source_profile_name values, confirmed directly against
+     * the database, paired with a human-readable label for the
+     * frontend.
+     */
+    private const CATEGORIES = [
+        'listam_apartments_sale' => 'Apartments for Sale',
+        'listam_apartments_rent' => 'Apartments for Rent',
+        'listam_houses_sale' => 'Houses for Sale',
+        'listam_commercial_sale' => 'Commercial for Sale',
+        'listam_commercial_rent' => 'Commercial for Rent',
+        'listam_land_sale' => 'Land for Sale',
+        'listam_new_developments_sale' => 'New Development Apartments',
+    ];
+
     public function __construct(
         private readonly ListingRepository $listingRepository,
-        private readonly MarketRegistry $marketRegistry,
     ) {}
 
     /**
@@ -43,19 +55,12 @@ class SnapshotController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        $marketSlug = request()->query('market') ?? $this->marketRegistry->defaultSlug();
-        $marketConfig = $this->marketRegistry->fromSlug($marketSlug);
-        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
-
-        $allLabels = CategoryLabels::all();
-        $sources = collect($allLabels)
-            ->filter(fn ($label, $source) => collect($sourcePrefixes)
-                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_')))
-            ->map(fn ($label, $source) => $this->buildCategorySnapshot($source, $label))
-            ->values();
+        $categories = collect(self::CATEGORIES)->map(
+            fn (string $label, string $source) => $this->buildCategorySnapshot($source, $label)
+        )->values();
 
         return response()->json([
-            'categories' => $sources,
+            'categories' => $categories,
         ]);
     }
 

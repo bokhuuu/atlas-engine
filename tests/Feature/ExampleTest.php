@@ -3,5 +3,7 @@
 declare(strict_types=1);
 
 test('returns a successful response', function () {
-    $this->get('/yerevan')->assertOk();
+    $response = $this->get(route('home'));
+
+    $response->assertOk();
 });

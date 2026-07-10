@@ -10,7 +10,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useAuth } from '@/hooks/use-auth';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -38,12 +37,10 @@ interface Props {
 }
 
 export default function EditUser({ user, roles, avatarUrl }: Props) {
-    const { adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Users', href: adminUrl('/users') },
-        { title: 'Trash', href: adminUrl('/users/trashed') },
+        { title: 'Users', href: '/admin/users' },
+        { title: user.name, href: `/admin/users/${user.id}/edit` },
     ];
-
     const { isAdmin, user: currentUser } = useAuth();
     const isEditingSelf = user.id === currentUser?.id;
     const isEditingSuperAdmin = user.roles[0]?.name === 'super_admin';
@@ -67,7 +64,7 @@ export default function EditUser({ user, roles, avatarUrl }: Props) {
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        put(adminUrl(`/users/${user.id}`), {
+        put(`/admin/users/${user.id}`, {
             forceFormData: true,
         });
     }
@@ -101,7 +98,7 @@ export default function EditUser({ user, roles, avatarUrl }: Props) {
                     <div className="mb-6 flex items-center justify-between">
                         <h1 className="text-2xl font-semibold">Edit User</h1>
                         <Link
-                            href={adminUrl('/users')}
+                            href="/admin/users"
                             className="text-sm text-muted-foreground hover:text-foreground"
                         >
                             ← Back to Users

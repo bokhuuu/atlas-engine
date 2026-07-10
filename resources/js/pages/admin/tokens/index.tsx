@@ -11,7 +11,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -27,6 +26,10 @@ interface Props {
     newToken: string | null;
 }
 
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'API Tokens', href: '/admin/tokens' },
+];
+
 export default function TokensIndex({ tokens, newToken }: Props) {
     const [tokenToRevoke, setTokenToRevoke] = useState<Token | null>(null);
     const [copied, setCopied] = useState(false);
@@ -34,13 +37,8 @@ export default function TokensIndex({ tokens, newToken }: Props) {
         name: '',
     });
 
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'API Tokens', href: adminUrl('/tokens') },
-    ];
-
     function handleCreate() {
-        post(adminUrl('/tokens'), {
+        post('/admin/tokens', {
             onSuccess: () => reset(),
         });
     }
@@ -195,7 +193,7 @@ export default function TokensIndex({ tokens, newToken }: Props) {
                             onClick={() => {
                                 if (tokenToRevoke) {
                                     router.delete(
-                                        adminUrl(`/tokens/${tokenToRevoke.id}`),
+                                        `/admin/tokens/${tokenToRevoke.id}`,
                                     );
                                     setTokenToRevoke(null);
                                 }

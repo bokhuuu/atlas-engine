@@ -26,7 +26,7 @@ it('admin can create a user', function () {
         'is_active' => true,
     ]);
 
-    $response->assertRedirect(adminRoute('admin.users.index'));
+    $response->assertRedirect(route('admin.users.index'));
     $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
 });
 
@@ -41,7 +41,7 @@ it('admin can update a user', function () {
         'is_active' => true,
     ]);
 
-    $response->assertRedirect(adminRoute('admin.users.index'));
+    $response->assertRedirect(route('admin.users.index'));
     $this->assertDatabaseHas('users', ['name' => 'Updated Name']);
 });
 
@@ -51,7 +51,7 @@ it('admin can soft delete a user', function () {
 
     $response = $this->actingAs($admin)->delete(route('admin.users.delete', $user));
 
-    $response->assertRedirect(adminRoute('admin.users.index'));
+    $response->assertRedirect(route('admin.users.index'));
     $this->assertSoftDeleted('users', ['id' => $user->id]);
 });
 
@@ -62,7 +62,7 @@ it('admin can restore a trashed user', function () {
 
     $response = $this->actingAs($admin)->patch(route('admin.users.restore', $user->id));
 
-    $response->assertRedirect(adminRoute('admin.users.index'));
+    $response->assertRedirect(route('admin.users.index'));
     $this->assertNotSoftDeleted('users', ['id' => $user->id]);
 });
 
@@ -73,7 +73,7 @@ it('admin can force delete a user', function () {
 
     $response = $this->actingAs($admin)->delete(route('admin.users.force-delete', $user->id));
 
-    $response->assertRedirect(adminRoute('admin.users.index'));
+    $response->assertRedirect(route('admin.users.index'));
     $this->assertDatabaseMissing('users', ['id' => $user->id]);
 });
 

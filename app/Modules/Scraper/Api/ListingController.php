@@ -7,7 +7,6 @@ namespace App\Modules\Scraper\Api;
 use App\Http\Controllers\Controller;
 use App\Modules\AI\Services\MarketSummaryService;
 use App\Modules\Scraper\Repositories\ListingRepository;
-use App\Services\MarketRegistry;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,7 +23,6 @@ class ListingController extends Controller
      */
     public function __construct(
         private readonly ListingRepository $listingRepository,
-        private readonly MarketRegistry $marketRegistry,
     ) {}
 
     /**
@@ -32,10 +30,7 @@ class ListingController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
-        $marketConfig = $this->marketRegistry->fromSlug($market);
-        $defaultSource = ($marketConfig['source_prefixes'][0] ?? 'listam').'_apartments_sale';
-        $source = $request->query('source', $defaultSource);
+        $source = $request->query('source', 'listam_apartments_sale');
 
         $listings = $this->listingRepository->paginateBySource($source, [
             'district' => $request->query('district'),
@@ -53,10 +48,7 @@ class ListingController extends Controller
      */
     public function stats(Request $request): JsonResponse
     {
-        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
-        $marketConfig = $this->marketRegistry->fromSlug($market);
-        $defaultSource = ($marketConfig['source_prefixes'][0] ?? 'listam').'_apartments_sale';
-        $source = $request->query('source', $defaultSource);
+        $source = $request->query('source', 'listam_apartments_sale');
 
         $avgStats = $this->listingRepository->getDistrictPriceStats($source);
         $medianByDistrict = $this->listingRepository->getMedianPricePerSqmByDistrict($source);
@@ -108,13 +100,10 @@ class ListingController extends Controller
     public function yield(Request $request): JsonResponse
     {
         $pair = $request->query('pair', 'residential');
-        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
-        $marketConfig = $this->marketRegistry->fromSlug($market);
-        $prefix = $marketConfig['source_prefixes'][0] ?? 'listam';
 
         [$saleSource, $rentSource] = match ($pair) {
-            'commercial' => ["{$prefix}_commercial_sale", "{$prefix}_commercial_rent"],
-            default => ["{$prefix}_apartments_sale", "{$prefix}_apartments_rent"],
+            'commercial' => ['listam_commercial_sale', 'listam_commercial_rent'],
+            default => ['listam_apartments_sale', 'listam_apartments_rent'],
         };
 
         $minListings = (int) config('scraper.yield_min_listings', 5);
@@ -178,18 +167,6 @@ class ListingController extends Controller
             'listing_date_from',
             'listing_date_to',
         ]);
-
-        if (empty($filters['source'])) {
-            $market = $request->query('market', config('scraper.default_market', 'yerevan'));
-            $marketConfig = $this->marketRegistry->fromSlug($market);
-            $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
-
-            $filters['market_sources'] = array_values(array_filter(
-                array_keys(config('scraper.profiles', [])),
-                fn ($source) => collect($sourcePrefixes)
-                    ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'))
-            ));
-        }
 
         $listings = $this->listingRepository->filterListings($filters, 20);
 

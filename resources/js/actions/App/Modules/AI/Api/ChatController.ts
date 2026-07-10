@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 export const history = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ history.definition = {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 history.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ history.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 history.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ history.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 history.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ history.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 const historyForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const historyForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 historyForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ historyForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Modules\AI\Api\ChatController::history
-* @see app/Modules/AI/Api/ChatController.php:116
+* @see app/Modules/AI/Api/ChatController.php:115
 * @route '/api/v1/ai/history'
 */
 historyForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ history.form = historyForm
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 export const systemUsage = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ systemUsage.definition = {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 systemUsage.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ systemUsage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 systemUsage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ systemUsage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 systemUsage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ systemUsage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 const systemUsageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const systemUsageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 systemUsageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ systemUsageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Modules\AI\Api\ChatController::systemUsage
-* @see app/Modules/AI/Api/ChatController.php:198
+* @see app/Modules/AI/Api/ChatController.php:196
 * @route '/api/v1/ai/usage/system'
 */
 systemUsageForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ systemUsage.form = systemUsageForm
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 export const usage = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +178,7 @@ usage.definition = {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 usage.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ usage.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 usage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -197,7 +197,7 @@ usage.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 usage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -207,7 +207,7 @@ usage.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 const usageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -217,7 +217,7 @@ const usageForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 usageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +227,7 @@ usageForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::usage
-* @see app/Modules/AI/Api/ChatController.php:154
+* @see app/Modules/AI/Api/ChatController.php:152
 * @route '/api/v1/ai/usage'
 */
 usageForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -244,7 +244,7 @@ usage.form = usageForm
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 export const feedback = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -259,7 +259,7 @@ feedback.definition = {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 feedback.url = (options?: RouteQueryOptions) => {
@@ -268,7 +268,7 @@ feedback.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 feedback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -278,7 +278,7 @@ feedback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 feedback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -288,7 +288,7 @@ feedback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 const feedbackForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ const feedbackForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 feedbackForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -308,7 +308,7 @@ feedbackForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Modules\AI\Api\ChatController::feedback
-* @see app/Modules/AI/Api/ChatController.php:184
+* @see app/Modules/AI/Api/ChatController.php:182
 * @route '/api/v1/ai/feedback'
 */
 feedbackForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

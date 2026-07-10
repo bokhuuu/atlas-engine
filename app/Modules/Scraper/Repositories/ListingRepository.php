@@ -134,12 +134,6 @@ class ListingRepository
 
         if (! empty($filters['source'])) {
             $query->where('source_profile_name', $filters['source']);
-        } elseif (isset($filters['market_sources'])) {
-            if (empty($filters['market_sources'])) {
-                $query->whereRaw('1 = 0');
-            } else {
-                $query->whereIn('source_profile_name', $filters['market_sources']);
-            }
         }
 
         if (! empty($filters['district'])) {

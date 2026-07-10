@@ -1,7 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { formatDistanceToNow } from 'date-fns';
 import { X } from 'lucide-react';
-import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -32,6 +31,10 @@ interface Props {
     filters: { event?: string; model?: string };
 }
 
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Activity Log', href: '/admin/activity-log' },
+];
+
 function eventBadgeClass(event: string): string {
     switch (event) {
         case 'created':
@@ -46,11 +49,6 @@ function eventBadgeClass(event: string): string {
 }
 
 export default function ActivityLog({ activities, filters = {} }: Props) {
-    const { adminUrl } = useMarket();
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Activity Log', href: adminUrl('/activity-log') },
-    ];
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Activity Log" />
@@ -67,7 +65,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         value={filters.event ?? ''}
                         onChange={(e) =>
                             router.get(
-                                adminUrl('/activity-log'),
+                                '/admin/activity-log',
                                 {
                                     event: e.target.value,
                                     model: filters.model ?? '',
@@ -88,7 +86,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         value={filters.model ?? ''}
                         onChange={(e) =>
                             router.get(
-                                adminUrl('/activity-log'),
+                                '/admin/activity-log',
                                 {
                                     event: filters.event ?? '',
                                     model: e.target.value,
@@ -107,7 +105,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         <button
                             onClick={() =>
                                 router.get(
-                                    adminUrl('/activity-log'),
+                                    '/admin/activity-log',
                                     {},
                                     { replace: true, preserveState: false },
                                 )
@@ -252,9 +250,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                     <div className="mt-4 flex items-center justify-center gap-2">
                         {activities.current_page > 1 && (
                             <Link
-                                href={adminUrl(
-                                    `/activity-log?page=${activities.current_page - 1}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`,
-                                )}
+                                href={`/admin/activity-log?page=${activities.current_page - 1}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`}
                                 className="rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
                             >
                                 Previous
@@ -266,9 +262,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         ).map((page) => (
                             <Link
                                 key={page}
-                                href={adminUrl(
-                                    `/activity-log?page=${page}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`,
-                                )}
+                                href={`/admin/activity-log?page=${page}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`}
                                 className={`rounded-md border px-3 py-1.5 text-sm ${page === activities.current_page ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
                             >
                                 {page}
@@ -276,9 +270,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         ))}
                         {activities.current_page < activities.last_page && (
                             <Link
-                                href={adminUrl(
-                                    `/activity-log?page=${activities.current_page + 1}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`,
-                                )}
+                                href={`/admin/activity-log?page=${activities.current_page + 1}&event=${filters.event ?? ''}&model=${filters.model ?? ''}`}
                                 className="rounded-md border px-3 py-1.5 text-sm hover:bg-muted"
                             >
                                 Next

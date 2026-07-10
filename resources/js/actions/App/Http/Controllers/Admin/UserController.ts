@@ -2,74 +2,74 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-const indexe38f12b144573eb0f8822cbb74bdf665 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
     method: 'get',
 })
 
-indexe38f12b144573eb0f8822cbb74bdf665.definition = {
+index.definition = {
     methods: ["get","head"],
-    url: '/yerevan/admin/users',
+    url: '/admin/users',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-indexe38f12b144573eb0f8822cbb74bdf665.url = (options?: RouteQueryOptions) => {
-    return indexe38f12b144573eb0f8822cbb74bdf665.definition.url + queryParams(options)
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-indexe38f12b144573eb0f8822cbb74bdf665.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-indexe38f12b144573eb0f8822cbb74bdf665.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-const indexe38f12b144573eb0f8822cbb74bdf665Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-indexe38f12b144573eb0f8822cbb74bdf665Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexe38f12b144573eb0f8822cbb74bdf665.url(options),
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::index
 * @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-indexe38f12b144573eb0f8822cbb74bdf665Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: indexe38f12b144573eb0f8822cbb74bdf665.url({
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -78,78 +78,79 @@ indexe38f12b144573eb0f8822cbb74bdf665Form.head = (options?: RouteQueryOptions): 
     method: 'get',
 })
 
-indexe38f12b144573eb0f8822cbb74bdf665.form = indexe38f12b144573eb0f8822cbb74bdf665Form
+index.form = indexForm
+
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-const index761de714b18569c72c4d5aae740322b7 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index761de714b18569c72c4d5aae740322b7.url(options),
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
     method: 'get',
 })
 
-index761de714b18569c72c4d5aae740322b7.definition = {
+create.definition = {
     methods: ["get","head"],
-    url: '/baku/admin/users',
+    url: '/admin/users/create',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-index761de714b18569c72c4d5aae740322b7.url = (options?: RouteQueryOptions) => {
-    return index761de714b18569c72c4d5aae740322b7.definition.url + queryParams(options)
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-index761de714b18569c72c4d5aae740322b7.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index761de714b18569c72c4d5aae740322b7.url(options),
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-index761de714b18569c72c4d5aae740322b7.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index761de714b18569c72c4d5aae740322b7.url(options),
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
     method: 'head',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-const index761de714b18569c72c4d5aae740322b7Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index761de714b18569c72c4d5aae740322b7.url(options),
+const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-index761de714b18569c72c4d5aae740322b7Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index761de714b18569c72c4d5aae740322b7.url(options),
+createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/baku/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::create
+* @see app/Http/Controllers/Admin/UserController.php:44
+* @route '/admin/users/create'
 */
-index761de714b18569c72c4d5aae740322b7Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index761de714b18569c72c4d5aae740322b7.url({
+createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: create.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -158,78 +159,79 @@ index761de714b18569c72c4d5aae740322b7Form.head = (options?: RouteQueryOptions): 
     method: 'get',
 })
 
-index761de714b18569c72c4d5aae740322b7.form = index761de714b18569c72c4d5aae740322b7Form
+create.form = createForm
+
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-const index1b67194e790cc5a7d0e08a7564efbfb4 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+export const trashed = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
     method: 'get',
 })
 
-index1b67194e790cc5a7d0e08a7564efbfb4.definition = {
+trashed.definition = {
     methods: ["get","head"],
-    url: '/tbilisi/admin/users',
+    url: '/admin/users/trashed',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-index1b67194e790cc5a7d0e08a7564efbfb4.url = (options?: RouteQueryOptions) => {
-    return index1b67194e790cc5a7d0e08a7564efbfb4.definition.url + queryParams(options)
+trashed.url = (options?: RouteQueryOptions) => {
+    return trashed.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-index1b67194e790cc5a7d0e08a7564efbfb4.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+trashed.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: trashed.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-index1b67194e790cc5a7d0e08a7564efbfb4.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+trashed.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: trashed.url(options),
     method: 'head',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-const index1b67194e790cc5a7d0e08a7564efbfb4Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+const trashedForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-index1b67194e790cc5a7d0e08a7564efbfb4Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index1b67194e790cc5a7d0e08a7564efbfb4.url(options),
+trashedForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url(options),
     method: 'get',
 })
 
 /**
-* @see \App\Http\Controllers\Admin\UserController::index
-* @see app/Http/Controllers/Admin/UserController.php:28
-* @route '/tbilisi/admin/users'
+* @see \App\Http\Controllers\Admin\UserController::trashed
+* @see app/Http/Controllers/Admin/UserController.php:66
+* @route '/admin/users/trashed'
 */
-index1b67194e790cc5a7d0e08a7564efbfb4Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: index1b67194e790cc5a7d0e08a7564efbfb4.url({
+trashedForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: trashed.url({
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -238,701 +240,85 @@ index1b67194e790cc5a7d0e08a7564efbfb4Form.head = (options?: RouteQueryOptions): 
     method: 'get',
 })
 
-index1b67194e790cc5a7d0e08a7564efbfb4.form = index1b67194e790cc5a7d0e08a7564efbfb4Form
-
-export const index = {
-    '/yerevan/admin/users': indexe38f12b144573eb0f8822cbb74bdf665,
-    '/baku/admin/users': index761de714b18569c72c4d5aae740322b7,
-    '/tbilisi/admin/users': index1b67194e790cc5a7d0e08a7564efbfb4,
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-const create144385697db0cb43b4a2519ab74955e4 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create144385697db0cb43b4a2519ab74955e4.url(options),
-    method: 'get',
-})
-
-create144385697db0cb43b4a2519ab74955e4.definition = {
-    methods: ["get","head"],
-    url: '/yerevan/admin/users/create',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-create144385697db0cb43b4a2519ab74955e4.url = (options?: RouteQueryOptions) => {
-    return create144385697db0cb43b4a2519ab74955e4.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-create144385697db0cb43b4a2519ab74955e4.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create144385697db0cb43b4a2519ab74955e4.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-create144385697db0cb43b4a2519ab74955e4.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: create144385697db0cb43b4a2519ab74955e4.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-const create144385697db0cb43b4a2519ab74955e4Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create144385697db0cb43b4a2519ab74955e4.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-create144385697db0cb43b4a2519ab74955e4Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create144385697db0cb43b4a2519ab74955e4.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/yerevan/admin/users/create'
-*/
-create144385697db0cb43b4a2519ab74955e4Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create144385697db0cb43b4a2519ab74955e4.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-create144385697db0cb43b4a2519ab74955e4.form = create144385697db0cb43b4a2519ab74955e4Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-const create0b8244a7c83672186963dd86b41e7b72 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create0b8244a7c83672186963dd86b41e7b72.url(options),
-    method: 'get',
-})
-
-create0b8244a7c83672186963dd86b41e7b72.definition = {
-    methods: ["get","head"],
-    url: '/baku/admin/users/create',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-create0b8244a7c83672186963dd86b41e7b72.url = (options?: RouteQueryOptions) => {
-    return create0b8244a7c83672186963dd86b41e7b72.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-create0b8244a7c83672186963dd86b41e7b72.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create0b8244a7c83672186963dd86b41e7b72.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-create0b8244a7c83672186963dd86b41e7b72.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: create0b8244a7c83672186963dd86b41e7b72.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-const create0b8244a7c83672186963dd86b41e7b72Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create0b8244a7c83672186963dd86b41e7b72.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-create0b8244a7c83672186963dd86b41e7b72Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create0b8244a7c83672186963dd86b41e7b72.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/baku/admin/users/create'
-*/
-create0b8244a7c83672186963dd86b41e7b72Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create0b8244a7c83672186963dd86b41e7b72.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-create0b8244a7c83672186963dd86b41e7b72.form = create0b8244a7c83672186963dd86b41e7b72Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-const create745a220651b0f528f324a29b84b495c5 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create745a220651b0f528f324a29b84b495c5.url(options),
-    method: 'get',
-})
-
-create745a220651b0f528f324a29b84b495c5.definition = {
-    methods: ["get","head"],
-    url: '/tbilisi/admin/users/create',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-create745a220651b0f528f324a29b84b495c5.url = (options?: RouteQueryOptions) => {
-    return create745a220651b0f528f324a29b84b495c5.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-create745a220651b0f528f324a29b84b495c5.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: create745a220651b0f528f324a29b84b495c5.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-create745a220651b0f528f324a29b84b495c5.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: create745a220651b0f528f324a29b84b495c5.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-const create745a220651b0f528f324a29b84b495c5Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create745a220651b0f528f324a29b84b495c5.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-create745a220651b0f528f324a29b84b495c5Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create745a220651b0f528f324a29b84b495c5.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:44
-* @route '/tbilisi/admin/users/create'
-*/
-create745a220651b0f528f324a29b84b495c5Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: create745a220651b0f528f324a29b84b495c5.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-create745a220651b0f528f324a29b84b495c5.form = create745a220651b0f528f324a29b84b495c5Form
-
-export const create = {
-    '/yerevan/admin/users/create': create144385697db0cb43b4a2519ab74955e4,
-    '/baku/admin/users/create': create0b8244a7c83672186963dd86b41e7b72,
-    '/tbilisi/admin/users/create': create745a220651b0f528f324a29b84b495c5,
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-const trashed7344a5f648fe8c7e4c38cdd4ffe02740 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
-    method: 'get',
-})
-
-trashed7344a5f648fe8c7e4c38cdd4ffe02740.definition = {
-    methods: ["get","head"],
-    url: '/yerevan/admin/users/trashed',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-trashed7344a5f648fe8c7e4c38cdd4ffe02740.url = (options?: RouteQueryOptions) => {
-    return trashed7344a5f648fe8c7e4c38cdd4ffe02740.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-trashed7344a5f648fe8c7e4c38cdd4ffe02740.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-trashed7344a5f648fe8c7e4c38cdd4ffe02740.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-const trashed7344a5f648fe8c7e4c38cdd4ffe02740Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-trashed7344a5f648fe8c7e4c38cdd4ffe02740Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/yerevan/admin/users/trashed'
-*/
-trashed7344a5f648fe8c7e4c38cdd4ffe02740Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed7344a5f648fe8c7e4c38cdd4ffe02740.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-trashed7344a5f648fe8c7e4c38cdd4ffe02740.form = trashed7344a5f648fe8c7e4c38cdd4ffe02740Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-const trashed833cd300f3827c1d3824d1568ea1e083 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
-    method: 'get',
-})
-
-trashed833cd300f3827c1d3824d1568ea1e083.definition = {
-    methods: ["get","head"],
-    url: '/baku/admin/users/trashed',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-trashed833cd300f3827c1d3824d1568ea1e083.url = (options?: RouteQueryOptions) => {
-    return trashed833cd300f3827c1d3824d1568ea1e083.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-trashed833cd300f3827c1d3824d1568ea1e083.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-trashed833cd300f3827c1d3824d1568ea1e083.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-const trashed833cd300f3827c1d3824d1568ea1e083Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-trashed833cd300f3827c1d3824d1568ea1e083Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed833cd300f3827c1d3824d1568ea1e083.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/baku/admin/users/trashed'
-*/
-trashed833cd300f3827c1d3824d1568ea1e083Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed833cd300f3827c1d3824d1568ea1e083.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-trashed833cd300f3827c1d3824d1568ea1e083.form = trashed833cd300f3827c1d3824d1568ea1e083Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-const trashed4c759b2684ed20053ad60facd9939b9f = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
-    method: 'get',
-})
-
-trashed4c759b2684ed20053ad60facd9939b9f.definition = {
-    methods: ["get","head"],
-    url: '/tbilisi/admin/users/trashed',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-trashed4c759b2684ed20053ad60facd9939b9f.url = (options?: RouteQueryOptions) => {
-    return trashed4c759b2684ed20053ad60facd9939b9f.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-trashed4c759b2684ed20053ad60facd9939b9f.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-trashed4c759b2684ed20053ad60facd9939b9f.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-const trashed4c759b2684ed20053ad60facd9939b9fForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-trashed4c759b2684ed20053ad60facd9939b9fForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed4c759b2684ed20053ad60facd9939b9f.url(options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::trashed
-* @see app/Http/Controllers/Admin/UserController.php:66
-* @route '/tbilisi/admin/users/trashed'
-*/
-trashed4c759b2684ed20053ad60facd9939b9fForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: trashed4c759b2684ed20053ad60facd9939b9f.url({
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-trashed4c759b2684ed20053ad60facd9939b9f.form = trashed4c759b2684ed20053ad60facd9939b9fForm
-
-export const trashed = {
-    '/yerevan/admin/users/trashed': trashed7344a5f648fe8c7e4c38cdd4ffe02740,
-    '/baku/admin/users/trashed': trashed833cd300f3827c1d3824d1568ea1e083,
-    '/tbilisi/admin/users/trashed': trashed4c759b2684ed20053ad60facd9939b9f,
-}
+trashed.form = trashedForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-const storee38f12b144573eb0f8822cbb74bdf665 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
     method: 'post',
 })
 
-storee38f12b144573eb0f8822cbb74bdf665.definition = {
+store.definition = {
     methods: ["post"],
-    url: '/yerevan/admin/users',
+    url: '/admin/users',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-storee38f12b144573eb0f8822cbb74bdf665.url = (options?: RouteQueryOptions) => {
-    return storee38f12b144573eb0f8822cbb74bdf665.definition.url + queryParams(options)
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-storee38f12b144573eb0f8822cbb74bdf665.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-const storee38f12b144573eb0f8822cbb74bdf665Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
 * @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/yerevan/admin/users'
+* @route '/admin/users'
 */
-storee38f12b144573eb0f8822cbb74bdf665Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: storee38f12b144573eb0f8822cbb74bdf665.url(options),
+storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: store.url(options),
     method: 'post',
 })
 
-storee38f12b144573eb0f8822cbb74bdf665.form = storee38f12b144573eb0f8822cbb74bdf665Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/baku/admin/users'
-*/
-const store761de714b18569c72c4d5aae740322b7 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store761de714b18569c72c4d5aae740322b7.url(options),
-    method: 'post',
-})
-
-store761de714b18569c72c4d5aae740322b7.definition = {
-    methods: ["post"],
-    url: '/baku/admin/users',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/baku/admin/users'
-*/
-store761de714b18569c72c4d5aae740322b7.url = (options?: RouteQueryOptions) => {
-    return store761de714b18569c72c4d5aae740322b7.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/baku/admin/users'
-*/
-store761de714b18569c72c4d5aae740322b7.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store761de714b18569c72c4d5aae740322b7.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/baku/admin/users'
-*/
-const store761de714b18569c72c4d5aae740322b7Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store761de714b18569c72c4d5aae740322b7.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/baku/admin/users'
-*/
-store761de714b18569c72c4d5aae740322b7Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store761de714b18569c72c4d5aae740322b7.url(options),
-    method: 'post',
-})
-
-store761de714b18569c72c4d5aae740322b7.form = store761de714b18569c72c4d5aae740322b7Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/tbilisi/admin/users'
-*/
-const store1b67194e790cc5a7d0e08a7564efbfb4 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
-    method: 'post',
-})
-
-store1b67194e790cc5a7d0e08a7564efbfb4.definition = {
-    methods: ["post"],
-    url: '/tbilisi/admin/users',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/tbilisi/admin/users'
-*/
-store1b67194e790cc5a7d0e08a7564efbfb4.url = (options?: RouteQueryOptions) => {
-    return store1b67194e790cc5a7d0e08a7564efbfb4.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/tbilisi/admin/users'
-*/
-store1b67194e790cc5a7d0e08a7564efbfb4.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/tbilisi/admin/users'
-*/
-const store1b67194e790cc5a7d0e08a7564efbfb4Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:75
-* @route '/tbilisi/admin/users'
-*/
-store1b67194e790cc5a7d0e08a7564efbfb4Form.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: store1b67194e790cc5a7d0e08a7564efbfb4.url(options),
-    method: 'post',
-})
-
-store1b67194e790cc5a7d0e08a7564efbfb4.form = store1b67194e790cc5a7d0e08a7564efbfb4Form
-
-export const store = {
-    '/yerevan/admin/users': storee38f12b144573eb0f8822cbb74bdf665,
-    '/baku/admin/users': store761de714b18569c72c4d5aae740322b7,
-    '/tbilisi/admin/users': store1b67194e790cc5a7d0e08a7564efbfb4,
-}
+store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-const edit188d3b82b7e7e62d8fc3c04f6db57a6f = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+export const edit = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
     method: 'get',
 })
 
-edit188d3b82b7e7e62d8fc3c04f6db57a6f.definition = {
+edit.definition = {
     methods: ["get","head"],
-    url: '/yerevan/admin/users/{user}/edit',
+    url: '/admin/users/{user}/edit',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-edit188d3b82b7e7e62d8fc3c04f6db57a6f.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+edit.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -949,7 +335,7 @@ edit188d3b82b7e7e62d8fc3c04f6db57a6f.url = (args: { user: string | number } | [u
         user: args.user,
     }
 
-    return edit188d3b82b7e7e62d8fc3c04f6db57a6f.definition.url
+    return edit.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -957,50 +343,50 @@ edit188d3b82b7e7e62d8fc3c04f6db57a6f.url = (args: { user: string | number } | [u
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-edit188d3b82b7e7e62d8fc3c04f6db57a6f.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+edit.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-edit188d3b82b7e7e62d8fc3c04f6db57a6f.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+edit.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-const edit188d3b82b7e7e62d8fc3c04f6db57a6fForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+const editForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-edit188d3b82b7e7e62d8fc3c04f6db57a6fForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, options),
+editForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
 * @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/yerevan/admin/users/{user}/edit'
+* @route '/admin/users/{user}/edit'
 */
-edit188d3b82b7e7e62d8fc3c04f6db57a6fForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit188d3b82b7e7e62d8fc3c04f6db57a6f.url(args, {
+editForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1009,231 +395,29 @@ edit188d3b82b7e7e62d8fc3c04f6db57a6fForm.head = (args: { user: string | number }
     method: 'get',
 })
 
-edit188d3b82b7e7e62d8fc3c04f6db57a6f.form = edit188d3b82b7e7e62d8fc3c04f6db57a6fForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-const edit3fcb35ca732f82782a0baca46da3d11d = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
-    method: 'get',
-})
-
-edit3fcb35ca732f82782a0baca46da3d11d.definition = {
-    methods: ["get","head"],
-    url: '/baku/admin/users/{user}/edit',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-edit3fcb35ca732f82782a0baca46da3d11d.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return edit3fcb35ca732f82782a0baca46da3d11d.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-edit3fcb35ca732f82782a0baca46da3d11d.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-edit3fcb35ca732f82782a0baca46da3d11d.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-const edit3fcb35ca732f82782a0baca46da3d11dForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-edit3fcb35ca732f82782a0baca46da3d11dForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/baku/admin/users/{user}/edit'
-*/
-edit3fcb35ca732f82782a0baca46da3d11dForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit3fcb35ca732f82782a0baca46da3d11d.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-edit3fcb35ca732f82782a0baca46da3d11d.form = edit3fcb35ca732f82782a0baca46da3d11dForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-const edit03f855fe84c32682ae8091e07154400b = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit03f855fe84c32682ae8091e07154400b.url(args, options),
-    method: 'get',
-})
-
-edit03f855fe84c32682ae8091e07154400b.definition = {
-    methods: ["get","head"],
-    url: '/tbilisi/admin/users/{user}/edit',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-edit03f855fe84c32682ae8091e07154400b.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return edit03f855fe84c32682ae8091e07154400b.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-edit03f855fe84c32682ae8091e07154400b.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit03f855fe84c32682ae8091e07154400b.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-edit03f855fe84c32682ae8091e07154400b.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: edit03f855fe84c32682ae8091e07154400b.url(args, options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-const edit03f855fe84c32682ae8091e07154400bForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit03f855fe84c32682ae8091e07154400b.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-edit03f855fe84c32682ae8091e07154400bForm.get = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit03f855fe84c32682ae8091e07154400b.url(args, options),
-    method: 'get',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:94
-* @route '/tbilisi/admin/users/{user}/edit'
-*/
-edit03f855fe84c32682ae8091e07154400bForm.head = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: edit03f855fe84c32682ae8091e07154400b.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'HEAD',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'get',
-})
-
-edit03f855fe84c32682ae8091e07154400b.form = edit03f855fe84c32682ae8091e07154400bForm
-
-export const edit = {
-    '/yerevan/admin/users/{user}/edit': edit188d3b82b7e7e62d8fc3c04f6db57a6f,
-    '/baku/admin/users/{user}/edit': edit3fcb35ca732f82782a0baca46da3d11d,
-    '/tbilisi/admin/users/{user}/edit': edit03f855fe84c32682ae8091e07154400b,
-}
+edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-const update8a872ec8ba4b9b69faede74a365fffcc = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update8a872ec8ba4b9b69faede74a365fffcc.url(args, options),
+export const update = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
     method: 'put',
 })
 
-update8a872ec8ba4b9b69faede74a365fffcc.definition = {
+update.definition = {
     methods: ["put"],
-    url: '/yerevan/admin/users/{user}',
+    url: '/admin/users/{user}',
 } satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-update8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+update.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -1250,7 +434,7 @@ update8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } | 
         user: args.user,
     }
 
-    return update8a872ec8ba4b9b69faede74a365fffcc.definition.url
+    return update.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -1258,20 +442,20 @@ update8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } | 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-update8a872ec8ba4b9b69faede74a365fffcc.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update8a872ec8ba4b9b69faede74a365fffcc.url(args, options),
+update.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-const update8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+const updateForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1283,10 +467,10 @@ const update8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | numbe
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
 * @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-update8a872ec8ba4b9b69faede74a365fffccForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+updateForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1295,201 +479,29 @@ update8a872ec8ba4b9b69faede74a365fffccForm.put = (args: { user: string | number 
     method: 'post',
 })
 
-update8a872ec8ba4b9b69faede74a365fffcc.form = update8a872ec8ba4b9b69faede74a365fffccForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/baku/admin/users/{user}'
-*/
-const update1a06d795c6c6fb4eace6ff4705f7285e = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, options),
-    method: 'put',
-})
-
-update1a06d795c6c6fb4eace6ff4705f7285e.definition = {
-    methods: ["put"],
-    url: '/baku/admin/users/{user}',
-} satisfies RouteDefinition<["put"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/baku/admin/users/{user}'
-*/
-update1a06d795c6c6fb4eace6ff4705f7285e.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return update1a06d795c6c6fb4eace6ff4705f7285e.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/baku/admin/users/{user}'
-*/
-update1a06d795c6c6fb4eace6ff4705f7285e.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, options),
-    method: 'put',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/baku/admin/users/{user}'
-*/
-const update1a06d795c6c6fb4eace6ff4705f7285eForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/baku/admin/users/{user}'
-*/
-update1a06d795c6c6fb4eace6ff4705f7285eForm.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update1a06d795c6c6fb4eace6ff4705f7285e.form = update1a06d795c6c6fb4eace6ff4705f7285eForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/tbilisi/admin/users/{user}'
-*/
-const update085a59e45f1a6318e7383026589d48c9 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update085a59e45f1a6318e7383026589d48c9.url(args, options),
-    method: 'put',
-})
-
-update085a59e45f1a6318e7383026589d48c9.definition = {
-    methods: ["put"],
-    url: '/tbilisi/admin/users/{user}',
-} satisfies RouteDefinition<["put"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/tbilisi/admin/users/{user}'
-*/
-update085a59e45f1a6318e7383026589d48c9.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return update085a59e45f1a6318e7383026589d48c9.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/tbilisi/admin/users/{user}'
-*/
-update085a59e45f1a6318e7383026589d48c9.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update085a59e45f1a6318e7383026589d48c9.url(args, options),
-    method: 'put',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/tbilisi/admin/users/{user}'
-*/
-const update085a59e45f1a6318e7383026589d48c9Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update085a59e45f1a6318e7383026589d48c9.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:121
-* @route '/tbilisi/admin/users/{user}'
-*/
-update085a59e45f1a6318e7383026589d48c9Form.put = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: update085a59e45f1a6318e7383026589d48c9.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PUT',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-update085a59e45f1a6318e7383026589d48c9.form = update085a59e45f1a6318e7383026589d48c9Form
-
-export const update = {
-    '/yerevan/admin/users/{user}': update8a872ec8ba4b9b69faede74a365fffcc,
-    '/baku/admin/users/{user}': update1a06d795c6c6fb4eace6ff4705f7285e,
-    '/tbilisi/admin/users/{user}': update085a59e45f1a6318e7383026589d48c9,
-}
+update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-const destroy8a872ec8ba4b9b69faede74a365fffcc = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, options),
+export const destroy = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
     method: 'delete',
 })
 
-destroy8a872ec8ba4b9b69faede74a365fffcc.definition = {
+destroy.definition = {
     methods: ["delete"],
-    url: '/yerevan/admin/users/{user}',
+    url: '/admin/users/{user}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-destroy8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+destroy.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -1506,7 +518,7 @@ destroy8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } |
         user: args.user,
     }
 
-    return destroy8a872ec8ba4b9b69faede74a365fffcc.definition.url
+    return destroy.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -1514,20 +526,20 @@ destroy8a872ec8ba4b9b69faede74a365fffcc.url = (args: { user: string | number } |
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-destroy8a872ec8ba4b9b69faede74a365fffcc.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, options),
+destroy.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-const destroy8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+const destroyForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1539,10 +551,10 @@ const destroy8a872ec8ba4b9b69faede74a365fffccForm = (args: { user: string | numb
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
 * @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/yerevan/admin/users/{user}'
+* @route '/admin/users/{user}'
 */
-destroy8a872ec8ba4b9b69faede74a365fffccForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy8a872ec8ba4b9b69faede74a365fffcc.url(args, {
+destroyForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: destroy.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1551,201 +563,29 @@ destroy8a872ec8ba4b9b69faede74a365fffccForm.delete = (args: { user: string | num
     method: 'post',
 })
 
-destroy8a872ec8ba4b9b69faede74a365fffcc.form = destroy8a872ec8ba4b9b69faede74a365fffccForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/baku/admin/users/{user}'
-*/
-const destroy1a06d795c6c6fb4eace6ff4705f7285e = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, options),
-    method: 'delete',
-})
-
-destroy1a06d795c6c6fb4eace6ff4705f7285e.definition = {
-    methods: ["delete"],
-    url: '/baku/admin/users/{user}',
-} satisfies RouteDefinition<["delete"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/baku/admin/users/{user}'
-*/
-destroy1a06d795c6c6fb4eace6ff4705f7285e.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return destroy1a06d795c6c6fb4eace6ff4705f7285e.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/baku/admin/users/{user}'
-*/
-destroy1a06d795c6c6fb4eace6ff4705f7285e.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/baku/admin/users/{user}'
-*/
-const destroy1a06d795c6c6fb4eace6ff4705f7285eForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/baku/admin/users/{user}'
-*/
-destroy1a06d795c6c6fb4eace6ff4705f7285eForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy1a06d795c6c6fb4eace6ff4705f7285e.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy1a06d795c6c6fb4eace6ff4705f7285e.form = destroy1a06d795c6c6fb4eace6ff4705f7285eForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/tbilisi/admin/users/{user}'
-*/
-const destroy085a59e45f1a6318e7383026589d48c9 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy085a59e45f1a6318e7383026589d48c9.url(args, options),
-    method: 'delete',
-})
-
-destroy085a59e45f1a6318e7383026589d48c9.definition = {
-    methods: ["delete"],
-    url: '/tbilisi/admin/users/{user}',
-} satisfies RouteDefinition<["delete"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/tbilisi/admin/users/{user}'
-*/
-destroy085a59e45f1a6318e7383026589d48c9.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return destroy085a59e45f1a6318e7383026589d48c9.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/tbilisi/admin/users/{user}'
-*/
-destroy085a59e45f1a6318e7383026589d48c9.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: destroy085a59e45f1a6318e7383026589d48c9.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/tbilisi/admin/users/{user}'
-*/
-const destroy085a59e45f1a6318e7383026589d48c9Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy085a59e45f1a6318e7383026589d48c9.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:136
-* @route '/tbilisi/admin/users/{user}'
-*/
-destroy085a59e45f1a6318e7383026589d48c9Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: destroy085a59e45f1a6318e7383026589d48c9.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-destroy085a59e45f1a6318e7383026589d48c9.form = destroy085a59e45f1a6318e7383026589d48c9Form
-
-export const destroy = {
-    '/yerevan/admin/users/{user}': destroy8a872ec8ba4b9b69faede74a365fffcc,
-    '/baku/admin/users/{user}': destroy1a06d795c6c6fb4eace6ff4705f7285e,
-    '/tbilisi/admin/users/{user}': destroy085a59e45f1a6318e7383026589d48c9,
-}
+destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/yerevan/admin/users/{user}/restore'
+* @route '/admin/users/{user}/restore'
 */
-const restore37beb7524207d6760d5037316b1a3644 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restore37beb7524207d6760d5037316b1a3644.url(args, options),
+export const restore = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
     method: 'patch',
 })
 
-restore37beb7524207d6760d5037316b1a3644.definition = {
+restore.definition = {
     methods: ["patch"],
-    url: '/yerevan/admin/users/{user}/restore',
+    url: '/admin/users/{user}/restore',
 } satisfies RouteDefinition<["patch"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/yerevan/admin/users/{user}/restore'
+* @route '/admin/users/{user}/restore'
 */
-restore37beb7524207d6760d5037316b1a3644.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+restore.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -1762,7 +602,7 @@ restore37beb7524207d6760d5037316b1a3644.url = (args: { user: string | number } |
         user: args.user,
     }
 
-    return restore37beb7524207d6760d5037316b1a3644.definition.url
+    return restore.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -1770,20 +610,20 @@ restore37beb7524207d6760d5037316b1a3644.url = (args: { user: string | number } |
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/yerevan/admin/users/{user}/restore'
+* @route '/admin/users/{user}/restore'
 */
-restore37beb7524207d6760d5037316b1a3644.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restore37beb7524207d6760d5037316b1a3644.url(args, options),
+restore.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: restore.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/yerevan/admin/users/{user}/restore'
+* @route '/admin/users/{user}/restore'
 */
-const restore37beb7524207d6760d5037316b1a3644Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restore37beb7524207d6760d5037316b1a3644.url(args, {
+const restoreForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1795,10 +635,10 @@ const restore37beb7524207d6760d5037316b1a3644Form = (args: { user: string | numb
 /**
 * @see \App\Http\Controllers\Admin\UserController::restore
 * @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/yerevan/admin/users/{user}/restore'
+* @route '/admin/users/{user}/restore'
 */
-restore37beb7524207d6760d5037316b1a3644Form.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restore37beb7524207d6760d5037316b1a3644.url(args, {
+restoreForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: restore.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -1807,201 +647,29 @@ restore37beb7524207d6760d5037316b1a3644Form.patch = (args: { user: string | numb
     method: 'post',
 })
 
-restore37beb7524207d6760d5037316b1a3644.form = restore37beb7524207d6760d5037316b1a3644Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/baku/admin/users/{user}/restore'
-*/
-const restore8ebfa34e6fdd939e324d8cad7b03c1e6 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, options),
-    method: 'patch',
-})
-
-restore8ebfa34e6fdd939e324d8cad7b03c1e6.definition = {
-    methods: ["patch"],
-    url: '/baku/admin/users/{user}/restore',
-} satisfies RouteDefinition<["patch"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/baku/admin/users/{user}/restore'
-*/
-restore8ebfa34e6fdd939e324d8cad7b03c1e6.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return restore8ebfa34e6fdd939e324d8cad7b03c1e6.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/baku/admin/users/{user}/restore'
-*/
-restore8ebfa34e6fdd939e324d8cad7b03c1e6.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, options),
-    method: 'patch',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/baku/admin/users/{user}/restore'
-*/
-const restore8ebfa34e6fdd939e324d8cad7b03c1e6Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/baku/admin/users/{user}/restore'
-*/
-restore8ebfa34e6fdd939e324d8cad7b03c1e6Form.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restore8ebfa34e6fdd939e324d8cad7b03c1e6.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-restore8ebfa34e6fdd939e324d8cad7b03c1e6.form = restore8ebfa34e6fdd939e324d8cad7b03c1e6Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/tbilisi/admin/users/{user}/restore'
-*/
-const restorec9b9859f72d101878af7ab9491ff896f = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restorec9b9859f72d101878af7ab9491ff896f.url(args, options),
-    method: 'patch',
-})
-
-restorec9b9859f72d101878af7ab9491ff896f.definition = {
-    methods: ["patch"],
-    url: '/tbilisi/admin/users/{user}/restore',
-} satisfies RouteDefinition<["patch"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/tbilisi/admin/users/{user}/restore'
-*/
-restorec9b9859f72d101878af7ab9491ff896f.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return restorec9b9859f72d101878af7ab9491ff896f.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/tbilisi/admin/users/{user}/restore'
-*/
-restorec9b9859f72d101878af7ab9491ff896f.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
-    url: restorec9b9859f72d101878af7ab9491ff896f.url(args, options),
-    method: 'patch',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/tbilisi/admin/users/{user}/restore'
-*/
-const restorec9b9859f72d101878af7ab9491ff896fForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restorec9b9859f72d101878af7ab9491ff896f.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::restore
-* @see app/Http/Controllers/Admin/UserController.php:150
-* @route '/tbilisi/admin/users/{user}/restore'
-*/
-restorec9b9859f72d101878af7ab9491ff896fForm.patch = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: restorec9b9859f72d101878af7ab9491ff896f.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'PATCH',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-restorec9b9859f72d101878af7ab9491ff896f.form = restorec9b9859f72d101878af7ab9491ff896fForm
-
-export const restore = {
-    '/yerevan/admin/users/{user}/restore': restore37beb7524207d6760d5037316b1a3644,
-    '/baku/admin/users/{user}/restore': restore8ebfa34e6fdd939e324d8cad7b03c1e6,
-    '/tbilisi/admin/users/{user}/restore': restorec9b9859f72d101878af7ab9491ff896f,
-}
+restore.form = restoreForm
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/yerevan/admin/users/{user}/force-delete'
+* @route '/admin/users/{user}/force-delete'
 */
-const forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, options),
+export const forceDelete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
     method: 'delete',
 })
 
-forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.definition = {
+forceDelete.definition = {
     methods: ["delete"],
-    url: '/yerevan/admin/users/{user}/force-delete',
+    url: '/admin/users/{user}/force-delete',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/yerevan/admin/users/{user}/force-delete'
+* @route '/admin/users/{user}/force-delete'
 */
-forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
+forceDelete.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -2018,7 +686,7 @@ forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url = (args: { user: string | number
         user: args.user,
     }
 
-    return forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.definition.url
+    return forceDelete.definition.url
             .replace('{user}', parsedArgs.user.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -2026,20 +694,20 @@ forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url = (args: { user: string | number
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/yerevan/admin/users/{user}/force-delete'
+* @route '/admin/users/{user}/force-delete'
 */
-forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, options),
+forceDelete.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: forceDelete.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/yerevan/admin/users/{user}/force-delete'
+* @route '/admin/users/{user}/force-delete'
 */
-const forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, {
+const forceDeleteForm = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -2051,10 +719,10 @@ const forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm = (args: { user: string | 
 /**
 * @see \App\Http\Controllers\Admin\UserController::forceDelete
 * @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/yerevan/admin/users/{user}/force-delete'
+* @route '/admin/users/{user}/force-delete'
 */
-forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.url(args, {
+forceDeleteForm.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: forceDelete.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'DELETE',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -2063,179 +731,7 @@ forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm.delete = (args: { user: string |
     method: 'post',
 })
 
-forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c.form = forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69cForm
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/baku/admin/users/{user}/force-delete'
-*/
-const forceDelete2b8df150ec5dd36d05323546256cc267 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, options),
-    method: 'delete',
-})
-
-forceDelete2b8df150ec5dd36d05323546256cc267.definition = {
-    methods: ["delete"],
-    url: '/baku/admin/users/{user}/force-delete',
-} satisfies RouteDefinition<["delete"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/baku/admin/users/{user}/force-delete'
-*/
-forceDelete2b8df150ec5dd36d05323546256cc267.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return forceDelete2b8df150ec5dd36d05323546256cc267.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/baku/admin/users/{user}/force-delete'
-*/
-forceDelete2b8df150ec5dd36d05323546256cc267.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/baku/admin/users/{user}/force-delete'
-*/
-const forceDelete2b8df150ec5dd36d05323546256cc267Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/baku/admin/users/{user}/force-delete'
-*/
-forceDelete2b8df150ec5dd36d05323546256cc267Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDelete2b8df150ec5dd36d05323546256cc267.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-forceDelete2b8df150ec5dd36d05323546256cc267.form = forceDelete2b8df150ec5dd36d05323546256cc267Form
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/tbilisi/admin/users/{user}/force-delete'
-*/
-const forceDelete613769948fc141603dccdd5264a6d945 = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDelete613769948fc141603dccdd5264a6d945.url(args, options),
-    method: 'delete',
-})
-
-forceDelete613769948fc141603dccdd5264a6d945.definition = {
-    methods: ["delete"],
-    url: '/tbilisi/admin/users/{user}/force-delete',
-} satisfies RouteDefinition<["delete"]>
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/tbilisi/admin/users/{user}/force-delete'
-*/
-forceDelete613769948fc141603dccdd5264a6d945.url = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { user: args }
-    }
-
-    if (Array.isArray(args)) {
-        args = {
-            user: args[0],
-        }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-        user: args.user,
-    }
-
-    return forceDelete613769948fc141603dccdd5264a6d945.definition.url
-            .replace('{user}', parsedArgs.user.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/tbilisi/admin/users/{user}/force-delete'
-*/
-forceDelete613769948fc141603dccdd5264a6d945.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
-    url: forceDelete613769948fc141603dccdd5264a6d945.url(args, options),
-    method: 'delete',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/tbilisi/admin/users/{user}/force-delete'
-*/
-const forceDelete613769948fc141603dccdd5264a6d945Form = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDelete613769948fc141603dccdd5264a6d945.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Admin\UserController::forceDelete
-* @see app/Http/Controllers/Admin/UserController.php:164
-* @route '/tbilisi/admin/users/{user}/force-delete'
-*/
-forceDelete613769948fc141603dccdd5264a6d945Form.delete = (args: { user: string | number } | [user: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: forceDelete613769948fc141603dccdd5264a6d945.url(args, {
-        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-            _method: 'DELETE',
-            ...(options?.query ?? options?.mergeQuery ?? {}),
-        }
-    }),
-    method: 'post',
-})
-
-forceDelete613769948fc141603dccdd5264a6d945.form = forceDelete613769948fc141603dccdd5264a6d945Form
-
-export const forceDelete = {
-    '/yerevan/admin/users/{user}/force-delete': forceDeletee4ddbfed03fe2c5c28da3eaedf9eb69c,
-    '/baku/admin/users/{user}/force-delete': forceDelete2b8df150ec5dd36d05323546256cc267,
-    '/tbilisi/admin/users/{user}/force-delete': forceDelete613769948fc141603dccdd5264a6d945,
-}
+forceDelete.form = forceDeleteForm
 
 const UserController = { index, create, trashed, store, edit, update, destroy, restore, forceDelete }
 
