@@ -32,7 +32,10 @@ class ListingController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $source = $request->query('source', 'listam_apartments_sale');
+        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
+        $marketConfig = $this->marketRegistry->fromSlug($market);
+        $defaultSource = ($marketConfig['source_prefixes'][0] ?? 'listam').'_apartments_sale';
+        $source = $request->query('source', $defaultSource);
 
         $listings = $this->listingRepository->paginateBySource($source, [
             'district' => $request->query('district'),
@@ -50,7 +53,10 @@ class ListingController extends Controller
      */
     public function stats(Request $request): JsonResponse
     {
-        $source = $request->query('source', 'listam_apartments_sale');
+        $market = $request->query('market', config('scraper.default_market', 'yerevan'));
+        $marketConfig = $this->marketRegistry->fromSlug($market);
+        $defaultSource = ($marketConfig['source_prefixes'][0] ?? 'listam').'_apartments_sale';
+        $source = $request->query('source', $defaultSource);
 
         $avgStats = $this->listingRepository->getDistrictPriceStats($source);
         $medianByDistrict = $this->listingRepository->getMedianPricePerSqmByDistrict($source);
@@ -170,6 +176,18 @@ class ListingController extends Controller
             'scraped_to',
             'status',
         ]);
+
+        if (empty($filters['source'])) {
+            $market = $request->query('market', config('scraper.default_market', 'yerevan'));
+            $marketConfig = $this->marketRegistry->fromSlug($market);
+            $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+            $filters['market_sources'] = array_values(array_filter(
+                array_keys(config('scraper.profiles', [])),
+                fn ($source) => collect($sourcePrefixes)
+                    ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'))
+            ));
+        }
 
         $listings = $this->listingRepository->filterListings($filters, 20);
 

@@ -31,14 +31,34 @@ const RENT_COLOR = '#F5B53D';
 const SALE_SOFT = 'rgba(90,160,255,0.12)';
 const RENT_SOFT = 'rgba(245,181,61,0.12)';
 
-const ICONS: Record<string, string> = {
-    listam_apartments_sale: '🏙️',
-    listam_apartments_rent: '🏙️',
-    listam_houses_sale: '🏠',
-    listam_commercial_sale: '🏢',
-    listam_commercial_rent: '🏢',
-    listam_land_sale: '🌍',
-    listam_new_developments_sale: '🏗️',
+const getIcon = (source: string): string => {
+    if (
+        source.endsWith('_apartments_sale') ||
+        source.endsWith('_apartments_rent')
+    ) {
+return '🏙️';
+}
+
+    if (source.endsWith('_houses_sale')) {
+return '🏠';
+}
+
+    if (
+        source.endsWith('_commercial_sale') ||
+        source.endsWith('_commercial_rent')
+    ) {
+return '🏢';
+}
+
+    if (source.endsWith('_land_sale')) {
+return '🌍';
+}
+
+    if (source.endsWith('_new_developments_sale')) {
+return '🏗️';
+}
+
+    return '🏘️';
 };
 
 const BARS = [
@@ -102,7 +122,7 @@ function CategoryCard({
                         background: accentSoft,
                     }}
                 >
-                    {ICONS[cat.source] ?? '🏠'}
+                    {getIcon(cat.source)}
                 </span>
                 <span
                     style={{
@@ -254,14 +274,16 @@ export default function MarketSnapshot() {
         : 0;
 
     const gridCats =
-        data?.categories.filter((c) => c.source !== 'listam_land_sale') ?? [];
-    const landCat = data?.categories.find(
-        (c) => c.source === 'listam_land_sale',
+        data?.categories.filter((c) => !c.source.endsWith('_land_sale')) ?? [];
+    const landCat = data?.categories.find((c) =>
+        c.source.endsWith('_land_sale'),
     );
 
     return (
         <>
-            <Head title="Yerevan Real Estate Market Snapshot" />
+            <Head
+                title={`${currentMarket ? currentMarket.charAt(0).toUpperCase() + currentMarket.slice(1) : 'Real Estate'} Market Snapshot`}
+            />
 
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
@@ -373,7 +395,7 @@ export default function MarketSnapshot() {
                                 paddingLeft: '11px',
                             }}
                         >
-                            YEREVAN
+                            {(currentMarket ?? 'MARKET').toUpperCase()}
                         </span>
                     </div>
                     <div
@@ -521,7 +543,11 @@ export default function MarketSnapshot() {
                                 maxWidth: '820px',
                             }}
                         >
-                            Yerevan real estate, priced in real time.
+                            {currentMarket
+                                ? currentMarket.charAt(0).toUpperCase() +
+                                  currentMarket.slice(1)
+                                : 'Real estate'}
+                            , priced in real time.
                         </h1>
 
                         <p
@@ -717,7 +743,8 @@ export default function MarketSnapshot() {
                                                     landCat.total_listings *
                                                         progress,
                                                 ).toLocaleString()}{' '}
-                                                listings across Yerevan
+                                                listings across{' '}
+                                                {currentMarket ?? 'the market'}{' '}
                                                 districts
                                             </span>
                                         </div>
@@ -852,11 +879,14 @@ export default function MarketSnapshot() {
                         color: '#6b7280',
                     }}
                 >
+                    <span>Powered by live scraped data</span>
                     <span>
-                        Powered by live{' '}
-                        <span style={{ color: '#9aa1ad' }}>list.am</span> data
+                        © 2026 Atlas ·{' '}
+                        {currentMarket
+                            ? currentMarket.charAt(0).toUpperCase() +
+                              currentMarket.slice(1)
+                            : 'Atlas'}
                     </span>
-                    <span>© 2026 Atlas · Yerevan</span>
                 </div>
             </div>
         </>

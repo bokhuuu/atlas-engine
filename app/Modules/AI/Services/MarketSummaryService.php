@@ -6,6 +6,7 @@ namespace App\Modules\AI\Services;
 
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Support\CategoryLabels;
+use App\Services\MarketRegistry;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -20,6 +21,7 @@ class MarketSummaryService
     public function __construct(
         private readonly ListingRepository $listingRepository,
         private readonly TextGenerationService $textGenerator,
+        private readonly MarketRegistry $marketRegistry,
     ) {}
 
     /**
@@ -39,6 +41,14 @@ class MarketSummaryService
     private function generate(string $source): ?string
     {
         $label = CategoryLabels::forSource($source);
+
+        $marketSlug = $this->marketRegistry->fromSourcePrefix(
+            explode('_', $source)[0]
+        ) ?? 'yerevan';
+        $marketConfig = $this->marketRegistry->fromSlug($marketSlug);
+        $marketLabel = $marketConfig['label'] ?? ucfirst($marketSlug);
+        $primarySource = $marketConfig['source_prefixes'][0] ?? 'listam';
+
         $totalListings = $this->listingRepository->countDistinctBySource($source);
 
         if ($totalListings === 0) {
@@ -68,9 +78,9 @@ class MarketSummaryService
         })->implode("\n");
 
         $prompt = <<<PROMPT
-You are a real estate market analyst writing a concise market briefing for the Yerevan market.
+You are a real estate market analyst writing a concise market briefing for the {$marketLabel} market.
 
-Write exactly one paragraph (4-6 sentences) summarizing the current state of the {$label} market in Yerevan, Armenia based on the following scraped data from list.am:
+Write exactly one paragraph (4-6 sentences) summarizing the current state of the {$label} market in {$marketLabel} based on the following scraped data from {$primarySource}:
 
 - Total listings: {$totalListings}
 - Citywide median price/sqm: {$medianStr}/sqm

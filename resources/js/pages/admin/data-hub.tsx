@@ -91,6 +91,7 @@ function validate(f: FilterState): ValidationErrors {
 }
 
 export default function DataHub({ categories, districts }: Props) {
+    const { adminUrl, market } = useMarket();
     const [filters, setFilters] = useState<FilterState>(
         makeDefault(categories),
     );
@@ -167,10 +168,13 @@ export default function DataHub({ categories, districts }: Props) {
 
             try {
                 const qs = buildQueryString(f);
-                const response = await fetch(`/api/v1/listings/filter?${qs}`, {
-                    headers: { Accept: 'application/json' },
-                    signal: abortRef.current.signal,
-                });
+                const response = await fetch(
+                    `/api/v1/listings/filter?${qs}&market=${market}`,
+                    {
+                        headers: { Accept: 'application/json' },
+                        signal: abortRef.current.signal,
+                    },
+                );
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -196,7 +200,7 @@ export default function DataHub({ categories, districts }: Props) {
                 setLoading(false);
             }
         },
-        [buildQueryString],
+        [buildQueryString, market],
     );
 
     useEffect(() => {
@@ -251,8 +255,6 @@ export default function DataHub({ categories, districts }: Props) {
         setActiveFilterCount(count);
     }, [filters]);
 
-    const { adminUrl } = useMarket();
-
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Data Hub', href: adminUrl('/data-hub') },
     ];
@@ -279,7 +281,10 @@ export default function DataHub({ categories, districts }: Props) {
 
         const qs = buildQueryString(filters);
 
-        window.open(`/api/v1/exports/filtered?${qs}`, '_blank');
+        window.open(
+            `/api/v1/exports/filtered?${qs}&market=${market}`,
+            '_blank',
+        );
     };
 
     const chipCls = (active: boolean, hasError = false) =>

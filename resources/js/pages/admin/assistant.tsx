@@ -42,7 +42,7 @@ const SUGGESTED_QUERIES = [
     {
         icon: BarChart2,
         label: 'Median price/sqm for apartments for sale',
-        query: 'What is the median price per sqm for apartments for sale across Yerevan?',
+        query: 'What is the median price per sqm for apartments for sale?',
     },
     {
         icon: Search,
@@ -51,13 +51,13 @@ const SUGGESTED_QUERIES = [
     },
     {
         icon: Zap,
-        label: 'Compare Kentron vs Arabkir apartments',
-        query: 'Compare the median price per sqm for apartments for sale in Kentron versus Arabkir.',
+        label: 'Most vs least expensive districts',
+        query: 'Compare the median price per sqm for apartments for sale across districts.',
     },
     {
         icon: List,
-        label: 'Find 3-bed apartments in Kentron under $200k',
-        query: 'Find 3 bedroom apartments for sale in Kentron under $200,000.',
+        label: 'Find 3-bed apartments under $200k',
+        query: 'Find 3 bedroom apartments for sale under $200,000.',
     },
     {
         icon: FileSpreadsheet,
@@ -84,6 +84,8 @@ export default function Assistant() {
     const [usage, setUsage] = useState<UsageStats | null>(null);
     const [usageFlash, setUsageFlash] = useState(false);
 
+    const { market, adminUrl } = useMarket();
+
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -92,7 +94,7 @@ export default function Assistant() {
     }, [messages]);
 
     useEffect(() => {
-        fetch('/api/v1/ai/history', {
+        fetch(`/api/v1/ai/history?market=${market}`, {
             headers: {
                 Accept: 'application/json',
                 'X-XSRF-TOKEN': decodeURIComponent(
@@ -119,7 +121,7 @@ export default function Assistant() {
                 }
             })
             .catch(() => {});
-    }, []);
+    }, [market]);
 
     useEffect(() => {
         fetch('/api/v1/ai/feedback', {
@@ -143,7 +145,6 @@ export default function Assistant() {
         fetchUsage();
     }, []);
 
-    const { market, adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'AI Assistant', href: adminUrl('/assistant') },
     ];
@@ -545,8 +546,7 @@ export default function Assistant() {
                             </button>
                         </div>
                         <p className="mt-2 px-1 text-xs text-muted-foreground">
-                            Answers are based on live scraped data from list.am
-                            only.
+                            Answers are based on live scraped data only.
                         </p>
                     </div>
                 </div>
