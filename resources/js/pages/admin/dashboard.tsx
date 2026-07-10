@@ -22,6 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson, postJson } from '@/lib/scraper-api';
 
@@ -49,10 +50,6 @@ interface TrendPoint {
     encountered: number;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/admin/dashboard' },
-];
-
 const POLL_INTERVAL_MS = 5000;
 
 export default function Dashboard({
@@ -70,6 +67,11 @@ export default function Dashboard({
     );
     const [trendData, setTrendData] = useState<TrendPoint[]>([]);
     const [trendLoading, setTrendLoading] = useState(false);
+
+    const { market, adminUrl } = useMarket();
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Dashboard', href: adminUrl('/dashboard') },
+    ];
 
     const fetchTrend = useCallback(async (source: string) => {
         if (!source) {
@@ -100,7 +102,7 @@ export default function Dashboard({
     const refreshStatuses = useCallback(async () => {
         try {
             const data = await fetchJson<{ statuses: ScraperRunStatus[] }>(
-                '/api/v1/scrape/status-all',
+                `/api/v1/scrape/status-all?market=${market}`,
             );
             const map: Record<string, ScraperRunStatus> = {};
 
@@ -112,7 +114,7 @@ export default function Dashboard({
         } catch {
             // Polling failure is non-fatal - next interval tries again.
         }
-    }, []);
+    }, [market]);
 
     useEffect(() => {
         refreshStatuses();
@@ -151,7 +153,9 @@ export default function Dashboard({
         setIsBusy(true);
 
         try {
-            await postJson('/api/v1/scrape/start-all', { pages: sharedPages });
+            await postJson(`/api/v1/scrape/start-all?market=${market}`, {
+                pages: sharedPages,
+            });
             await refreshStatuses();
         } finally {
             setIsBusy(false);
@@ -211,7 +215,7 @@ export default function Dashboard({
                     </button>
 
                     <a
-                        href="/api/v1/exports"
+                        href={`/api/v1/exports?market=${market}`}
                         className="rounded border px-3 py-1 text-sm"
                     >
                         Download All
