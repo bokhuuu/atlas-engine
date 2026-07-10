@@ -72,7 +72,6 @@ export default function Dashboard({
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: adminUrl('/dashboard') },
     ];
-    const [anyRunning, setAnyRunning] = useState(false);
 
     const fetchTrend = useCallback(async (source: string) => {
         if (!source) {
@@ -127,11 +126,11 @@ export default function Dashboard({
                 return;
             }
 
-            const isCurrentlyRunning = Object.values(statusesRef.current).some(
+            const anyRunning = Object.values(statusesRef.current).some(
                 (s) => s.state === 'running',
             );
 
-            if (isCurrentlyRunning) {
+            if (anyRunning) {
                 setAnyRunning(true);
                 refreshStatuses();
             } else {
