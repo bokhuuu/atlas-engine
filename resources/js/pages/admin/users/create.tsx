@@ -43,7 +43,7 @@ export default function CreateUser({ roles }: Props) {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post('/admin/users', { forceFormData: true });
+        post(adminUrl('/users'), { forceFormData: true });
     }
 
     function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {

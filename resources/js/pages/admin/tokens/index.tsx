@@ -40,7 +40,7 @@ export default function TokensIndex({ tokens, newToken }: Props) {
     ];
 
     function handleCreate() {
-        post('/admin/tokens', {
+        post(adminUrl('/tokens'), {
             onSuccess: () => reset(),
         });
     }
@@ -195,7 +195,7 @@ export default function TokensIndex({ tokens, newToken }: Props) {
                             onClick={() => {
                                 if (tokenToRevoke) {
                                     router.delete(
-                                        `/admin/tokens/${tokenToRevoke.id}`,
+                                        adminUrl(`/tokens/${tokenToRevoke.id}`),
                                     );
                                     setTokenToRevoke(null);
                                 }

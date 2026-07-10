@@ -82,7 +82,7 @@ export default function RolesIndex({ allRoles, allPermissions }: Props) {
     const handleSave = (role: Role) => {
         setSaving(role.id);
         router.put(
-            `/admin/roles/${role.id}`,
+            adminUrl(`/roles/${role.id}`),
             { permissions: rolePermissions[role.id] ?? [] },
             { onFinish: () => setSaving(null) },
         );

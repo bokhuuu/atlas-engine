@@ -70,7 +70,7 @@ export default function SettingsIndex({ settings, groups, fileUrls }: Props) {
             }
         });
 
-        router.post('/admin/settings', formData, {
+        router.post(adminUrl('/settings'), formData, {
             forceFormData: true,
         });
     }

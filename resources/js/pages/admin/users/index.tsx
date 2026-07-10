@@ -70,7 +70,7 @@ export default function UsersIndex({ users, filters }: Props) {
 
         searchRef.current = setTimeout(() => {
             router.get(
-                '/admin/users',
+                adminUrl('/users'),
                 {
                     search: value,
                     role: filters.role ?? '',
@@ -87,7 +87,7 @@ export default function UsersIndex({ users, filters }: Props) {
 
     function handleFilter(key: string, value: string) {
         router.get(
-            '/admin/users',
+            adminUrl('/users'),
             {
                 search: filters.search ?? '',
                 role: key === 'role' ? value : (filters.role ?? ''),
@@ -170,7 +170,7 @@ export default function UsersIndex({ users, filters }: Props) {
                             onClick={() => {
                                 setSearchValue('');
                                 router.get(
-                                    '/admin/users',
+                                    adminUrl('/users'),
                                     {},
                                     { preserveState: true, replace: true },
                                 );
@@ -365,7 +365,7 @@ export default function UsersIndex({ users, filters }: Props) {
                                 onClick={() => {
                                     if (userToDelete) {
                                         router.delete(
-                                            `/admin/users/${userToDelete}`,
+                                            adminUrl(`/users/${userToDelete}`),
                                         );
                                         setUserToDelete(null);
                                     }

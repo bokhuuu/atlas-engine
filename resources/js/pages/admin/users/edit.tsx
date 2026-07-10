@@ -67,7 +67,7 @@ export default function EditUser({ user, roles, avatarUrl }: Props) {
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        put(`/admin/users/${user.id}`, {
+        put(adminUrl(`/users/${user.id}`), {
             forceFormData: true,
         });
     }

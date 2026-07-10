@@ -47,7 +47,7 @@ export default function SystemHealthIndex({ snapshot }: Props) {
     function clearCache(type: 'config' | 'route' | 'view') {
         setProcessing(type);
         router.post(
-            '/admin/system-health/cache',
+            adminUrl('/system-health/cache'),
             { type },
             { onFinish: () => setProcessing(null) },
         );
@@ -56,7 +56,7 @@ export default function SystemHealthIndex({ snapshot }: Props) {
     function toggleMaintenance() {
         setProcessing('maintenance');
         router.post(
-            '/admin/system-health/maintenance',
+            adminUrl('/system-health/maintenance'),
             {},
             { onFinish: () => setProcessing(null) },
         );

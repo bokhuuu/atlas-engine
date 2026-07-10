@@ -67,7 +67,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         value={filters.event ?? ''}
                         onChange={(e) =>
                             router.get(
-                                '/admin/activity-log',
+                                adminUrl('/activity-log'),
                                 {
                                     event: e.target.value,
                                     model: filters.model ?? '',
@@ -88,7 +88,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         value={filters.model ?? ''}
                         onChange={(e) =>
                             router.get(
-                                '/admin/activity-log',
+                                adminUrl('/activity-log'),
                                 {
                                     event: filters.event ?? '',
                                     model: e.target.value,
@@ -107,7 +107,7 @@ export default function ActivityLog({ activities, filters = {} }: Props) {
                         <button
                             onClick={() =>
                                 router.get(
-                                    '/admin/activity-log',
+                                    adminUrl('/activity-log'),
                                     {},
                                     { replace: true, preserveState: false },
                                 )

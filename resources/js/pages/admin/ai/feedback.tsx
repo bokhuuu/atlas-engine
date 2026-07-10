@@ -27,19 +27,19 @@ interface Props {
 }
 
 export default function AiFeedback({ feedback, summary, filters }: Props) {
+    const { adminUrl } = useMarket();
     const positivePercent =
         summary.total > 0
             ? Math.round((summary.positive / summary.total) * 100)
             : 0;
 
     const setVoteFilter = (vote: string | null) => {
-        router.get('/admin/ai-feedback', vote ? { vote } : {}, {
+        router.get(adminUrl('/ai-feedback'), vote ? { vote } : {}, {
             preserveState: true,
             replace: true,
         });
     };
 
-    const { adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'AI Feedback', href: adminUrl('/ai-feedback') },
     ];

@@ -124,7 +124,9 @@ export default function TrashedUsers({ users }: Props) {
                                                         <button
                                                             onClick={() =>
                                                                 router.patch(
-                                                                    `/admin/users/${user.id}/restore`,
+                                                                    adminUrl(
+                                                                        `/users/${user.id}/restore`,
+                                                                    ),
                                                                 )
                                                             }
                                                             className="text-green-500 hover:text-green-700"
@@ -225,7 +227,9 @@ export default function TrashedUsers({ users }: Props) {
                                 onClick={() => {
                                     if (userToForceDelete) {
                                         router.delete(
-                                            `/admin/users/${userToForceDelete}/force-delete`,
+                                            adminUrl(
+                                                `/users/${userToForceDelete}/force-delete`,
+                                            ),
                                         );
                                         setUserToForceDelete(null);
                                     }
