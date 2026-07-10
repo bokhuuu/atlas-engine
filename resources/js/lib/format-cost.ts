@@ -12,5 +12,5 @@ export function formatCost(usd: number): string {
         return `${(usd * 100).toFixed(2)}`;
     }
 
-    return `$${usd.toFixed(2)}`;
+    return `${usd.toFixed(2)}`;
 }
