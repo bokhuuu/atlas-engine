@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Api;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Exports\ExportManager;
+use App\Services\MarketRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -19,7 +20,25 @@ class ExportController extends Controller
 {
     public function __construct(
         private readonly ExportManager $exportManager,
+        private readonly MarketRegistry $marketRegistry,
     ) {}
+
+    /**
+     * Returns source profile keys for the market specified in the request query param.
+     * Falls back to the default market if not provided.
+     */
+    private function currentMarketSources(): array
+    {
+        $market = request()->query('market', $this->marketRegistry->defaultSlug());
+        $marketConfig = $this->marketRegistry->fromSlug($market);
+        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+        return array_values(array_filter(
+            array_keys(config('scraper.profiles', [])),
+            fn ($source) => collect($sourcePrefixes)
+                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'))
+        ));
+    }
 
     /**
      * Generate and download a fresh export for one category, built
@@ -49,7 +68,7 @@ class ExportController extends Controller
      */
     public function downloadAll(): BinaryFileResponse|Response
     {
-        $sources = array_keys(config('scraper.profiles', []));
+        $sources = $this->currentMarketSources();
         $allPaths = [];
 
         foreach ($sources as $source) {

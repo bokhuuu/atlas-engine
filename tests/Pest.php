@@ -50,9 +50,26 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Returns a market-prefixed admin route for use in feature tests.
+ * Defaults to the default market so tests don't hardcode 'yerevan'.
+ */
+function adminRoute(string $name, array $params = [], ?string $market = null): string
 {
-    // ..
+    $market ??= config('scraper.default_market');
+
+    return route($name, array_merge(['market' => $market], $params));
+}
+
+/**
+ * Returns a market-prefixed URL for use in feature tests.
+ * Defaults to the default market.
+ */
+function marketUrl(string $path, ?string $market = null): string
+{
+    $market ??= config('scraper.default_market');
+
+    return '/'.$market.$path;
 }
 
 function makeListing(array $overrides = []): ListingDTO

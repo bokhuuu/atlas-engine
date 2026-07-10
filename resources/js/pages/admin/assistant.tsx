@@ -16,14 +16,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { formatCost } from '@/lib/format-cost';
 import { postJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'AI Assistant', href: '/admin/assistant' },
-];
 
 interface Message {
     id: string;
@@ -45,7 +42,7 @@ const SUGGESTED_QUERIES = [
     {
         icon: BarChart2,
         label: 'Median price/sqm for apartments for sale',
-        query: 'What is the median price per sqm for apartments for sale across Yerevan?',
+        query: 'What is the median price per sqm for apartments for sale?',
     },
     {
         icon: Search,
@@ -54,13 +51,13 @@ const SUGGESTED_QUERIES = [
     },
     {
         icon: Zap,
-        label: 'Compare Kentron vs Arabkir apartments',
-        query: 'Compare the median price per sqm for apartments for sale in Kentron versus Arabkir.',
+        label: 'Most vs least expensive districts',
+        query: 'Compare the median price per sqm for apartments for sale across districts.',
     },
     {
         icon: List,
-        label: 'Find 3-bed apartments in Kentron under $200k',
-        query: 'Find 3 bedroom apartments for sale in Kentron under $200,000.',
+        label: 'Find 3-bed apartments under $200k',
+        query: 'Find 3 bedroom apartments for sale under $200,000.',
     },
     {
         icon: FileSpreadsheet,
@@ -87,6 +84,8 @@ export default function Assistant() {
     const [usage, setUsage] = useState<UsageStats | null>(null);
     const [usageFlash, setUsageFlash] = useState(false);
 
+    const { market, adminUrl } = useMarket();
+
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -95,7 +94,7 @@ export default function Assistant() {
     }, [messages]);
 
     useEffect(() => {
-        fetch('/api/v1/ai/history', {
+        fetch(`/api/v1/ai/history?market=${market}`, {
             headers: {
                 Accept: 'application/json',
                 'X-XSRF-TOKEN': decodeURIComponent(
@@ -122,7 +121,7 @@ export default function Assistant() {
                 }
             })
             .catch(() => {});
-    }, []);
+    }, [market]);
 
     useEffect(() => {
         fetch('/api/v1/ai/feedback', {
@@ -145,6 +144,10 @@ export default function Assistant() {
     useEffect(() => {
         fetchUsage();
     }, []);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'AI Assistant', href: adminUrl('/assistant') },
+    ];
 
     const sendMessage = async (text: string) => {
         if (!text.trim() || streaming) {
@@ -180,7 +183,7 @@ export default function Assistant() {
                         document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
                     ),
                 },
-                body: JSON.stringify({ message: text.trim() }),
+                body: JSON.stringify({ message: text.trim(), market }),
             });
 
             const data = await response.json();
@@ -375,7 +378,9 @@ export default function Assistant() {
                         )}
                         {!usage && (
                             <span className="ml-auto text-xs text-muted-foreground">
-                                Yerevan market data
+                                {market.charAt(0).toUpperCase() +
+                                    market.slice(1)}{' '}
+                                market data
                             </span>
                         )}
                     </div>
@@ -528,7 +533,7 @@ export default function Assistant() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Ask anything about the Yerevan market…"
+                                placeholder={`Ask anything about the ${market.charAt(0).toUpperCase() + market.slice(1)} market…`}
                                 disabled={streaming}
                                 className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-50"
                             />
@@ -541,8 +546,7 @@ export default function Assistant() {
                             </button>
                         </div>
                         <p className="mt-2 px-1 text-xs text-muted-foreground">
-                            Answers are based on live scraped data from list.am
-                            only.
+                            Answers are based on live scraped data only.
                         </p>
                     </div>
                 </div>

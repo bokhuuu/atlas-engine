@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clear
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
-* @route '/admin/system-health/cache'
+* @route '/yerevan/admin/system-health/cache'
 */
 export const clear = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clear.url(options),
@@ -11,13 +11,13 @@ export const clear = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 clear.definition = {
     methods: ["post"],
-    url: '/admin/system-health/cache',
+    url: '/yerevan/admin/system-health/cache',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clear
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
-* @route '/admin/system-health/cache'
+* @route '/yerevan/admin/system-health/cache'
 */
 clear.url = (options?: RouteQueryOptions) => {
     return clear.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ clear.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clear
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
-* @route '/admin/system-health/cache'
+* @route '/yerevan/admin/system-health/cache'
 */
 clear.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clear.url(options),
@@ -36,7 +36,7 @@ clear.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clear
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
-* @route '/admin/system-health/cache'
+* @route '/yerevan/admin/system-health/cache'
 */
 const clearForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clear.url(options),
@@ -46,7 +46,119 @@ const clearForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 /**
 * @see \App\Http\Controllers\Admin\SystemHealthController::clear
 * @see app/Http/Controllers/Admin/SystemHealthController.php:48
-* @route '/admin/system-health/cache'
+* @route '/yerevan/admin/system-health/cache'
+*/
+clearForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clear.url(options),
+    method: 'post',
+})
+
+clear.form = clearForm
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+export const clear = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clear.url(options),
+    method: 'post',
+})
+
+clear.definition = {
+    methods: ["post"],
+    url: '/baku/admin/system-health/cache',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+clear.url = (options?: RouteQueryOptions) => {
+    return clear.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+clear.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clear.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+const clearForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clear.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/baku/admin/system-health/cache'
+*/
+clearForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clear.url(options),
+    method: 'post',
+})
+
+clear.form = clearForm
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+export const clear = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clear.url(options),
+    method: 'post',
+})
+
+clear.definition = {
+    methods: ["post"],
+    url: '/tbilisi/admin/system-health/cache',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+clear.url = (options?: RouteQueryOptions) => {
+    return clear.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+clear.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: clear.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
+*/
+const clearForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clear.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\SystemHealthController::clear
+* @see app/Http/Controllers/Admin/SystemHealthController.php:48
+* @route '/tbilisi/admin/system-health/cache'
 */
 clearForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: clear.url(options),

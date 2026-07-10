@@ -9,6 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { fetchJson } from '@/lib/scraper-api';
 import type { BreadcrumbItem } from '@/types';
@@ -38,10 +39,6 @@ interface YieldRow {
 interface Props {
     categories: Category[];
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Market Stats', href: '/admin/market-stats' },
-];
 
 /**
  * Background intensity scales with median price/sqm rank among the
@@ -75,6 +72,8 @@ function intensityClass(rank: number, total: number): string {
 }
 
 export default function MarketStats({ categories }: Props) {
+    const { adminUrl, market } = useMarket();
+
     const [selectedSource, setSelectedSource] = useState(
         categories[0]?.source ?? '',
     );
@@ -143,14 +142,15 @@ export default function MarketStats({ categories }: Props) {
     }, [selectedSource]);
 
     useEffect(() => {
-        const pair =
-            selectedSource === 'listam_commercial_sale' ? 'commercial' : null;
+        const pair = selectedSource.endsWith('_commercial_sale')
+            ? 'commercial'
+            : null;
 
         let active = true;
 
         if (pair) {
             fetchJson<{ pair: string; rows: YieldRow[] }>(
-                `/api/v1/listings/yield?pair=${pair}`,
+                `/api/v1/listings/yield?pair=${pair}&market=${market}`,
             )
                 .then((res) => {
                     if (active) {
@@ -173,11 +173,15 @@ export default function MarketStats({ categories }: Props) {
         return () => {
             active = false;
         };
-    }, [selectedSource]);
+    }, [selectedSource, market]);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Dashboard', href: adminUrl('/dashboard') },
+    ];
 
     const error = errorSource === selectedSource;
     const rows = result?.source === selectedSource ? result.rows : null;
-    const showYield = selectedSource === 'listam_commercial_sale';
+    const showYield = selectedSource.endsWith('_commercial_sale');
 
     const sortedRows = rows
         ? [...rows].sort(
@@ -185,6 +189,25 @@ export default function MarketStats({ categories }: Props) {
                   (b.median_price_per_sqm ?? 0) - (a.median_price_per_sqm ?? 0),
           )
         : [];
+
+    if (categories.length === 0) {
+        return (
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <Head title="Market Stats" />
+                <div className="flex flex-col items-center justify-center py-32 text-center">
+                    <p className="mb-2 text-2xl">📊</p>
+                    <h2 className="mb-1 text-lg font-semibold">
+                        No data available yet
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                        Data collection for the{' '}
+                        {market.charAt(0).toUpperCase() + market.slice(1)}{' '}
+                        market has not started yet.
+                    </p>
+                </div>
+            </AppLayout>
+        );
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

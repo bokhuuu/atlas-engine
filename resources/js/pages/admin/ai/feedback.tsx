@@ -1,11 +1,8 @@
 import { Head, router } from '@inertiajs/react';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'AI Feedback', href: '/admin/ai-feedback' },
-];
 
 interface FeedbackItem {
     id: number;
@@ -30,17 +27,22 @@ interface Props {
 }
 
 export default function AiFeedback({ feedback, summary, filters }: Props) {
+    const { adminUrl } = useMarket();
     const positivePercent =
         summary.total > 0
             ? Math.round((summary.positive / summary.total) * 100)
             : 0;
 
     const setVoteFilter = (vote: string | null) => {
-        router.get('/admin/ai-feedback', vote ? { vote } : {}, {
+        router.get(adminUrl('/ai-feedback'), vote ? { vote } : {}, {
             preserveState: true,
             replace: true,
         });
     };
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'AI Feedback', href: adminUrl('/ai-feedback') },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

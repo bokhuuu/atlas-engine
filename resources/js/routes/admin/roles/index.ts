@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/admin/roles',
+    url: '/yerevan/admin/roles',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -56,7 +56,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -66,7 +66,169 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\Admin\RoleController::index
 * @see app/Http/Controllers/Admin/RoleController.php:29
-* @route '/admin/roles'
+* @route '/yerevan/admin/roles'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/baku/admin/roles',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/baku/admin/roles'
+*/
+indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index.form = indexForm
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+index.definition = {
+    methods: ["get","head"],
+    url: '/tbilisi/admin/roles',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+index.url = (options?: RouteQueryOptions) => {
+    return index.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
+*/
+indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::index
+* @see app/Http/Controllers/Admin/RoleController.php:29
+* @route '/tbilisi/admin/roles'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -83,7 +245,7 @@ index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\RoleController::update
 * @see app/Http/Controllers/Admin/RoleController.php:46
-* @route '/admin/roles/{role}'
+* @route '/yerevan/admin/roles/{role}'
 */
 export const update = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -92,13 +254,13 @@ export const update = (args: { role: number | { id: number } } | [role: number |
 
 update.definition = {
     methods: ["put"],
-    url: '/admin/roles/{role}',
+    url: '/yerevan/admin/roles/{role}',
 } satisfies RouteDefinition<["put"]>
 
 /**
 * @see \App\Http\Controllers\Admin\RoleController::update
 * @see app/Http/Controllers/Admin/RoleController.php:46
-* @route '/admin/roles/{role}'
+* @route '/yerevan/admin/roles/{role}'
 */
 update.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -131,7 +293,7 @@ update.url = (args: { role: number | { id: number } } | [role: number | { id: nu
 /**
 * @see \App\Http\Controllers\Admin\RoleController::update
 * @see app/Http/Controllers/Admin/RoleController.php:46
-* @route '/admin/roles/{role}'
+* @route '/yerevan/admin/roles/{role}'
 */
 update.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -141,7 +303,7 @@ update.put = (args: { role: number | { id: number } } | [role: number | { id: nu
 /**
 * @see \App\Http\Controllers\Admin\RoleController::update
 * @see app/Http/Controllers/Admin/RoleController.php:46
-* @route '/admin/roles/{role}'
+* @route '/yerevan/admin/roles/{role}'
 */
 const updateForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -156,7 +318,187 @@ const updateForm = (args: { role: number | { id: number } } | [role: number | { 
 /**
 * @see \App\Http\Controllers\Admin\RoleController::update
 * @see app/Http/Controllers/Admin/RoleController.php:46
-* @route '/admin/roles/{role}'
+* @route '/yerevan/admin/roles/{role}'
+*/
+updateForm.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/baku/admin/roles/{role}'
+*/
+export const update = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+update.definition = {
+    methods: ["put"],
+    url: '/baku/admin/roles/{role}',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/baku/admin/roles/{role}'
+*/
+update.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { role: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { role: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            role: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        role: typeof args.role === 'object'
+        ? args.role.id
+        : args.role,
+    }
+
+    return update.definition.url
+            .replace('{role}', parsedArgs.role.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/baku/admin/roles/{role}'
+*/
+update.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/baku/admin/roles/{role}'
+*/
+const updateForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/baku/admin/roles/{role}'
+*/
+updateForm.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+update.form = updateForm
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/tbilisi/admin/roles/{role}'
+*/
+export const update = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+update.definition = {
+    methods: ["put"],
+    url: '/tbilisi/admin/roles/{role}',
+} satisfies RouteDefinition<["put"]>
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/tbilisi/admin/roles/{role}'
+*/
+update.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { role: args }
+    }
+
+    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+        args = { role: args.id }
+    }
+
+    if (Array.isArray(args)) {
+        args = {
+            role: args[0],
+        }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+        role: typeof args.role === 'object'
+        ? args.role.id
+        : args.role,
+    }
+
+    return update.definition.url
+            .replace('{role}', parsedArgs.role.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/tbilisi/admin/roles/{role}'
+*/
+update.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: update.url(args, options),
+    method: 'put',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/tbilisi/admin/roles/{role}'
+*/
+const updateForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: update.url(args, {
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'PUT',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\RoleController::update
+* @see app/Http/Controllers/Admin/RoleController.php:46
+* @route '/tbilisi/admin/roles/{role}'
 */
 updateForm.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {

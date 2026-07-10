@@ -52,7 +52,7 @@ it('redirects to settings index after update', function () {
         'settings' => ['site_name' => 'Test'],
     ]);
 
-    $response->assertRedirect(route('admin.settings.index'));
+    $response->assertRedirect(adminRoute('admin.settings.index'));
 });
 
 it('cache is invalidated after settings update', function () {

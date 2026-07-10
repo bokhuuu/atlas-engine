@@ -13,6 +13,7 @@ use App\Modules\Scraper\Requests\CancelScrapeRequest;
 use App\Modules\Scraper\Requests\StartAllScrapeRequest;
 use App\Modules\Scraper\Requests\StartScrapeRequest;
 use App\Modules\Scraper\ScraperManager;
+use App\Services\MarketRegistry;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -27,7 +28,25 @@ class ScrapeController extends Controller
         private readonly ScraperManager $manager,
         private readonly ScraperRunRepository $runRepository,
         private readonly ListingRepository $listingRepository,
+        private readonly MarketRegistry $marketRegistry,
     ) {}
+
+    /**
+     * Returns source profile keys for the market specified in the request query param.
+     * Falls back to the default market if not provided.
+     */
+    private function currentMarketSources(): array
+    {
+        $market = request()->query('market', $this->marketRegistry->defaultSlug());
+        $marketConfig = $this->marketRegistry->fromSlug($market);
+        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+        return array_values(array_filter(
+            array_keys(config('scraper.profiles', [])),
+            fn ($source) => collect($sourcePrefixes)
+                ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'))
+        ));
+    }
 
     /**
      * Start a new scrape run for the given source.
@@ -64,7 +83,7 @@ class ScrapeController extends Controller
     public function startAll(StartAllScrapeRequest $request): JsonResponse
     {
         $pages = $request->validated('pages');
-        $sources = array_keys(config('scraper.profiles', []));
+        $sources = $this->currentMarketSources();
         $started = [];
         $skipped = [];
 
@@ -134,7 +153,7 @@ class ScrapeController extends Controller
      */
     public function statusAll(): JsonResponse
     {
-        $sources = array_keys(config('scraper.profiles', []));
+        $sources = $this->currentMarketSources();
 
         $statuses = array_map(function (string $source): array {
             $run = $this->runRepository->findLatest($source);
@@ -228,7 +247,7 @@ class ScrapeController extends Controller
      */
     public function cancelAll(): JsonResponse
     {
-        $sources = array_keys(config('scraper.profiles', []));
+        $sources = $this->currentMarketSources();
         $cancelled = [];
 
         foreach ($sources as $source) {
