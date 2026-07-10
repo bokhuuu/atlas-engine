@@ -254,7 +254,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ marketStats.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 marketStats.url = (options?: RouteQueryOptions) => {
@@ -278,7 +278,7 @@ marketStats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -288,7 +288,7 @@ marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -298,7 +298,7 @@ marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -308,7 +308,7 @@ const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -318,7 +318,7 @@ marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -335,7 +335,7 @@ marketStats.form = marketStatsForm
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -350,7 +350,7 @@ marketStats.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 marketStats.url = (options?: RouteQueryOptions) => {
@@ -359,7 +359,7 @@ marketStats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -369,7 +369,7 @@ marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -379,7 +379,7 @@ marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -389,7 +389,7 @@ const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -399,7 +399,7 @@ marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -416,7 +416,7 @@ marketStats.form = marketStatsForm
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -431,7 +431,7 @@ marketStats.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 marketStats.url = (options?: RouteQueryOptions) => {
@@ -440,7 +440,7 @@ marketStats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -450,7 +450,7 @@ marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -460,7 +460,7 @@ marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -470,7 +470,7 @@ const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -480,7 +480,7 @@ marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::marketStats
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

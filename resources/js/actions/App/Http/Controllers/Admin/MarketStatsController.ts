@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 const indexbd8200b901f6ef8a6b061e6b305105de = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ indexbd8200b901f6ef8a6b061e6b305105de.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 indexbd8200b901f6ef8a6b061e6b305105de.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ indexbd8200b901f6ef8a6b061e6b305105de.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 indexbd8200b901f6ef8a6b061e6b305105de.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ indexbd8200b901f6ef8a6b061e6b305105de.get = (options?: RouteQueryOptions): Route
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 indexbd8200b901f6ef8a6b061e6b305105de.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ indexbd8200b901f6ef8a6b061e6b305105de.head = (options?: RouteQueryOptions): Rout
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 const indexbd8200b901f6ef8a6b061e6b305105deForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexbd8200b901f6ef8a6b061e6b305105deForm = (options?: RouteQueryOptions):
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 indexbd8200b901f6ef8a6b061e6b305105deForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexbd8200b901f6ef8a6b061e6b305105deForm.get = (options?: RouteQueryOptions): R
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/yerevan/admin/market-stats'
 */
 indexbd8200b901f6ef8a6b061e6b305105deForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -81,7 +81,7 @@ indexbd8200b901f6ef8a6b061e6b305105deForm.head = (options?: RouteQueryOptions): 
 indexbd8200b901f6ef8a6b061e6b305105de.form = indexbd8200b901f6ef8a6b061e6b305105deForm
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 const index1380a9386fbf4e4fd19428fd771686fc = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -96,7 +96,7 @@ index1380a9386fbf4e4fd19428fd771686fc.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 index1380a9386fbf4e4fd19428fd771686fc.url = (options?: RouteQueryOptions) => {
@@ -105,7 +105,7 @@ index1380a9386fbf4e4fd19428fd771686fc.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 index1380a9386fbf4e4fd19428fd771686fc.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -115,7 +115,7 @@ index1380a9386fbf4e4fd19428fd771686fc.get = (options?: RouteQueryOptions): Route
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 index1380a9386fbf4e4fd19428fd771686fc.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -125,7 +125,7 @@ index1380a9386fbf4e4fd19428fd771686fc.head = (options?: RouteQueryOptions): Rout
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 const index1380a9386fbf4e4fd19428fd771686fcForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -135,7 +135,7 @@ const index1380a9386fbf4e4fd19428fd771686fcForm = (options?: RouteQueryOptions):
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 index1380a9386fbf4e4fd19428fd771686fcForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -145,7 +145,7 @@ index1380a9386fbf4e4fd19428fd771686fcForm.get = (options?: RouteQueryOptions): R
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/baku/admin/market-stats'
 */
 index1380a9386fbf4e4fd19428fd771686fcForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -161,7 +161,7 @@ index1380a9386fbf4e4fd19428fd771686fcForm.head = (options?: RouteQueryOptions): 
 index1380a9386fbf4e4fd19428fd771686fc.form = index1380a9386fbf4e4fd19428fd771686fcForm
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 const index8cfe190c194e015bd74aa8ddb8f4edb7 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -176,7 +176,7 @@ index8cfe190c194e015bd74aa8ddb8f4edb7.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 index8cfe190c194e015bd74aa8ddb8f4edb7.url = (options?: RouteQueryOptions) => {
@@ -185,7 +185,7 @@ index8cfe190c194e015bd74aa8ddb8f4edb7.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 index8cfe190c194e015bd74aa8ddb8f4edb7.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -195,7 +195,7 @@ index8cfe190c194e015bd74aa8ddb8f4edb7.get = (options?: RouteQueryOptions): Route
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 index8cfe190c194e015bd74aa8ddb8f4edb7.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -205,7 +205,7 @@ index8cfe190c194e015bd74aa8ddb8f4edb7.head = (options?: RouteQueryOptions): Rout
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 const index8cfe190c194e015bd74aa8ddb8f4edb7Form = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -215,7 +215,7 @@ const index8cfe190c194e015bd74aa8ddb8f4edb7Form = (options?: RouteQueryOptions):
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 index8cfe190c194e015bd74aa8ddb8f4edb7Form.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -225,7 +225,7 @@ index8cfe190c194e015bd74aa8ddb8f4edb7Form.get = (options?: RouteQueryOptions): R
 
 /**
 * @see \App\Http\Controllers\Admin\MarketStatsController::index
-* @see app/Http/Controllers/Admin/MarketStatsController.php:21
+* @see app/Http/Controllers/Admin/MarketStatsController.php:24
 * @route '/tbilisi/admin/market-stats'
 */
 index8cfe190c194e015bd74aa8ddb8f4edb7Form.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
