@@ -103,51 +103,55 @@ export default function DataHub({ categories, districts }: Props) {
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
 
-    const buildQueryString = useCallback((f: FilterState) => {
-        const params = new URLSearchParams();
+    const buildQueryString = useCallback(
+        (f: FilterState) => {
+            const params = new URLSearchParams();
+            params.set('market', market);
 
-        if (f.source) {
-            params.set('source', f.source);
-        }
+            if (f.source) {
+                params.set('source', f.source);
+            }
 
-        if (f.district) {
-            params.set('district', f.district);
-        }
+            if (f.district) {
+                params.set('district', f.district);
+            }
 
-        f.status.forEach((s) => params.append('status[]', s));
+            f.status.forEach((s) => params.append('status[]', s));
 
-        if (f.min_price) {
-            params.set('min_price', f.min_price);
-        }
+            if (f.min_price) {
+                params.set('min_price', f.min_price);
+            }
 
-        if (f.max_price) {
-            params.set('max_price', f.max_price);
-        }
+            if (f.max_price) {
+                params.set('max_price', f.max_price);
+            }
 
-        if (f.min_area) {
-            params.set('min_area', f.min_area);
-        }
+            if (f.min_area) {
+                params.set('min_area', f.min_area);
+            }
 
-        if (f.max_area) {
-            params.set('max_area', f.max_area);
-        }
+            if (f.max_area) {
+                params.set('max_area', f.max_area);
+            }
 
-        f.rooms.forEach((r) => params.append('rooms[]', r));
+            f.rooms.forEach((r) => params.append('rooms[]', r));
 
-        if (f.agency) {
-            params.set('agency', f.agency);
-        }
+            if (f.agency) {
+                params.set('agency', f.agency);
+            }
 
-        if (f.scraped_from) {
-            params.set('scraped_from', f.scraped_from);
-        }
+            if (f.scraped_from) {
+                params.set('scraped_from', f.scraped_from);
+            }
 
-        if (f.scraped_to) {
-            params.set('scraped_to', f.scraped_to);
-        }
+            if (f.scraped_to) {
+                params.set('scraped_to', f.scraped_to);
+            }
 
-        return params.toString();
-    }, []);
+            return params.toString();
+        },
+        [market],
+    );
 
     const fetchCount = useCallback(
         async (f: FilterState) => {
