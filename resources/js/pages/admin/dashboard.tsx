@@ -67,7 +67,7 @@ export default function Dashboard({
     );
     const [trendData, setTrendData] = useState<TrendPoint[]>([]);
     const [trendLoading, setTrendLoading] = useState(false);
-
+    const [anyRunning, setAnyRunning] = useState(false);
     const { market, adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: adminUrl('/dashboard') },
