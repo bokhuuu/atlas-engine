@@ -83,7 +83,7 @@ class ExcelExporter implements ExporterInterface
                 $staleDays = (int) config('scraper.stale_listing_days', 90);
 
                 return array_map(function ($row) use ($staleDays) {
-                    $start = $row['scraped_at'] ?? null;
+                    $start = $row['listing_date'] ?? $row['scraped_at'] ?? null;
                     $end = $row['disappeared_at'] ?? now()->toDateTimeString();
 
                     $row['days_on_market'] = $start

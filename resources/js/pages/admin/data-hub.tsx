@@ -589,8 +589,8 @@ export default function DataHub({ categories, districts }: Props) {
 
                         {/* Collected by Atlas - secondary date filter */}
                         <div className="sm:col-span-2">
-                            <label className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                                <span className="h-2 w-2 rounded-full bg-blue-400" />
+                            <label className="mb-2 flex items-center gap-1.5 text-xs font-medium tracking-wide text-sky-500 uppercase dark:text-sky-400">
+                                <span className="h-2 w-2 rounded-full bg-sky-400" />
                                 Collected by Atlas
                             </label>
                             <div className="grid grid-cols-2 gap-2">
