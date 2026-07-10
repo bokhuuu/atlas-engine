@@ -25,3 +25,23 @@ test('data hub page loads successfully', function () {
                 ->has('districts')
         );
 });
+
+test('data hub only shows yerevan categories', function () {
+    $response = $this->get('/yerevan/admin/data-hub');
+
+    $categories = $response->original->getData()['page']['props']['categories'];
+
+    expect(collect($categories)->every(
+        fn ($cat) => str_starts_with($cat['source'], 'listam_')
+    ))->toBeTrue();
+});
+
+test('data hub shows empty categories for baku with no profiles', function () {
+    $this->get('/baku/admin/data-hub')
+        ->assertOk()
+        ->assertInertia(
+            fn ($page) => $page
+                ->component('admin/data-hub')
+                ->where('categories', [])
+        );
+});

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/yerevan/admin/data-hub'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/baku/admin/data-hub'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +178,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -197,7 +197,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -207,7 +207,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -217,7 +217,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +227,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DataHubController::index
-* @see app/Http/Controllers/Admin/DataHubController.php:20
+* @see app/Http/Controllers/Admin/DataHubController.php:23
 * @route '/tbilisi/admin/data-hub'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
