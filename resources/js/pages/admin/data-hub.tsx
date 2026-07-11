@@ -374,7 +374,7 @@ export default function DataHub({ categories, districts }: Props) {
             <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden lg:flex-row">
                 {/* Filters panel */}
                 <div className="flex-1 overflow-y-auto border-b border-border p-6 lg:border-r lg:border-b-0">
-                    <div className="mb-6 flex items-center justify-between">
+                    <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-2.5">
                             <Database className="h-5 w-5 text-primary" />
                             <h1 className="text-lg font-semibold">Data Hub</h1>
