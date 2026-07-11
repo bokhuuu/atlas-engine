@@ -1,7 +1,7 @@
 {
     "info": {
-        "name": "Atlas API - Yerevan Real Estate Intelligence",
-        "description": "REST API for Atlas, built for the Yerevan real estate market intelligence platform.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Create an API token at /admin/tokens\n3. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}",
+        "name": "Atlas API - Multi-Market Real Estate Intelligence",
+        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
@@ -18,7 +18,12 @@
         {
             "key": "source",
             "value": "listam_apartments_sale",
-            "description": "Scraper source key. Options: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale"
+            "description": "Scraper source key for Yerevan. Options: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale"
+        },
+        {
+            "key": "market",
+            "value": "yerevan",
+            "description": "Active market. Options: yerevan, baku, tbilisi"
         }
     ],
     "item": [
@@ -51,11 +56,18 @@
                     "request": {
                         "method": "GET",
                         "url": {
-                            "raw": "{{base_url}}/api/v1/public/snapshot",
+                            "raw": "{{base_url}}/api/v1/public/snapshot?market={{market}}",
                             "host": ["{{base_url}}"],
-                            "path": ["api", "v1", "public", "snapshot"]
+                            "path": ["api", "v1", "public", "snapshot"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
                         },
-                        "description": "Returns headline stats for all 7 property categories: median price/sqm, total listing count and deal type (sale/rent). Powers the public Screen 0 page. No auth required."
+                        "description": "Returns headline stats for all 7 property categories: median price/sqm, total listing count and deal type (sale/rent). Powers the public Screen 0 page. No auth required.\n\nPass ?market=yerevan (or baku/tbilisi) to scope to a specific market."
                     },
                     "response": [
                         {
@@ -114,7 +126,7 @@
                     ]
                 },
                 {
-                    "name": "Start scrape - all categories",
+                    "name": "Start scrape - all categories (market-scoped)",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -139,9 +151,16 @@
                             "raw": "{\n  \"pages\": 1\n}"
                         },
                         "url": {
-                            "raw": "{{base_url}}/api/v1/scrape/start-all",
+                            "raw": "{{base_url}}/api/v1/scrape/start-all?market={{market}}",
                             "host": ["{{base_url}}"],
-                            "path": ["api", "v1", "scrape", "start-all"]
+                            "path": ["api", "v1", "scrape", "start-all"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
                         },
                         "description": "Start a scrape run for all 7 categories at once using the same page count. Categories already running are skipped automatically."
                     },
@@ -193,7 +212,7 @@
                     ]
                 },
                 {
-                    "name": "Status - all categories",
+                    "name": "Status - all categories (market-scoped)",
                     "request": {
                         "method": "GET",
                         "header": [
@@ -209,9 +228,16 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/v1/scrape/status-all",
+                            "raw": "{{base_url}}/api/v1/scrape/status-all?market={{market}}",
                             "host": ["{{base_url}}"],
-                            "path": ["api", "v1", "scrape", "status-all"]
+                            "path": ["api", "v1", "scrape", "status-all"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
                         },
                         "description": "Get the latest run state for all 7 categories at once, including live total listing counts. Used by the dashboard polling loop."
                     },
@@ -312,9 +338,16 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/v1/scrape/cancel-all",
+                            "raw": "{{base_url}}/api/v1/scrape/cancel-all?market={{market}}",
                             "host": ["{{base_url}}"],
-                            "path": ["api", "v1", "scrape", "cancel-all"]
+                            "path": ["api", "v1", "scrape", "cancel-all"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
                         },
                         "description": "Cancel all currently running scrape runs."
                     }
@@ -482,7 +515,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/v1/listings/yield?pair=commercial",
+                            "raw": "{{base_url}}/api/v1/listings/yield?pair=commercial&market={{market}}",
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "yield"],
                             "query": [
@@ -490,6 +523,11 @@
                                     "key": "pair",
                                     "value": "commercial",
                                     "description": "Property pair to calculate yield for. Options: residential (apartments sale vs rent), commercial (commercial sale vs rent)"
+                                },
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
                                 }
                             ]
                         },
@@ -521,7 +559,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/v1/listings/filter?source={{source}}&status[]=active&status[]=stale&status[]=disappeared",
+                            "raw": "{{base_url}}/api/v1/listings/filter?source={{source}}&status[]=active&status[]=stale&status[]=disappeared&market={{market}}",
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "filter"],
                             "query": [
@@ -596,10 +634,15 @@
                                     "value": "",
                                     "description": "To date YYYY-MM-DD (optional)",
                                     "disabled": true
+                                },
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
                                 }
                             ]
                         },
-                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited — safe for UI polling. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to."
+                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited \u2014 safe for UI polling. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to."
                     },
                     "response": [
                         {
@@ -636,7 +679,7 @@
                     }
                 },
                 {
-                    "name": "Download - all categories (zip)",
+                    "name": "Download all exports - ZIP (market-scoped)",
                     "request": {
                         "method": "GET",
                         "header": [
@@ -647,9 +690,16 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/api/v1/exports",
+                            "raw": "{{base_url}}/api/v1/exports?market={{market}}",
                             "host": ["{{base_url}}"],
-                            "path": ["api", "v1", "exports"]
+                            "path": ["api", "v1", "exports"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
                         },
                         "description": "Download all 7 category exports in a single zip file. Returns a .zip containing one .xlsx per category."
                     }
@@ -797,7 +847,7 @@
                     }
                 },
                 {
-                    "name": "Chat",
+                    "name": "AI chat (market-aware)",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -819,14 +869,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"message\": \"What is the median price per sqm for apartments for sale?\"\n}"
+                            "raw": "{\n  \"message\": \"What is the median price per sqm for apartments for sale?\",\n  \"market\": \"{{market}}\"\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/ai/chat",
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "ai", "chat"]
                         },
-                        "description": "Send a message to the AI assistant. The agent has 8 callable tools and answers only from real scraped data. Conversation history is persisted per user in Redis."
+                        "description": "Send a message to the AI assistant. The market field scopes responses to the selected market. History is stored per user per market."
                     },
                     "response": [
                         {
@@ -842,6 +892,37 @@
                             "body": "{\n  \"error\": \"Rate limit exceeded. Please wait before sending another message.\"\n}"
                         }
                     ]
+                },
+                {
+                    "name": "AI chat history (market-scoped)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/ai/history?market={{market}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "ai", "history"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                }
+                            ]
+                        },
+                        "description": "Fetch the last 20 AI chat messages for the current user, scoped to the selected market. History is stored separately per user per market."
+                    }
                 },
                 {
                     "name": "AI usage - current user",
