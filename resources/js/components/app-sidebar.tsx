@@ -315,7 +315,7 @@ export function AppSidebar() {
             </SidebarContent>
             <SidebarFooter>
                 {systemUsage && ['admin', 'super_admin'].includes(role) && (
-                    <div className="mx-3 mb-2 rounded-lg border border-sidebar-border/50 bg-sidebar-accent/30 px-3 py-2">
+                    <div className="mx-3 mb-1 rounded-lg border border-sidebar-border/50 bg-sidebar-accent/30 px-3 py-2">
                         <p className="mb-1.5 text-[10px] font-semibold tracking-widest text-muted-foreground/60 uppercase">
                             AI Usage
                         </p>
@@ -344,7 +344,7 @@ export function AppSidebar() {
                     </div>
                 )}
 
-                <div className="mx-3 mt-4 mb-2">
+                <div className="mx-3 mt-1 mb-1">
                     <a
                         href={`/${market}`}
                         target="_blank"
