@@ -161,6 +161,14 @@ export default function DataHub({ categories, districts }: Props) {
                 params.set('scraped_to', f.scraped_to);
             }
 
+            if (f.listing_date_from) {
+                params.set('listing_date_from', f.listing_date_from);
+            }
+
+            if (f.listing_date_to) {
+                params.set('listing_date_to', f.listing_date_to);
+            }
+
             return params.toString();
         },
         [market],
