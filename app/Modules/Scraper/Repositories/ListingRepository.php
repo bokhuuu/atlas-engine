@@ -198,12 +198,12 @@ class ListingRepository
                     if ($status === 'active') {
                         $q->$method(function ($sub) use ($staleDays) {
                             $sub->whereNull('disappeared_at')
-                                ->where('scraped_at', '>', now()->subDays($staleDays));
+                                ->whereRaw('COALESCE(listing_date, scraped_at) > ?', [now()->subDays($staleDays)]);
                         });
                     } elseif ($status === 'stale') {
                         $q->$method(function ($sub) use ($staleDays) {
                             $sub->whereNull('disappeared_at')
-                                ->where('scraped_at', '<=', now()->subDays($staleDays));
+                                ->whereRaw('COALESCE(listing_date, scraped_at) <= ?', [now()->subDays($staleDays)]);
                         });
                     } elseif ($status === 'disappeared') {
                         $q->$method(function ($sub) {
@@ -437,7 +437,7 @@ class ListingRepository
             DB::table('listings')
                 ->where('source_profile_name', $source)
                 ->whereNull('disappeared_at')
-                ->where('scraped_at', '<=', now()->subDays($staleDays))
+                ->whereRaw('COALESCE(listing_date, scraped_at) <= ?', [now()->subDays($staleDays)])
                 ->whereNotNull('district')
                 ->select('district', DB::raw('COUNT(*) as stale_count'))
                 ->groupBy('district')

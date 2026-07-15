@@ -15,7 +15,9 @@ beforeEach(function () {
 
 test('listings endpoint returns paginated results', function () {
     $repository = new ListingRepository;
-    $repository->updateOrCreate(makeListing(['source_profile_name' => 'listam_apartments_sale'])->toArray());
+    $repository->updateOrCreate(makeListing(
+        ['source_profile_name' => 'listam_apartments_sale']
+    )->toArray());
 
     $this->getJson('/api/v1/listings?source=listam_apartments_sale')
         ->assertOk()
@@ -24,7 +26,9 @@ test('listings endpoint returns paginated results', function () {
 
 test('listings endpoint filters by district', function () {
     $repository = new ListingRepository;
-    $repository->updateOrCreate(makeListing(['source_profile_name' => 'listam_apartments_sale', 'district' => 'Kentron'])->toArray());
+    $repository->updateOrCreate(makeListing(
+        ['source_profile_name' => 'listam_apartments_sale', 'district' => 'Kentron']
+    )->toArray());
     $repository->updateOrCreate(makeListing([
         'source_profile_name' => 'listam_apartments_sale',
         'external_id' => 'test-456',
@@ -82,6 +86,7 @@ test('filter endpoint filters by status active', function () {
         'source_profile_name' => 'listam_apartments_sale',
         'disappeared_at' => null,
         'scraped_at' => now()->toDateTimeString(),
+        'listing_date' => now()->toDateTimeString(),
     ])->toArray());
     $repository->updateOrCreate(makeListing([
         'source_profile_name' => 'listam_apartments_sale',
