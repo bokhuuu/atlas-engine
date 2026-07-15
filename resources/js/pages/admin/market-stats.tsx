@@ -1,7 +1,15 @@
 import { Head } from '@inertiajs/react';
 import { TrendingDown, XCircle, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
-
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+} from 'recharts';
 import {
     Select,
     SelectContent,
@@ -34,6 +42,17 @@ interface YieldRow {
     sale_median: number | null;
     rent_median: number | null;
     yield_pct: number | null;
+}
+
+interface VolumePoint {
+    period: string;
+    sale?: number;
+    rent?: number;
+}
+
+interface PricePoint {
+    period: string;
+    median_price_per_sqm: number;
 }
 
 interface Props {
@@ -85,6 +104,41 @@ export default function MarketStats({ categories }: Props) {
     const [summary, setSummary] = useState<string | null>(null);
     const [summarySource, setSummarySource] = useState<string>('');
     const [yieldData, setYieldData] = useState<Record<string, YieldRow>>({});
+    const [groupBy, setGroupBy] = useState<'month' | 'quarter'>('month');
+    const [volumeData, setVolumeData] = useState<VolumePoint[]>([]);
+    const [priceData, setPriceData] = useState<PricePoint[]>([]);
+    const [trendsLoading, setTrendsLoading] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        Promise.all([
+            fetchJson<{ series: VolumePoint[] }>(
+                `/api/v1/trends/volume?market=${market}&groupBy=${groupBy}`,
+            ),
+            fetchJson<{ series: PricePoint[] }>(
+                `/api/v1/trends/price?market=${market}&groupBy=${groupBy}`,
+            ),
+        ])
+            .then(([volumeRes, priceRes]) => {
+                if (active) {
+                    setVolumeData(volumeRes.series);
+                    setPriceData(priceRes.series);
+                    setTrendsLoading(false);
+                }
+            })
+            .catch(() => {
+                if (active) {
+                    setVolumeData([]);
+                    setPriceData([]);
+                    setTrendsLoading(false);
+                }
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [market, groupBy]);
 
     useEffect(() => {
         if (!selectedSource) {
@@ -372,6 +426,240 @@ export default function MarketStats({ categories }: Props) {
                         )}
                     </div>
                 )}
+
+                {/* Market Trends */}
+                <div className="mt-10">
+                    <div className="mb-4 flex items-center justify-between">
+                        <div>
+                            <h2 className="text-lg font-semibold">
+                                Market Trends
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                listing activity and pricing over time.
+                            </p>
+                        </div>
+                        <div className="flex gap-2">
+                            {(['month', 'quarter'] as const).map((g) => (
+                                <button
+                                    key={g}
+                                    onClick={() => setGroupBy(g)}
+                                    className={`rounded px-3 py-1 text-sm ${
+                                        groupBy === g
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'border text-muted-foreground'
+                                    }`}
+                                >
+                                    {g.charAt(0).toUpperCase() + g.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {trendsLoading ? (
+                        <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                            Loading…
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                            {/* Sale Volume */}
+                            <div className="rounded-lg border p-4">
+                                <h3 className="mb-3 text-sm font-medium">
+                                    Sale Listing Volume
+                                </h3>
+                                {volumeData.length === 0 ? (
+                                    <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                                        Not enough data yet.
+                                    </div>
+                                ) : (
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height={220}
+                                    >
+                                        <LineChart
+                                            data={volumeData}
+                                            margin={{
+                                                top: 4,
+                                                right: 16,
+                                                left: 0,
+                                                bottom: 4,
+                                            }}
+                                        >
+                                            <CartesianGrid
+                                                strokeDasharray="3 3"
+                                                stroke="#333333"
+                                            />
+                                            <XAxis
+                                                dataKey="period"
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                            />
+                                            <YAxis
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                                width={40}
+                                            />
+                                            <Tooltip
+                                                contentStyle={{
+                                                    background: '#1a1a1a',
+                                                    border: '1px solid #333333',
+                                                    borderRadius: '6px',
+                                                    fontSize: '12px',
+                                                    color: '#ffffff',
+                                                }}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey="sale"
+                                                name="Sale Listings"
+                                                stroke="hsl(var(--primary))"
+                                                strokeWidth={2}
+                                                dot={{ r: 3 }}
+                                                activeDot={{ r: 5 }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                )}
+                            </div>
+
+                            {/* Rent Volume */}
+                            <div className="rounded-lg border p-4">
+                                <h3 className="mb-3 text-sm font-medium">
+                                    Rent Listing Volume
+                                </h3>
+                                {volumeData.length === 0 ? (
+                                    <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                                        Not enough data yet.
+                                    </div>
+                                ) : (
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height={220}
+                                    >
+                                        <LineChart
+                                            data={volumeData}
+                                            margin={{
+                                                top: 4,
+                                                right: 16,
+                                                left: 0,
+                                                bottom: 4,
+                                            }}
+                                        >
+                                            <CartesianGrid
+                                                strokeDasharray="3 3"
+                                                stroke="#333333"
+                                            />
+                                            <XAxis
+                                                dataKey="period"
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                            />
+                                            <YAxis
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                                width={40}
+                                            />
+                                            <Tooltip
+                                                contentStyle={{
+                                                    background: '#1a1a1a',
+                                                    border: '1px solid #333333',
+                                                    borderRadius: '6px',
+                                                    fontSize: '12px',
+                                                    color: '#ffffff',
+                                                }}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey="rent"
+                                                name="Rent Listings"
+                                                stroke="hsl(var(--muted-foreground))"
+                                                strokeWidth={2}
+                                                dot={{ r: 3 }}
+                                                activeDot={{ r: 5 }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                )}
+                            </div>
+
+                            {/* Median Price/sqm */}
+                            <div className="rounded-lg border p-4 lg:col-span-2">
+                                <h3 className="mb-3 text-sm font-medium">
+                                    Median Sale Price/sqm (USD)
+                                </h3>
+                                {priceData.length === 0 ? (
+                                    <div className="flex h-48 items-center justify-center text-sm text-muted-foreground">
+                                        Not enough data yet.
+                                    </div>
+                                ) : (
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height={220}
+                                    >
+                                        <LineChart
+                                            data={priceData}
+                                            margin={{
+                                                top: 4,
+                                                right: 16,
+                                                left: 8,
+                                                bottom: 4,
+                                            }}
+                                        >
+                                            <CartesianGrid
+                                                strokeDasharray="3 3"
+                                                stroke="#333333"
+                                            />
+                                            <XAxis
+                                                dataKey="period"
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                            />
+                                            <YAxis
+                                                tick={{
+                                                    fontSize: 11,
+                                                    fill: '#888888',
+                                                }}
+                                                width={55}
+                                                tickFormatter={(v) => `$${v}`}
+                                            />
+                                            <Tooltip
+                                                contentStyle={{
+                                                    background: '#1a1a1a',
+                                                    border: '1px solid #333333',
+                                                    borderRadius: '6px',
+                                                    fontSize: '12px',
+                                                    color: '#ffffff',
+                                                }}
+                                                formatter={(v) => [
+                                                    `$${v}`,
+                                                    'Median Price/sqm',
+                                                ]}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey="median_price_per_sqm"
+                                                name="Median Price/sqm"
+                                                stroke="hsl(var(--primary))"
+                                                strokeWidth={2}
+                                                dot={{ r: 3 }}
+                                                activeDot={{ r: 5 }}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </AppLayout>
     );
