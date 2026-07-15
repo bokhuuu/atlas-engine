@@ -169,4 +169,17 @@ return [
         'enabled' => env('AI_TOKEN_BUDGET_ENABLED', true),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Translation
+    |--------------------------------------------------------------------------
+    | chunk_size: number of listings to translate per batch in TranslateNewListings job.
+    | Keeps memory usage bounded — each listing makes one API call, so smaller
+    | chunks also limit concurrent API pressure.
+    | Override via TRANSLATION_CHUNK_SIZE in .env.
+    */
+    'translation' => [
+        'chunk_size' => (int) env('TRANSLATION_CHUNK_SIZE', 50),
+    ],
+
 ];

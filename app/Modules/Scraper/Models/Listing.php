@@ -49,6 +49,7 @@ class Listing extends Model
         'agency_name',
         'images',
         'extras',
+        'description',
         'duplicate_group_id',
 
         'listing_date',

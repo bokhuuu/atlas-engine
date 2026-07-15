@@ -8,6 +8,7 @@ use App\Events\AiCallCompleted;
 use App\Listeners\CostAlertListener;
 use App\Listeners\TrackLastLogin;
 use App\Listeners\UsageTrackingListener;
+use App\Modules\AI\Jobs\TranslateNewListings;
 use App\Modules\AI\Models\AiUsageLog;
 use App\Modules\Scraper\Events\ScrapeCompleted;
 use App\Modules\Scraper\Events\ScrapeFailed;
@@ -62,6 +63,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(ScrapeCompleted::class, SendScrapeCompletedNotification::class);
         Event::listen(ScrapeCompleted::class, TriggerScrapeExport::class);
+
+        Event::listen(ScrapeCompleted::class, function (ScrapeCompleted $event) {
+            TranslateNewListings::dispatch($event->source);
+        });
+
         Event::listen(ScrapeFailed::class, SendScrapeFailedNotification::class);
 
         RateLimiter::for('api.global', fn () => Limit::perMinute(config('scraper.api_rate_limit', 60)));
