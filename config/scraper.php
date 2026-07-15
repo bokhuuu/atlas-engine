@@ -545,5 +545,6 @@ return [
         'amd_usd' => (float) env('FALLBACK_AMD_USD_RATE', 0.00256),
         'azn_usd' => (float) env('FALLBACK_AZN_USD_RATE', 0.588),
         'gel_usd' => (float) env('FALLBACK_GEL_USD_RATE', 0.357),
+        'eur_usd' => (float) env('FALLBACK_EUR_USD_RATE', 0.876),
     ],
 ];

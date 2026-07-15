@@ -16,4 +16,5 @@ enum SettingGroup: string
     case SOCIAL = 'social';
     case SEO = 'seo';
     case MAIL = 'mail';
+    case MARKET = 'market';
 }

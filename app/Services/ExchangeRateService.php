@@ -30,12 +30,14 @@ class ExchangeRateService
         'AMD' => 'amd_usd_rate',
         'AZN' => 'azn_usd_rate',
         'GEL' => 'gel_usd_rate',
+        'EUR' => 'eur_usd_rate',
     ];
 
     private const CONFIG_FALLBACKS = [
         'AMD' => 'scraper.exchange_rates.amd_usd',
         'AZN' => 'scraper.exchange_rates.azn_usd',
         'GEL' => 'scraper.exchange_rates.gel_usd',
+        'EUR' => 'scraper.exchange_rates.eur_usd',
     ];
 
     /**
