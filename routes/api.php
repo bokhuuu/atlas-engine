@@ -11,6 +11,7 @@ use App\Modules\Scraper\Api\ExportController;
 use App\Modules\Scraper\Api\HealthController;
 use App\Modules\Scraper\Api\ListingController;
 use App\Modules\Scraper\Api\ScrapeController;
+use App\Modules\Scraper\Api\TrendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/listings/stats', [ListingController::class, 'stats']);
         Route::get('/listings/summary', [ListingController::class, 'summary']);
         Route::get('/listings/yield', [ListingController::class, 'yield']);
+
+        Route::get('/trends/volume', [TrendController::class, 'volume']);
+        Route::get('/trends/price', [TrendController::class, 'price']);
 
         Route::get('/exports', [ExportController::class, 'downloadAll']);
         Route::get('/exports/{source}', [ExportController::class, 'download']);
