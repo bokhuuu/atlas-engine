@@ -22,3 +22,5 @@ Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1
 
 // Requires residential proxies to bypass list.am server IP block on non-browser requests
 // Schedule::command('atlas:check-listings')->days([0, 2, 4, 6])->at('10:00');
+
+Schedule::command('atlas:fetch-exchange-rates')->dailyAt('04:00');

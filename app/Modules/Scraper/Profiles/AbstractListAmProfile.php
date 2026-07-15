@@ -13,7 +13,6 @@ use App\Modules\Scraper\Notifications\MailNotifier;
 use App\Modules\Scraper\Notifications\TelegramNotifier;
 use App\Modules\Scraper\Pipeline\Stages\DetectPriceChangeStage;
 use App\Modules\Scraper\Pipeline\Stages\EnrichDistrictStage;
-use App\Modules\Scraper\Pipeline\Stages\FilterCurrencyStage;
 use App\Modules\Scraper\Pipeline\Stages\FlagProbableDuplicatesStage;
 use Laravel\Dusk\Browser;
 
@@ -142,7 +141,6 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
     {
         return [
             ...parent::getPipelineStages(),
-            app(FilterCurrencyStage::class, ['acceptedCurrencies' => ['USD']]),
             app(EnrichDistrictStage::class, ['districts' => $this->getDistricts()]),
             app(DetectPriceChangeStage::class),
             app(FlagProbableDuplicatesStage::class),

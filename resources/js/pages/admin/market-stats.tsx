@@ -443,7 +443,7 @@ export default function MarketStats({ categories }: Props) {
                                 <button
                                     key={g}
                                     onClick={() => setGroupBy(g)}
-                                    className={`rounded px-3 py-1 text-sm ${
+                                    className={`cursor-pointer rounded px-3 py-1 text-sm ${
                                         groupBy === g
                                             ? 'bg-primary text-primary-foreground'
                                             : 'border text-muted-foreground'

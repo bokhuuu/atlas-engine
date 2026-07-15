@@ -181,18 +181,18 @@ return [
     ],
 
     /*
-|--------------------------------------------------------------------------
-| Market Registry
-|--------------------------------------------------------------------------
-|
-| Defines all markets Atlas supports. Each market has a slug (used in URLs),
-| a label, country, flag emoji, currency, and the source_profile_name
-| prefixes that belong to it. One market can have multiple prefixes
-| (e.g. two data sources for the same city).
-|
-| 'global' is a reserved slug — do not use it as a market key.
-|
-*/
+    |--------------------------------------------------------------------------
+    | Market Registry
+    |--------------------------------------------------------------------------
+    |
+    | Defines all markets Atlas supports. Each market has a slug (used in URLs),
+    | a label, country, flag emoji, currency, and the source_profile_name
+    | prefixes that belong to it. One market can have multiple prefixes
+    | (e.g. two data sources for the same city).
+    |
+    | 'global' is a reserved slug - do not use it as a market key.
+    |
+    */
     'markets' => [
         'yerevan' => [
             'label' => 'Yerevan',
@@ -460,7 +460,7 @@ return [
     |--------------------------------------------------------------------------
     | Minimum number of listings required on both the sale and rent side
     | of a district before an estimated rental yield is calculated.
-    | Districts below this threshold show — instead of a potentially
+    | Districts below this threshold show - instead of a potentially
     | unreliable figure based on too few data points.
     */
     'yield_min_listings' => env('SCRAPER_YIELD_MIN_LISTINGS', 5),
@@ -510,7 +510,7 @@ return [
     |
     | Number of days after which a listing is considered stale.
     | Stale listings are still active on the site but have been
-    | listed for a long time — potentially overpriced or slow-moving.
+    | listed for a long time - potentially overpriced or slow-moving.
     | Shown as "Stale (90+ days)" in exports and admin panel.
     |
     */
@@ -528,4 +528,22 @@ return [
     |
     */
     'screenshots_enabled' => (bool) env('SCRAPER_SCREENSHOTS_ENABLED', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exchange Rate Fallbacks
+    |--------------------------------------------------------------------------
+    |
+    | Approximate fallback rates used when the settings table has no stored
+    | exchange rate yet (e.g. first boot before atlas:fetch-exchange-rates runs).
+    | These are not used for production calculations - the daily job overwrites
+    | them in settings immediately. Values are USD per 1 unit of currency.
+    | Update these in .env if rates drift significantly before the job runs.
+    |
+    */
+    'exchange_rates' => [
+        'amd_usd' => (float) env('FALLBACK_AMD_USD_RATE', 0.00256),
+        'azn_usd' => (float) env('FALLBACK_AZN_USD_RATE', 0.588),
+        'gel_usd' => (float) env('FALLBACK_GEL_USD_RATE', 0.357),
+    ],
 ];
