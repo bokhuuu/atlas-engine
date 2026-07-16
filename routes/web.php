@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AiFeedbackController;
 use App\Http\Controllers\Admin\AssistantController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataHubController;
+use App\Http\Controllers\Admin\GlobalDashboardController;
 use App\Http\Controllers\Admin\MarketStatsController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
@@ -91,5 +92,12 @@ foreach (app(MarketRegistry::class)->allSlugs() as $slug) {
                 });
         });
 }
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('global/admin')
+    ->name('global.admin.')
+    ->group(function () {
+        Route::get('dashboard', [GlobalDashboardController::class, 'index'])->name('dashboard');
+    });
 
 require __DIR__.'/settings.php';

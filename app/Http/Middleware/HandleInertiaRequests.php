@@ -108,9 +108,11 @@ class HandleInertiaRequests extends Middleware
             'translations' => fn () => [
                 'posts' => trans('posts'),
             ],
-            'currentMarket' => $request->segment(1) && app(MarketRegistry::class)->isValid($request->segment(1))
-                ? $request->segment(1)
-                : null,
+            'currentMarket' => $request->segment(1) === 'global'
+                ? 'global'
+                : ($request->segment(1) && app(MarketRegistry::class)->isValid($request->segment(1))
+                    ? $request->segment(1)
+                    : null),
             'markets' => app(MarketRegistry::class)->all(),
         ];
     }

@@ -64,41 +64,65 @@ function buildNavItems(market: string): {
     administration: NavItemWithRoles[];
     system: NavItemWithRoles[];
 } {
-    const base = `/${market}/admin`;
+    const base = market === 'global' ? '/global/admin' : `/${market}/admin`;
+
+    const intelligenceItems: NavItemWithRoles[] =
+        market === 'global'
+            ? [
+                  {
+                      title: 'Global Dashboard',
+                      href: `${base}/dashboard`,
+                      icon: LayoutGrid,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+                  {
+                      title: 'Market Comparison',
+                      href: `${base}/market-stats`,
+                      icon: ChartNoAxesColumn,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+                  {
+                      title: 'AI Assistant',
+                      href: `${base}/assistant`,
+                      icon: Bot,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+              ]
+            : [
+                  {
+                      title: 'Scraper Control',
+                      href: `${base}/dashboard`,
+                      icon: LayoutGrid,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+                  {
+                      title: 'Market Stats',
+                      href: `${base}/market-stats`,
+                      icon: ChartNoAxesColumn,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+                  {
+                      title: 'Data Hub',
+                      href: `${base}/data-hub`,
+                      icon: Database,
+                      roles: ['super_admin', 'admin'],
+                  },
+                  {
+                      title: 'AI Assistant',
+                      href: `${base}/assistant`,
+                      icon: Bot,
+                      roles: ['super_admin', 'admin', 'editor'],
+                  },
+                  {
+                      title: 'AI Feedback',
+                      href: `${base}/ai-feedback`,
+                      icon: ThumbsUp,
+                      roles: ['super_admin', 'admin'],
+                  },
+              ];
 
     return {
-        intelligence: [
-            {
-                title: 'Dashboard',
-                href: `${base}/dashboard`,
-                icon: LayoutGrid,
-                roles: ['super_admin', 'admin', 'editor'],
-            },
-            {
-                title: 'Market Stats',
-                href: `${base}/market-stats`,
-                icon: ChartNoAxesColumn,
-                roles: ['super_admin', 'admin', 'editor'],
-            },
-            {
-                title: 'Data Hub',
-                href: `${base}/data-hub`,
-                icon: Database,
-                roles: ['super_admin', 'admin'],
-            },
-            {
-                title: 'AI Assistant',
-                href: `${base}/assistant`,
-                icon: Bot,
-                roles: ['super_admin', 'admin', 'editor'],
-            },
-            {
-                title: 'AI Feedback',
-                href: `${base}/ai-feedback`,
-                icon: ThumbsUp,
-                roles: ['super_admin', 'admin'],
-            },
-        ],
+        intelligence: intelligenceItems,
         administration: [
             {
                 title: 'Users',
@@ -234,6 +258,38 @@ function MarketSwitcher({
                     </Link>
                 );
             })}
+
+            <Link
+                href="/global/admin/dashboard"
+                title="Global"
+                className={`group relative flex flex-col items-center gap-1 rounded-lg py-2 transition-all duration-200 ${
+                    currentMarket === 'global'
+                        ? 'bg-sidebar-accent shadow-sm'
+                        : 'hover:bg-sidebar-accent/50'
+                }`}
+            >
+                <span
+                    className={`text-2xl transition-transform duration-200 ${
+                        currentMarket === 'global'
+                            ? 'scale-110 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]'
+                            : 'scale-90 opacity-50 group-hover:scale-100 group-hover:opacity-75'
+                    }`}
+                >
+                    🌍
+                </span>
+                <span
+                    className={`text-[9px] font-semibold tracking-widest uppercase transition-all duration-200 ${
+                        currentMarket === 'global'
+                            ? 'text-foreground opacity-100'
+                            : 'text-muted-foreground opacity-0 group-hover:opacity-60'
+                    }`}
+                >
+                    Global
+                </span>
+                {currentMarket === 'global' && (
+                    <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary" />
+                )}
+            </Link>
         </div>
     );
 }
@@ -274,7 +330,14 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={`/${market}/admin/dashboard`} prefetch>
+                            <Link
+                                href={
+                                    market === 'global'
+                                        ? '/global/admin/dashboard'
+                                        : `/${market}/admin/dashboard`
+                                }
+                                prefetch
+                            >
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -293,25 +356,26 @@ export function AppSidebar() {
                     role={role}
                 />
 
-                <div className="mx-4 my-1 border-t border-sidebar-border/50" />
-
-                <div className="opacity-60">
-                    <NavGroup
-                        label="Administration"
-                        items={navItems.administration}
-                        role={role}
-                    />
-                </div>
-
-                <div className="mx-4 my-1 border-t border-sidebar-border/50" />
-
-                <div className="opacity-60">
-                    <NavGroup
-                        label="System"
-                        items={navItems.system}
-                        role={role}
-                    />
-                </div>
+                {market !== 'global' && (
+                    <>
+                        <div className="mx-4 my-1 border-t border-sidebar-border/50" />
+                        <div className="opacity-60">
+                            <NavGroup
+                                label="Administration"
+                                items={navItems.administration}
+                                role={role}
+                            />
+                        </div>
+                        <div className="mx-4 my-1 border-t border-sidebar-border/50" />
+                        <div className="opacity-60">
+                            <NavGroup
+                                label="System"
+                                items={navItems.system}
+                                role={role}
+                            />
+                        </div>
+                    </>
+                )}
             </SidebarContent>
             <SidebarFooter>
                 {systemUsage && ['admin', 'super_admin'].includes(role) && (
@@ -346,7 +410,7 @@ export function AppSidebar() {
 
                 <div className="mx-3 mt-1 mb-1">
                     <a
-                        href={`/${market}`}
+                        href={market === 'global' ? '/' : `/${market}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-blue-400 transition-colors hover:text-blue-300"

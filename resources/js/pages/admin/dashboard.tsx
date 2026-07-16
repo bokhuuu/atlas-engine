@@ -70,7 +70,7 @@ export default function Dashboard({
     const [anyRunning, setAnyRunning] = useState(false);
     const { market, adminUrl } = useMarket();
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: adminUrl('/dashboard') },
+        { title: 'Scraper Control', href: adminUrl('/dashboard') },
     ];
 
     const fetchTrend = useCallback(async (source: string) => {
@@ -173,7 +173,7 @@ export default function Dashboard({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Scraper Control" />
             <div className="p-6">
                 <div className="mb-6 flex items-center justify-between">
                     <div>

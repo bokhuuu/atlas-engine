@@ -10,6 +10,7 @@ import TokenController from './TokenController'
 import SystemHealthController from './SystemHealthController'
 import AiFeedbackController from './AiFeedbackController'
 import DataHubController from './DataHubController'
+import GlobalDashboardController from './GlobalDashboardController'
 
 const Admin = {
     DashboardController: Object.assign(DashboardController, DashboardController),
@@ -24,6 +25,7 @@ const Admin = {
     SystemHealthController: Object.assign(SystemHealthController, SystemHealthController),
     AiFeedbackController: Object.assign(AiFeedbackController, AiFeedbackController),
     DataHubController: Object.assign(DataHubController, DataHubController),
+    GlobalDashboardController: Object.assign(GlobalDashboardController, GlobalDashboardController),
 }
 
 export default Admin
