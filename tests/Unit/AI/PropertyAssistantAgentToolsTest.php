@@ -111,3 +111,57 @@ test('getYieldEstimate uses market source prefix', function () {
     expect($result)->toHaveKey('message')
         ->and($result['message'])->toContain('Not enough data');
 });
+
+test('compareMarkets returns data for all configured markets', function () {
+    $agent = makeAgent();
+    $result = json_decode($agent->compareMarkets(), true);
+
+    expect($result)->toHaveKey('markets')
+        ->and(count($result['markets']))->toBe(3);
+});
+
+test('compareMarkets shows yerevan has data when listings exist', function () {
+    seedListing(['source_profile_name' => 'listam_apartments_sale']);
+
+    $agent = makeAgent();
+    $result = json_decode($agent->compareMarkets(), true);
+
+    $yerevan = collect($result['markets'])->firstWhere('slug', 'yerevan');
+
+    expect($yerevan['has_data'])->toBeTrue()
+        ->and($yerevan['total_listings'])->toBeGreaterThan(0);
+});
+
+test('compareMarkets shows baku has no data when no listings exist', function () {
+    $agent = makeAgent();
+    $result = json_decode($agent->compareMarkets(), true);
+
+    $baku = collect($result['markets'])->firstWhere('slug', 'baku');
+
+    expect($baku['has_data'])->toBeFalse()
+        ->and($baku['total_listings'])->toBe(0);
+});
+
+test('compareMarkets returns no data message when all markets empty', function () {
+    $agent = makeAgent();
+    $result = json_decode($agent->compareMarkets(), true);
+
+    expect($result)->toHaveKey('message')
+        ->and($result['message'])->toContain('No market data available');
+});
+
+test('compareMarkets includes currency and price data for markets with listings', function () {
+    seedListing([
+        'source_profile_name' => 'listam_apartments_sale',
+        'price_per_sqm' => 2000,
+    ]);
+
+    $agent = makeAgent();
+    $result = json_decode($agent->compareMarkets(), true);
+
+    $yerevan = collect($result['markets'])->firstWhere('slug', 'yerevan');
+
+    expect($yerevan)->toHaveKey('currency')
+        ->and($yerevan['currency'])->toBe('USD')
+        ->and($yerevan)->toHaveKey('median_sale_price_per_sqm');
+});

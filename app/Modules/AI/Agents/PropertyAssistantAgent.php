@@ -367,6 +367,61 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
+    #[Tool('Compare key real estate metrics across all available markets. Use when the user asks to compare cities, markets, or wants to know which market has more listings, higher prices, or better yield. Returns side-by-side data for all configured markets.')]
+    public function compareMarkets(?string $category = null): string
+    {
+        $registry = app(MarketRegistry::class);
+        $repo = app(ListingRepository::class);
+        $results = [];
+
+        foreach ($registry->allSlugs() as $marketSlug) {
+            $marketConfig = $registry->fromSlug($marketSlug);
+            $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+            $prefix = $sourcePrefixes[0] ?? null;
+
+            if (! $prefix) {
+                continue;
+            }
+
+            $saleSource = "{$prefix}_apartments_sale";
+            $rentSource = "{$prefix}_apartments_rent";
+
+            $totalListings = 0;
+            foreach (array_keys(config('scraper.profiles', [])) as $source) {
+                if (collect($sourcePrefixes)->contains(fn ($p) => str_starts_with($source, $p.'_'))) {
+                    $totalListings += $repo->countDistinctBySource($source);
+                }
+            }
+
+            $medianSalePrice = $repo->getMedianPricePerSqm($saleSource);
+            $medianRentPrice = $repo->getMedianPricePerSqm($rentSource);
+
+            $results[] = [
+                'market' => $marketConfig['label'] ?? ucfirst($marketSlug),
+                'slug' => $marketSlug,
+                'currency' => 'USD',
+                'total_listings' => $totalListings,
+                'median_sale_price_per_sqm' => $medianSalePrice,
+                'median_rent_price_per_sqm' => $medianRentPrice,
+                'has_data' => $totalListings > 0,
+            ];
+        }
+
+        $marketsWithData = collect($results)->where('has_data', true)->count();
+
+        if ($marketsWithData === 0) {
+            return json_encode([
+                'message' => 'No market data available yet for any configured market.',
+                'markets' => $results,
+            ]);
+        }
+
+        return json_encode([
+            'note' => 'All prices in USD. Markets with no data show null values — data collection has not started for those markets yet.',
+            'markets' => $results,
+        ]);
+    }
+
     #[Tool('Search listings by meaning rather than exact keywords. Use when the user describes a property in natural language — e.g. "find apartments that mention renovation" or "listings with mountain view". Returns null if no text data has been indexed for this market yet.')]
     public function semanticSearch(string $query, ?int $limit = null): string
     {
