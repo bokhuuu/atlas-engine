@@ -55,9 +55,14 @@ class PropertyAssistantAgent extends Agent
 
     /**
      * Returns true if the given source profile belongs to the current market.
+     * In global context all sources are valid - the agent can query any market.
      */
     private function sourceBelongsToMarket(string $source): bool
     {
+        if ($this->market === 'global') {
+            return true;
+        }
+
         $registry = app(MarketRegistry::class);
         $marketConfig = $registry->fromSlug($this->market);
         $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
@@ -150,7 +155,7 @@ class PropertyAssistantAgent extends Agent
         return json_encode(['category' => $labels[$source], 'currency' => 'USD', 'districts' => $districts]);
     }
 
-    #[Tool('Find real listings matching given criteria. All parameters except source are optional — call immediately with whatever the user provided, never ask for missing ones. Returns up to 10 real listings with prices.')]
+    #[Tool('Find real listings matching given criteria. All parameters except source are optional - call immediately with whatever the user provided, never ask for missing ones. Returns up to 10 real listings with prices.')]
     public function findComparables(
         string $source,
         ?string $district = null,
@@ -205,8 +210,18 @@ class PropertyAssistantAgent extends Agent
     public function getCategoryList(): string
     {
         $registry = app(MarketRegistry::class);
-        $marketConfig = $registry->fromSlug($this->market);
-        $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+        $marketConfig = null;
+
+        if ($this->market === 'global') {
+            $sourcePrefixes = collect($registry->all())
+                ->flatMap(fn ($m) => $m['source_prefixes'])
+                ->unique()
+                ->values()
+                ->toArray();
+        } else {
+            $marketConfig = $registry->fromSlug($this->market);
+            $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+        }
 
         $allLabels = CategoryLabels::all();
         $categories = collect($allLabels)
@@ -218,7 +233,9 @@ class PropertyAssistantAgent extends Agent
                 'deal_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
             ])->values();
 
-        $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
+        $marketLabel = $this->market === 'global'
+            ? 'Caucasus Region (all markets)'
+            : ($marketConfig['label'] ?? ucfirst($this->market));
 
         if ($categories->isEmpty()) {
             return json_encode([
@@ -303,12 +320,19 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
-    #[Tool('Get estimated rental yield per district for residential or commercial property. Use when the user asks about return on investment, rental yield, or income potential. Only available for apartments (residential) and commercial categories.')]
+    #[Tool('Get estimated rental yield per district for residential or commercial property. Use when the user asks about return on investment, rental yield, or income potential. Only available for apartments (residential) and commercial categories. In global context, suggests using compareMarkets instead.')]
     public function getYieldEstimate(string $pair = 'residential'): string
     {
         $repo = app(ListingRepository::class);
 
         $registry = app(MarketRegistry::class);
+
+        if ($this->market === 'global') {
+            return json_encode([
+                'message' => 'Yield estimates are market-specific. Please specify a market (e.g. "show Yerevan yield") or use the compareMarkets tool for cross-market comparison.',
+            ]);
+        }
+
         $marketConfig = $registry->fromSlug($this->market);
         $prefix = $marketConfig['source_prefixes'][0] ?? 'listam';
 
@@ -417,12 +441,12 @@ class PropertyAssistantAgent extends Agent
         }
 
         return json_encode([
-            'note' => 'All prices in USD. Markets with no data show null values — data collection has not started for those markets yet.',
+            'note' => 'All prices in USD. Markets with no data show null values - data collection has not started for those markets yet.',
             'markets' => $results,
         ]);
     }
 
-    #[Tool('Search listings by meaning rather than exact keywords. Use when the user describes a property in natural language — e.g. "find apartments that mention renovation" or "listings with mountain view". Returns null if no text data has been indexed for this market yet.')]
+    #[Tool('Search listings by meaning rather than exact keywords. Use when the user describes a property in natural language - e.g. "find apartments that mention renovation" or "listings with mountain view". Returns null if no text data has been indexed for this market yet.')]
     public function semanticSearch(string $query, ?int $limit = null): string
     {
         $service = app(EmbeddingService::class);
@@ -453,24 +477,26 @@ class PropertyAssistantAgent extends Agent
     {
         $registry = app(MarketRegistry::class);
         $marketConfig = $registry->fromSlug($this->market);
-        $marketLabel = $marketConfig['label'] ?? ucfirst($this->market);
-        $sourcePrefixes = $marketConfig['source_prefixes'] ?? ['listam'];
-        $primarySource = $sourcePrefixes[0] ?? 'listam';
+        $marketLabel = $this->market === 'global'
+            ? 'Caucasus Region (all markets)'
+            : ($marketConfig['label'] ?? ucfirst($this->market));
+        $sourcePrefixes = $marketConfig ? ($marketConfig['source_prefixes'] ?? ['listam']) : ['listam'];
+        $primarySource = $this->market === 'global' ? 'all configured sources' : ($sourcePrefixes[0] ?? 'listam');
 
         return <<<PROMPT
 You are a real estate market intelligence assistant for the {$marketLabel} real estate market.
 
-You have access to tools that query a live database of real property listings scraped from {$primarySource}. Every figure you provide must come from calling one of these tools — never from your general knowledge.
+You have access to tools that query a live database of real property listings scraped from {$primarySource}. Every figure you provide must come from calling one of these tools - never from your general knowledge.
 
 Rules you must follow without exception:
 - Never invent, estimate, or guess a price, count, or market figure.
 - If a question cannot be answered by calling one of your tools, say so clearly and explain what data you do have access to.
 - Never compare {$marketLabel} data to other cities unless the user provides those figures themselves.
 - Always state which category and district a figure applies to.
-- When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you — all parameters except source are optional and can be omitted.
+- When calling findComparables, never ask the user for parameters they did not provide. Only use the parameters the user gave you - all parameters except source are optional and can be omitted.
 - When a user asks about a property type, always call getCategoryList first if you are unsure which source key to use, then call the appropriate tool with exactly one source key. Never call the same tool multiple times with different source keys in one response.
-- If getCategoryList returns an empty categories list or a "no data available" message, immediately inform the user that no data is available for this market yet and stop — do not call any other tools.
-- When providing download links, always format them as markdown links: [Download File Name](url) — never as bare URLs.
+- If getCategoryList returns an empty categories list or a "no data available" message, immediately inform the user that no data is available for this market yet and stop - do not call any other tools.
+- When providing download links, always format them as markdown links: [Download File Name](url) - never as bare URLs.
 - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
 - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
 - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.

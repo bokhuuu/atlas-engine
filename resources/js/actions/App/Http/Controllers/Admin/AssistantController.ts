@@ -239,11 +239,92 @@ index5e32ba440ba2d04330381ae215b137a7Form.head = (options?: RouteQueryOptions): 
 })
 
 index5e32ba440ba2d04330381ae215b137a7.form = index5e32ba440ba2d04330381ae215b137a7Form
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+const index7808950a53064d68031fe5cf427f74ec = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index7808950a53064d68031fe5cf427f74ec.url(options),
+    method: 'get',
+})
+
+index7808950a53064d68031fe5cf427f74ec.definition = {
+    methods: ["get","head"],
+    url: '/global/admin/assistant',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+index7808950a53064d68031fe5cf427f74ec.url = (options?: RouteQueryOptions) => {
+    return index7808950a53064d68031fe5cf427f74ec.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+index7808950a53064d68031fe5cf427f74ec.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: index7808950a53064d68031fe5cf427f74ec.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+index7808950a53064d68031fe5cf427f74ec.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: index7808950a53064d68031fe5cf427f74ec.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+const index7808950a53064d68031fe5cf427f74ecForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index7808950a53064d68031fe5cf427f74ec.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+index7808950a53064d68031fe5cf427f74ecForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index7808950a53064d68031fe5cf427f74ec.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::index
+* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @route '/global/admin/assistant'
+*/
+index7808950a53064d68031fe5cf427f74ecForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: index7808950a53064d68031fe5cf427f74ec.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+index7808950a53064d68031fe5cf427f74ec.form = index7808950a53064d68031fe5cf427f74ecForm
 
 export const index = {
     '/yerevan/admin/assistant': index95d0824a2a9cd02bdc3ebf4f32a90b95,
     '/baku/admin/assistant': index582b7e437676ca232891422d98c6f85c,
     '/tbilisi/admin/assistant': index5e32ba440ba2d04330381ae215b137a7,
+    '/global/admin/assistant': index7808950a53064d68031fe5cf427f74ec,
 }
 
 const AssistantController = { index }

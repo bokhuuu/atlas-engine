@@ -98,6 +98,7 @@ Route::middleware(['auth', 'admin'])
     ->name('global.admin.')
     ->group(function () {
         Route::get('dashboard', [GlobalDashboardController::class, 'index'])->name('dashboard');
+        Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
     });
 
 require __DIR__.'/settings.php';

@@ -10,13 +10,14 @@ interface MarketData {
     currency: string;
     total_listings: number;
     active_categories: number;
+    total_categories: number;
     median_sale_price_per_sqm: number | null;
     last_scraped_at: string | null;
     has_data: boolean;
 }
 
 interface Props {
-    markets: MarketData[];
+    marketStats: MarketData[];
     totalListingsAllMarkets: number;
 }
 
@@ -25,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function GlobalDashboard({
-    markets,
+    marketStats,
     totalListingsAllMarkets,
 }: Props) {
     return (
@@ -50,13 +51,13 @@ export default function GlobalDashboard({
                         {totalListingsAllMarkets.toLocaleString()}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                        across {markets.length} configured markets
+                        across {marketStats.length} configured markets
                     </p>
                 </div>
 
                 {/* Market cards */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    {markets.map((market) => (
+                    {marketStats.map((market) => (
                         <div
                             key={market.slug}
                             className={`rounded-lg border p-5 ${
@@ -128,7 +129,8 @@ export default function GlobalDashboard({
                                         Active Categories
                                     </span>
                                     <span className="text-sm font-medium">
-                                        {market.active_categories} / 7
+                                        {market.active_categories} /{' '}
+                                        {market.total_categories}
                                     </span>
                                 </div>
                             </div>

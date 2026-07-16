@@ -41,6 +41,7 @@ class GlobalDashboardController extends Controller
 
             $totalListings = 0;
             $activeCategories = 0;
+            $totalCategories = 0;
             $lastScrapedAt = null;
 
             foreach (config('scraper.profiles', []) as $source => $profileClass) {
@@ -54,10 +55,10 @@ class GlobalDashboardController extends Controller
                 $count = $this->listingRepository->countDistinctBySource($source);
                 $totalListings += $count;
 
+                $totalCategories++;
                 if ($count > 0) {
                     $activeCategories++;
                 }
-
                 $latestRun = ScraperRun::where('source', $source)
                     ->where('state', 'completed')
                     ->latest('finished_at')
@@ -75,9 +76,10 @@ class GlobalDashboardController extends Controller
                 'slug' => $slug,
                 'label' => $marketConfig['label'] ?? ucfirst($slug),
                 'flag' => $marketConfig['flag'] ?? '',
-                'currency' => $marketConfig['currency'] ?? 'USD',
+                'currency' => 'USD',
                 'total_listings' => $totalListings,
                 'active_categories' => $activeCategories,
+                'total_categories' => $totalCategories,
                 'median_sale_price_per_sqm' => $medianPricePerSqm,
                 'last_scraped_at' => $lastScrapedAt?->toDateTimeString(),
                 'has_data' => $totalListings > 0,
@@ -87,7 +89,7 @@ class GlobalDashboardController extends Controller
         $totalListingsAllMarkets = array_sum(array_column($markets, 'total_listings'));
 
         return Inertia::render('admin/global-dashboard', [
-            'markets' => $markets,
+            'marketStats' => $markets,
             'totalListingsAllMarkets' => $totalListingsAllMarkets,
         ]);
     }
