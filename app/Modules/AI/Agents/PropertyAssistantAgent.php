@@ -156,7 +156,7 @@ class PropertyAssistantAgent extends Agent
         return json_encode(['category' => $labels[$source], 'currency' => 'USD', 'districts' => $districts]);
     }
 
-    #[Tool('Find real listings matching given criteria. All parameters except source are optional - call immediately with whatever the user provided, never ask for missing ones. Returns up to 10 real listings with prices.')]
+    #[Tool('Find real listings matching given criteria. All parameters except source are optional - call immediately with whatever the user provided, never ask for missing ones. Returns up to 10 real listings with prices, district, area, floor and links. For each listing: if screenshot_url is present show it as "📸 Screenshot" link; if url is present show it as "🔗 View listing" link. For disappeared listings (no active url), the screenshot_url is the only way to see the property - always show it prominently.')]
     public function findComparables(
         string $source,
         ?string $district = null,
