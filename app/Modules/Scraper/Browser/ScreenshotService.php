@@ -26,7 +26,7 @@ use Throwable;
  */
 class ScreenshotService
 {
-    private const DISK = 'b2';
+    private const DISK = 'b2_screenshots';
 
     private const API_URL = 'https://api.screenshotone.com/take';
 
