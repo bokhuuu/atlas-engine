@@ -6,25 +6,18 @@ namespace App\Modules\Scraper\Console\Commands;
 
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Models\Listing;
-use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Illuminate\Console\Command;
 use Throwable;
 
 /**
  * Captures screenshots of listings that don't have one yet.
  *
- * navigates to the URL, waits for initial render, captures via CDP,
- * uploads to Backblaze B2, and stores the path in screenshot_url.
+ * Uses Screenshotone API — no Chrome session needed. Sends listing URL,
+ * receives JPG image, uploads to Backblaze B2, stores path in screenshot_url.
  *
  * Runs on off-scrape nights (Tue/Thu/Sat at 05:00 Tbilisi) so it
  * never interferes with active scraping. Config-driven chunk size
  * limits how many screenshots are taken per run.
- *
- * Usage:
- *   php artisan atlas:capture-screenshots
- *   php artisan atlas:capture-screenshots --dry-run
  */
 class CaptureScreenshotsCommand extends Command
 {
@@ -33,14 +26,22 @@ class CaptureScreenshotsCommand extends Command
 
     protected $description = 'Capture screenshots of new listings and upload to Backblaze B2';
 
+    /**
+     * Find listings without screenshots and capture them via Screenshotone API.
+     * Processes up to screenshot_daily_chunk listings per run to stay within
+     * API rate limits and avoid long-running processes.
+     */
     public function handle(ScreenshotService $screenshotService): int
     {
         $chunk = (int) config('scraper.screenshot_daily_chunk', 200);
-        $dryRun = (bool) $this->option('dry-run');
 
-        $total = Listing::whereNull('screenshot_url')
+        $listings = Listing::whereNull('screenshot_url')
+            ->whereNotNull('url')
             ->whereNull('disappeared_at')
-            ->count();
+            ->limit($chunk)
+            ->get();
+
+        $total = $listings->count();
 
         if ($total === 0) {
             $this->info('No listings need screenshots.');
@@ -48,89 +49,32 @@ class CaptureScreenshotsCommand extends Command
             return self::SUCCESS;
         }
 
-        $toProcess = min($total, $chunk);
-
         $this->info("Listings needing screenshots: {$total}");
-        $this->info("Capturing {$toProcess} this run (chunk limit: {$chunk}).");
+        $this->info("Capturing {$total} this run (chunk limit: {$chunk}).");
 
-        if ($dryRun) {
-            $this->warn('Dry run - no Chrome sessions will be opened.');
+        if ($this->option('dry-run')) {
+            $this->info('Dry run - no screenshots will be captured.');
 
             return self::SUCCESS;
         }
 
-        $listings = Listing::whereNull('screenshot_url')
-            ->whereNull('disappeared_at')
-            ->orderBy('scraped_at')
-            ->limit($toProcess)
-            ->get();
-
-        $bar = $this->output->createProgressBar($listings->count());
-        $bar->start();
-
         $captured = 0;
         $failed = 0;
+        $bar = $this->output->createProgressBar($total);
 
         foreach ($listings as $listing) {
-            if (empty($listing->url)) {
-                $bar->advance();
-
-                continue;
-            }
-
-            $driver = null;
-
             try {
-                $options = new ChromeOptions;
-                $options->addArguments([
-                    '--headless',
-                    '--no-sandbox',
-                    '--disable-gpu',
-                    '--disable-dev-shm-usage',
-                    '--window-size=1920,1080',
-                ]);
+                $screenshotService->captureAndUpload($listing);
 
-                $capabilities = DesiredCapabilities::chrome();
-                $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
-                $capabilities->setCapability('pageLoadStrategy', 'none');
-
-                $driver = RemoteWebDriver::create(
-                    'http://chrome:4444/wd/hub',
-                    $capabilities,
-                    30000,
-                    30000,
-                );
-
-                $driver->get($listing->url);
-                usleep(5_000_000);
-
-                $sessionId = $driver->getSessionID();
-
-                $path = $screenshotService->captureBySessionId(
-                    $sessionId,
-                    $listing->external_id,
-                    $listing->source_profile_name,
-                );
-
-                $driver->quit();
-                $driver = null;
-
-                if ($path !== null) {
-                    $listing->update(['screenshot_url' => $path]);
+                if ($listing->fresh()->screenshot_url) {
                     $captured++;
                 } else {
                     $failed++;
-                    $this->warn("Null capture for listing {$listing->id}: {$listing->url}");
+                    $this->warn("No screenshot for listing {$listing->id}: {$listing->url}");
                 }
             } catch (Throwable $e) {
                 $failed++;
                 $this->error("Failed listing {$listing->id}: ".$e->getMessage());
-
-                try {
-                    $driver?->quit();
-                } catch (Throwable) {
-                    // already closed
-                }
             }
 
             $bar->advance();
@@ -138,12 +82,8 @@ class CaptureScreenshotsCommand extends Command
 
         $bar->finish();
         $this->newLine();
-
         $this->info("Captured: {$captured}");
-
-        if ($failed > 0) {
-            $this->warn("Failed: {$failed}");
-        }
+        $this->info("Failed: {$failed}");
 
         return self::SUCCESS;
     }
