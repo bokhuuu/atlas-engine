@@ -163,4 +163,36 @@ class ScreenshotService
         return config('scraper.screenshots.storage_path', 'screenshots')
             ."/{$source}/{$externalId}.jpg";
     }
+
+    /**
+     * Returns the public URL for a screenshot.
+     * Requires the b2_screenshots bucket to be set to public.
+     * Once public, URLs are permanent — no expiry.
+     */
+    public function publicUrl(string $b2Path): string
+    {
+        $endpoint = config(
+            'filesystems.disks.b2_screenshots.endpoint',
+            'https://s3.eu-central-003.backblazeb2.com'
+        );
+        $bucket = config(
+            'filesystems.disks.b2_screenshots.bucket',
+            'bokhuuu-atlas-screenshots'
+        );
+
+        return "{$endpoint}/{$bucket}/{$b2Path}";
+    }
+
+    /**
+     * Returns the best available URL for a screenshot.
+     * Uses public URL if bucket is public, signed URL otherwise.
+     */
+    public function url(string $b2Path): ?string
+    {
+        if (config('scraper.screenshots_public', false)) {
+            return $this->publicUrl($b2Path);
+        }
+
+        return $this->signedUrl($b2Path);
+    }
 }

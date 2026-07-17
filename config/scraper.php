@@ -532,6 +532,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Screenshots Public
+    |--------------------------------------------------------------------------
+    |
+    | When true, screenshot URLs are served as permanent public B2 URLs.
+    | Requires the b2_screenshots bucket to be set to public in Backblaze.
+    | When false, signed URLs are generated per-request (expire after 30 days).
+    | Switch to true after making the bucket public to enable permanent links
+    | in Data Hub, Excel exports, and AI responses.
+    |
+    */
+    'screenshots_public' => (bool) env('SCREENSHOTS_PUBLIC', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Exchange Rate Fallbacks
     |--------------------------------------------------------------------------
     |
