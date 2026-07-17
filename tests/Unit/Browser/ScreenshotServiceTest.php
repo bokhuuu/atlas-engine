@@ -5,54 +5,101 @@ declare(strict_types=1);
 namespace Tests\Unit\Browser;
 
 use App\Modules\Scraper\Browser\ScreenshotService;
+use App\Modules\Scraper\Models\Listing;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Dusk\Browser;
 use Tests\TestCase;
 
 class ScreenshotServiceTest extends TestCase
 {
-    public function test_returns_null_when_screenshots_disabled(): void
+    use RefreshDatabase;
+
+    public function test_returns_early_when_screenshots_disabled(): void
     {
         config(['scraper.screenshots_enabled' => false]);
 
-        $service = app(ScreenshotService::class);
-
-        $result = $service->capture(
-            browser: $this->createMock(Browser::class),
-            externalId: '12345',
-            source: 'listam_apartments_sale',
-        );
-
-        $this->assertNull($result);
-    }
-
-    public function test_signed_url_returns_string_for_valid_path(): void
-    {
-        Storage::fake('b2_screenshots');
-        Storage::disk('b2_screenshots')->put('screenshots/listam/test.png', 'fake content');
+        $listing = Listing::factory()->create([
+            'url' => 'https://list.am/en/item/12345',
+            'screenshot_url' => null,
+        ]);
 
         $service = app(ScreenshotService::class);
+        $service->captureAndUpload($listing);
 
-        $result = $service->signedUrl('screenshots/listam/test.png');
-
-        $this->assertIsString($result);
+        $this->assertNull($listing->fresh()->screenshot_url);
     }
 
-    public function test_capture_returns_null_on_browser_exception(): void
+    public function test_returns_early_when_url_is_empty(): void
     {
         config(['scraper.screenshots_enabled' => true]);
 
-        $browser = $this->createMock(Browser::class);
-        $browser->method('screenshot')->willThrowException(new \Exception('Chrome error'));
+        $listing = Listing::factory()->create([
+            'url' => null,
+            'screenshot_url' => null,
+        ]);
 
         $service = app(ScreenshotService::class);
+        $service->captureAndUpload($listing);
 
-        $result = $service->capture(
-            browser: $browser,
-            externalId: '12345',
-            source: 'listam_apartments_sale',
-        );
+        $this->assertNull($listing->fresh()->screenshot_url);
+    }
 
-        $this->assertNull($result);
+    public function test_returns_early_when_access_key_not_configured(): void
+    {
+        config(['scraper.screenshots_enabled' => true]);
+        config(['scraper.screenshot_access_key' => null]);
+
+        $listing = Listing::factory()->create([
+            'url' => 'https://list.am/en/item/12345',
+            'screenshot_url' => null,
+        ]);
+
+        $service = app(ScreenshotService::class);
+        $service->captureAndUpload($listing);
+
+        $this->assertNull($listing->fresh()->screenshot_url);
+    }
+
+    public function test_captures_and_uploads_screenshot_successfully(): void
+    {
+        config(['scraper.screenshots_enabled' => true]);
+        config(['scraper.screenshot_access_key' => 'test-key']);
+
+        Storage::fake('b2');
+
+        Http::fake([
+            'api.screenshotone.com/*' => Http::response('fake-image-bytes', 200),
+        ]);
+
+        $listing = Listing::factory()->create([
+            'url' => 'https://list.am/en/item/12345',
+            'screenshot_url' => null,
+        ]);
+
+        $service = app(ScreenshotService::class);
+        $service->captureAndUpload($listing);
+
+        $this->assertNotNull($listing->fresh()->screenshot_url);
+    }
+
+    public function test_handles_api_failure_gracefully(): void
+    {
+        config(['scraper.screenshots_enabled' => true]);
+        config(['scraper.screenshot_access_key' => 'test-key']);
+
+        Http::fake([
+            'api.screenshotone.com/*' => Http::response('error', 500),
+        ]);
+
+        $listing = Listing::factory()->create([
+            'url' => 'https://list.am/en/item/12345',
+            'screenshot_url' => null,
+        ]);
+
+        $service = app(ScreenshotService::class);
+        $service->captureAndUpload($listing);
+
+        $this->assertNull($listing->fresh()->screenshot_url);
     }
 }

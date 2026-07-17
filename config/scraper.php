@@ -528,6 +528,7 @@ return [
     |
     */
     'screenshots_enabled' => (bool) env('SCRAPER_SCREENSHOTS_ENABLED', false),
+    'screenshot_access_key' => env('SCREENSHOT_ACCESS_KEY'),
 
     /*
     |--------------------------------------------------------------------------
