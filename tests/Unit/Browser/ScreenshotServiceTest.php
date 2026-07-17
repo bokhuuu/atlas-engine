@@ -69,7 +69,7 @@ class ScreenshotServiceTest extends TestCase
         Storage::fake('b2');
 
         Http::fake([
-            'api.screenshotone.com/*' => Http::response('fake-image-bytes', 200),
+            'api.screenshotone.com/*' => Http::response("\xFF\xD8\xFF".str_repeat('x', 100), 200),
         ]);
 
         $listing = Listing::factory()->create([

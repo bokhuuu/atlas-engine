@@ -94,16 +94,20 @@ class ScreenshotService
             return null;
         }
 
-        $response = Http::timeout(30)->get(self::API_URL, [
+        $response = Http::timeout(45)->get(self::API_URL, [
             'access_key' => $accessKey,
             'url' => $url,
             'format' => 'jpg',
+            'image_quality' => 80,
             'block_ads' => 'true',
             'block_cookie_banners' => 'true',
             'block_trackers' => 'true',
+            'block_chats' => 'true',
             'full_page' => 'false',
             'viewport_width' => 1280,
-            'viewport_height' => 800,
+            'viewport_height' => 1200,
+            'timeout' => 30,
+            'delay' => 1,
         ]);
 
         if (! $response->successful()) {
@@ -115,7 +119,18 @@ class ScreenshotService
             return null;
         }
 
-        return $response->body();
+        $body = $response->body();
+
+        if (strlen($body) < 3 || substr($body, 0, 2) !== "\xFF\xD8") {
+            Log::warning('ScreenshotService: response is not a valid JPEG', [
+                'url' => $url,
+                'body_preview' => substr($body, 0, 200),
+            ]);
+
+            return null;
+        }
+
+        return $body;
     }
 
     /**
