@@ -161,9 +161,91 @@ assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =
 
 assistant.form = assistantForm
 
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+export const marketStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+marketStats.definition = {
+    methods: ["get","head"],
+    url: '/global/admin/market-stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+marketStats.url = (options?: RouteQueryOptions) => {
+    return marketStats.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+marketStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+marketStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: marketStats.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+const marketStatsForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+marketStatsForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url(options),
+    method: 'get',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\GlobalMarketStatsController::marketStats
+* @see app/Http/Controllers/Admin/GlobalMarketStatsController.php:35
+* @route '/global/admin/market-stats'
+*/
+marketStatsForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: marketStats.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'HEAD',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'get',
+})
+
+marketStats.form = marketStatsForm
+
 const admin = {
     dashboard: Object.assign(dashboard, dashboard),
     assistant: Object.assign(assistant, assistant),
+    marketStats: Object.assign(marketStats, marketStats),
 }
 
 export default admin

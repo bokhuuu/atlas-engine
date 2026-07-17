@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AssistantController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataHubController;
 use App\Http\Controllers\Admin\GlobalDashboardController;
+use App\Http\Controllers\Admin\GlobalMarketStatsController;
 use App\Http\Controllers\Admin\MarketStatsController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RoleController;
@@ -99,6 +100,7 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
         Route::get('dashboard', [GlobalDashboardController::class, 'index'])->name('dashboard');
         Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
+        Route::get('market-stats', [GlobalMarketStatsController::class, 'index'])->name('market-stats');
     });
 
 require __DIR__.'/settings.php';
