@@ -6,6 +6,7 @@ namespace App\Modules\Scraper\Console\Commands;
 
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Models\Listing;
+use App\Services\MarketRegistry;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -22,7 +23,8 @@ use Throwable;
 class CaptureScreenshotsCommand extends Command
 {
     protected $signature = 'atlas:capture-screenshots
-                            {--dry-run : Log what would be captured without opening Chrome or uploading}';
+                            {--dry-run : Log what would be captured without opening Chrome or uploading}
+                            {--market= : Limit captures to a specific market slug (e.g. yerevan, baku)}';
 
     protected $description = 'Capture screenshots of new listings and upload to Backblaze B2';
 
@@ -30,17 +32,37 @@ class CaptureScreenshotsCommand extends Command
      * Find listings without screenshots and capture them via Screenshotone API.
      * Processes up to screenshot_daily_chunk listings per run to stay within
      * API rate limits and avoid long-running processes.
+     *
+     * Optional --market= flag scopes captures to a specific market,
+     * useful for prioritizing a new market when it goes live.
      */
     public function handle(ScreenshotService $screenshotService): int
     {
         $chunk = (int) config('scraper.screenshot_daily_chunk', 200);
+        $marketSlug = $this->option('market');
 
-        $listings = Listing::whereNull('screenshot_url')
+        $query = Listing::whereNull('screenshot_url')
             ->whereNotNull('url')
-            ->whereNull('disappeared_at')
-            ->limit($chunk)
-            ->get();
+            ->whereNull('disappeared_at');
 
+        if ($marketSlug) {
+            $marketConfig = app(MarketRegistry::class)->fromSlug($marketSlug);
+            $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
+
+            if (empty($sourcePrefixes)) {
+                $this->error("Unknown market: {$marketSlug}");
+
+                return self::FAILURE;
+            }
+
+            $query->where(function ($q) use ($sourcePrefixes) {
+                foreach ($sourcePrefixes as $prefix) {
+                    $q->orWhere('source_profile_name', 'like', $prefix.'_%');
+                }
+            });
+        }
+
+        $listings = $query->limit($chunk)->get();
         $total = $listings->count();
 
         if ($total === 0) {
