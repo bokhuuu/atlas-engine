@@ -55,6 +55,9 @@ final class ListingDTO
         public ?Carbon $listingDate,
         public Carbon $scrapedAt,
 
+        public ?string $description = null,
+        public ?string $translatedDescription = null,
+
         public ?float $previousPrice = null,
         public ?float $priceChangePct = null,
         public ?Carbon $priceChangedAt = null,
@@ -101,6 +104,9 @@ final class ListingDTO
 
             images: $data['image_urls'] ?? [],
             extras: $data['extras'] ?? [],
+
+            description: $data['description'] ?? null,
+            translatedDescription: $data['translated_description'] ?? null,
 
             listingDate: isset($data['listing_date'])
                 ? Carbon::parse($data['listing_date'])
@@ -149,6 +155,9 @@ final class ListingDTO
 
             'images' => $this->images,
             'extras' => $this->extras,
+
+            'description' => $this->description,
+            'translated_description' => $this->translatedDescription,
 
             'listing_date' => $this->listingDate?->toDateTimeString(),
             'scraped_at' => $this->scrapedAt->toDateTimeString(),
