@@ -157,9 +157,15 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
         return [TelegramNotifier::class, MailNotifier::class];
     }
 
+    /**
+     * All categories use the full market research report.
+     * Sheet 4 variant is determined automatically from the source
+     * profile name inside RealEstateMarketReport - no changes needed
+     * here when adding new categories or markets.
+     */
     public function getExports(): array
     {
-        return ['excel', 'json'];
+        return ['real_estate_report', 'json'];
     }
 
     /**

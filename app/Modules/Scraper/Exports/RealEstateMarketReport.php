@@ -11,54 +11,82 @@ use App\Services\MarketRegistry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
- * Produces a five-sheet workbook from scraped listing data.
- * Every sheet sits on one principle: describe what list.am shows,
+ * Produces a market research workbook from scraped listing data.
+ * Every sheet sits on one principle: describe what the source shows,
  * sliced by fields that already exist in the data - no editorial
  * bracketing, no imposed categories, no analytical judgment.
  *
- *   Sheet 1 - All Listings       : full raw dataset for analyst use
- *   Sheet 2 - Market Overview    : aggregated headline statistics
- *   Sheet 3 - District Analysis  : pricing and supply by district
- *   Sheet 4 - Room Type Analysis : product mix and pricing by bedroom count
- *   Sheet 5 - Price Distribution : market segmentation by price bracket
+ *   Sheet 1 - All Listings         : full raw dataset for analyst use
+ *   Sheet 2 - Market Overview      : aggregated headline statistics
+ *   Sheet 3 - District Analysis    : pricing and supply by district
+ *   Sheet 4 - Room/Building Type   : product mix by room count (apartments/houses)
+ *                                    or building type (commercial); omitted for land
+ *   Sheet 5 - Price Distribution   : market segmentation by price bracket
  *
- * Registered only in profiles where rooms data genuinely applies -
- * ApartmentsForSaleProfile and LongTermApartmentRentalsProfile - not
- * the shared AbstractListAmProfile, since Land/Commercial/Houses don't
- * have the room-count data Sheet 4 depends on.
+ * Sheet 4 variant is determined from the source profile name pattern -
+ * market-portable, works for any prefix (listam_, binaz_, myhome_).
  */
 class RealEstateMarketReport implements ExporterInterface
 {
     /**
-     * Generate the five-sheet market research report.
+     * Generate the market research report workbook.
+     *
+     * Sheet 4 variant is determined from the source profile name pattern -
+     * market-portable, works for any prefix (listam_, binaz_, myhome_).
+     * 'room'     → apartments, houses, new developments
+     * 'building' → commercial sale and rent
+     * null       → land (4 sheets only, Sheet 4 omitted)
      */
     public function export(array $data, ScraperProfileInterface $profile): string
     {
         $path = $this->buildPath($profile->getName());
         $deduplicated = self::deduplicateForAggregation($data);
+        $source = $profile->getName();
 
-        Excel::store(new class($data, $deduplicated) implements WithMultipleSheets
+        $sheet4Type = match (true) {
+            str_contains($source, '_apartments_') => 'room',
+            str_contains($source, '_houses_') => 'room',
+            str_contains($source, '_new_developments_') => 'room',
+            str_contains($source, '_commercial_') => 'building',
+            str_contains($source, '_land_') => null,
+            default => 'room',
+        };
+
+        Excel::store(new class($data, $deduplicated, $sheet4Type) implements WithMultipleSheets
         {
             public function __construct(
                 private readonly array $rawData,
                 private readonly array $deduplicatedData,
+                private readonly ?string $sheet4Type,
             ) {}
 
             public function sheets(): array
             {
-                return [
+                $sheets = [
                     new AllListingsSheet($this->rawData),
                     new MarketOverviewSheet($this->deduplicatedData),
                     new DistrictAnalysisSheet($this->deduplicatedData),
-                    new RoomTypeAnalysisSheet($this->deduplicatedData),
-                    new PriceDistributionSheet($this->deduplicatedData),
                 ];
+
+                if ($this->sheet4Type === 'room') {
+                    $sheets[] = new RoomTypeAnalysisSheet($this->deduplicatedData);
+                } elseif ($this->sheet4Type === 'building') {
+                    $sheets[] = new BuildingTypeAnalysisSheet($this->deduplicatedData);
+                }
+
+                $sheets[] = new PriceDistributionSheet($this->deduplicatedData);
+
+                return $sheets;
             }
         }, $path, 'local');
 
@@ -120,11 +148,11 @@ class RealEstateMarketReport implements ExporterInterface
 }
 
 /**
- * Sheet 1 — Client-facing raw dataset.
+ * Sheet 1 - Client-facing raw dataset.
  * Contains only fields relevant to the client.
  * Ordered for readability: location → price → property details → lifecycle.
  *
- * days_on_market and status are computed on export —
+ * days_on_market and status are computed on export -
  * they do not exist as DB columns.
  */
 class AllListingsSheet implements FromArray, WithHeadings, WithTitle
@@ -427,6 +455,88 @@ class RoomTypeAnalysisSheet implements FromArray, WithHeadings, WithTitle
         }
 
         return $rows;
+    }
+}
+
+/**
+ * Groups listings by building type (monolith, panels, stone, etc.)
+ * and shows count, average and median price/sqm per type.
+ *
+ * Used for commercial and other non-residential categories where
+ * room count is not meaningful. Language-agnostic - groups by
+ * whatever value is stored in building_type, works for any market.
+ */
+class BuildingTypeAnalysisSheet implements FromArray, WithColumnWidths, WithStyles, WithTitle
+{
+    use CalculatesMedian;
+
+    public function __construct(private readonly array $listings) {}
+
+    public function title(): string
+    {
+        return 'Building Type Analysis';
+    }
+
+    public function array(): array
+    {
+        $header = [
+            'Building Type',
+            'Listings',
+            '% of Market',
+            'Avg Price (USD)',
+            'Avg Price/sqm (USD)',
+            'Median Price/sqm (USD)',
+            'Avg Area (sqm)',
+        ];
+
+        $active = array_filter(
+            $this->listings,
+            fn ($r) => ($r['status'] ?? '') !== 'Disappeared',
+        );
+
+        $total = count($active);
+
+        $grouped = [];
+        foreach ($active as $row) {
+            $type = $row['building_type'] ?? 'Unknown';
+            $grouped[$type][] = $row;
+        }
+
+        ksort($grouped);
+
+        $rows = [$header];
+        foreach ($grouped as $type => $items) {
+            $count = count($items);
+            $prices = array_filter(array_column($items, 'price'));
+            $psqm = array_filter(array_column($items, 'price_per_sqm'));
+
+            $rows[] = [
+                ucfirst($type),
+                $count,
+                $total > 0 ? round(($count / $total) * 100, 1).'%' : '0%',
+                count($prices) ? '$'.number_format(array_sum($prices) / count($prices), 0) : '-',
+                count($psqm) ? '$'.number_format(array_sum($psqm) / count($psqm), 0) : '-',
+                count($psqm) ? '$'.number_format($this->median($psqm), 0) : '-',
+                count($items) ? round(array_sum(array_filter(array_column($items, 'area'))) / count($items), 1) : '-',
+            ];
+        }
+
+        return $rows;
+    }
+
+    public function styles(Worksheet $sheet): array
+    {
+        return [
+            1 => [
+                'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF1F3864']],
+            ],
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return ['A' => 22, 'B' => 12, 'C' => 16, 'D' => 18, 'E' => 22, 'F' => 24, 'G' => 16];
     }
 }
 
