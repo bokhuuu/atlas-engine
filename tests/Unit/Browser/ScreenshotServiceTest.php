@@ -102,4 +102,21 @@ class ScreenshotServiceTest extends TestCase
 
         $this->assertNull($listing->fresh()->screenshot_url);
     }
+
+    public function test_url_returns_public_url_when_public_enabled(): void
+    {
+        config(['scraper.screenshots_public' => true]);
+
+        $result = ScreenshotService::url('screenshots/listam/test.jpg');
+
+        $this->assertStringContainsString('bokhuuu-atlas-screenshots', $result);
+        $this->assertStringContainsString('screenshots/listam/test.jpg', $result);
+    }
+
+    public function test_url_returns_null_when_path_empty(): void
+    {
+        $result = ScreenshotService::url('');
+
+        $this->assertNull($result);
+    }
 }

@@ -169,7 +169,7 @@ class ScreenshotService
      * Requires the b2_screenshots bucket to be set to public.
      * Once public, URLs are permanent — no expiry.
      */
-    public function publicUrl(string $b2Path): string
+    public static function publicUrl(string $b2Path): string
     {
         $endpoint = config(
             'filesystems.disks.b2_screenshots.endpoint',
@@ -187,12 +187,12 @@ class ScreenshotService
      * Returns the best available URL for a screenshot.
      * Uses public URL if bucket is public, signed URL otherwise.
      */
-    public function url(string $b2Path): ?string
+    public static function url(string $b2Path): ?string
     {
         if (config('scraper.screenshots_public', false)) {
-            return $this->publicUrl($b2Path);
+            return self::publicUrl($b2Path);
         }
 
-        return $this->signedUrl($b2Path);
+        return (new self)->signedUrl($b2Path, 60 * 24 * 30);
     }
 }

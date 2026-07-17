@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Scraper\Exports;
 
+use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Concerns\CalculatesMedian;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
@@ -219,6 +220,12 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                 $row['status'] = "Stale ({$staleDays}+ days)";
             } else {
                 $row['status'] = 'Active';
+            }
+
+            if (! empty($row['screenshot_url'])) {
+                $row['screenshot_url'] = ScreenshotService::url(
+                    $row['screenshot_url']
+                );
             }
 
             return array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns);
