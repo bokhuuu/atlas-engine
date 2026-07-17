@@ -193,6 +193,6 @@ class ScreenshotService
             return self::publicUrl($b2Path);
         }
 
-        return (new self)->signedUrl($b2Path, 60 * 24 * 30);
+        return (new self)->signedUrl($b2Path, 60 * 24 * 7);
     }
 }

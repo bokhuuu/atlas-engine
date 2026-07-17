@@ -7,6 +7,7 @@ namespace App\Modules\AI\Agents;
 use App\Modules\AI\Models\Document;
 use App\Modules\AI\Services\EmbeddingService;
 use App\Modules\AI\Services\PromptService;
+use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Exports\ExportManager;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Support\CategoryLabels;
@@ -195,6 +196,9 @@ class PropertyAssistantAgent extends Agent
             'rooms' => $l->rooms,
             'floor' => $l->floor,
             'url' => $l->url,
+            'screenshot_url' => $l->screenshot_url
+                ? ScreenshotService::url($l->screenshot_url)
+                : null,
         ]);
 
         return json_encode([
