@@ -16,11 +16,12 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SystemHealthController;
 use App\Http\Controllers\Admin\TokenController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Public\OverviewController;
 use App\Modules\Scraper\Api\ExportController;
 use App\Services\MarketRegistry;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/'.config('scraper.default_market'))->name('home');
+Route::get('/', OverviewController::class)->name('home');
 
 Route::redirect('/admin', '/'.config('scraper.default_market').'/admin/dashboard');
 Route::redirect('/admin/dashboard', '/'.config('scraper.default_market').'/admin/dashboard');

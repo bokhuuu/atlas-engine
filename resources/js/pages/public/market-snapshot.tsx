@@ -397,6 +397,28 @@ export default function MarketSnapshot() {
                         >
                             {(currentMarket ?? 'MARKET').toUpperCase()}
                         </span>
+
+                        <a
+                            href="/"
+                            style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: '11px',
+                                letterSpacing: '1px',
+                                color: '#5b626d',
+                                textDecoration: 'none',
+                                borderLeft: '1px solid rgba(255,255,255,.06)',
+                                paddingLeft: '11px',
+                                transition: 'color .2s',
+                            }}
+                            onMouseEnter={(e) =>
+                                (e.currentTarget.style.color = '#9aa1ad')
+                            }
+                            onMouseLeave={(e) =>
+                                (e.currentTarget.style.color = '#5b626d')
+                            }
+                        >
+                            ← All Markets
+                        </a>
                     </div>
                     <div
                         style={{
