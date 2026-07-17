@@ -38,43 +38,85 @@ interface UsageStats {
     all_time: { tokens: number; cost_usd: number };
 }
 
-const SUGGESTED_QUERIES = [
-    {
-        icon: BarChart2,
-        label: 'Median price/sqm for apartments for sale',
-        query: 'What is the median price per sqm for apartments for sale?',
-    },
-    {
-        icon: Search,
-        label: 'Cheapest district for commercial rent',
-        query: 'Which district has the lowest median price per sqm for commercial space for rent?',
-    },
-    {
-        icon: Zap,
-        label: 'Most vs least expensive districts',
-        query: 'Compare the median price per sqm for apartments for sale across districts.',
-    },
-    {
-        icon: List,
-        label: 'Find 3-bed apartments under $200k',
-        query: 'Find 3 bedroom apartments for sale under $200,000.',
-    },
-    {
-        icon: FileSpreadsheet,
-        label: 'Export commercial listings to Excel',
-        query: 'Export all commercial real estate for sale listings to Excel.',
-    },
-    {
-        icon: TrendingDown,
-        label: 'Districts with price reductions this week',
-        query: 'Which districts had the most price reductions for apartments for sale in the last 7 days?',
-    },
-    {
-        icon: PiggyBank,
-        label: 'Best rental yield districts for commercial',
-        query: 'What is the estimated rental yield per district for commercial property?',
-    },
-];
+function getSuggestedQueries(market: string) {
+    if (market === 'global') {
+        return [
+            {
+                icon: BarChart2,
+                label: 'Compare all markets',
+                query: 'Compare all markets side by side.',
+            },
+            {
+                icon: Zap,
+                label: 'Which market has most listings?',
+                query: 'Which market has the most listings?',
+            },
+            {
+                icon: DollarSign,
+                label: 'Price comparison across markets',
+                query: 'Compare median sale price per sqm across all markets.',
+            },
+            {
+                icon: PiggyBank,
+                label: 'Best yield market',
+                query: 'Which market offers the best rental yield?',
+            },
+            {
+                icon: List,
+                label: 'What categories are available?',
+                query: 'What real estate categories are available across all markets?',
+            },
+            {
+                icon: Search,
+                label: 'Find apartments under $200k',
+                query: 'Find 3 bedroom apartments for sale under $200,000.',
+            },
+            {
+                icon: TrendingDown,
+                label: 'Markets with price reductions',
+                query: 'Which markets have had the most price reductions recently?',
+            },
+        ];
+    }
+
+    return [
+        {
+            icon: BarChart2,
+            label: 'Median price/sqm for apartments for sale',
+            query: 'What is the median price per sqm for apartments for sale?',
+        },
+        {
+            icon: Search,
+            label: 'Cheapest district for commercial rent',
+            query: 'Which district has the lowest median price per sqm for commercial space for rent?',
+        },
+        {
+            icon: Zap,
+            label: 'Most vs least expensive districts',
+            query: 'Compare the median price per sqm for apartments for sale across districts.',
+        },
+        {
+            icon: List,
+            label: 'Find 3-bed apartments under $200k',
+            query: 'Find 3 bedroom apartments for sale under $200,000.',
+        },
+        {
+            icon: FileSpreadsheet,
+            label: 'Export commercial listings to Excel',
+            query: 'Export all commercial real estate for sale listings to Excel.',
+        },
+        {
+            icon: TrendingDown,
+            label: 'Districts with price reductions this week',
+            query: 'Which districts had the most price reductions for apartments for sale in the last 7 days?',
+        },
+        {
+            icon: PiggyBank,
+            label: 'Best rental yield districts for commercial',
+            query: 'What is the estimated rental yield per district for commercial property?',
+        },
+    ];
+}
 
 export default function Assistant() {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -85,6 +127,7 @@ export default function Assistant() {
     const [usageFlash, setUsageFlash] = useState(false);
 
     const { market, adminUrl } = useMarket();
+    const suggestedQueries = getSuggestedQueries(market);
 
     const bottomRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -323,13 +366,13 @@ export default function Assistant() {
             <Head title="AI Assistant" />
 
             <div className="flex h-[calc(100vh-8rem)] gap-4 p-4 lg:p-6">
-                {/* Left panel — suggested queries, vertical, scrollable */}
+                {/* Left panel - suggested queries, vertical, scrollable */}
                 <div className="hidden w-56 shrink-0 flex-col gap-2 lg:flex">
                     <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
                         Suggested queries
                     </p>
                     <div className="flex flex-col gap-2 overflow-y-auto">
-                        {SUGGESTED_QUERIES.map((item) => (
+                        {suggestedQueries.map((item) => (
                             <button
                                 key={item.query}
                                 onClick={() => sendMessage(item.query)}
@@ -505,10 +548,10 @@ export default function Assistant() {
                         )}
                     </div>
 
-                    {/* Mobile suggested queries — horizontal scroll */}
+                    {/* Mobile suggested queries - horizontal scroll */}
                     <div className="border-t border-border px-3 pt-3 lg:hidden">
                         <div className="flex gap-2 overflow-x-auto pb-2">
-                            {SUGGESTED_QUERIES.map((item) => (
+                            {suggestedQueries.map((item) => (
                                 <button
                                     key={item.query}
                                     onClick={() => sendMessage(item.query)}
