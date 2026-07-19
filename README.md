@@ -22,9 +22,9 @@ One platform, multiple markets. Switching between Yerevan and Baku changes which
 | Global Market Comparison | `/global/admin/market-stats`  | Per-category price comparison table across all configured markets.                                                                                                                                                           |
 | Global AI Assistant      | `/global/admin/assistant`     | Cross-market AI - all sources accessible, compareMarkets tool, context-aware suggested queries.                                                                                                                              |
 
-**279 tests passing** across unit, feature and integration layers. PostgreSQL 16 backend.
-
 Old `/admin/*` URLs redirect automatically to `/yerevan/admin/*`.
+
+**279 tests passing** across unit, feature and integration layers (PostgreSQL 16 backend, Pest framework).
 
 ---
 
@@ -40,7 +40,7 @@ Old `/admin/*` URLs redirect automatically to `/yerevan/admin/*`.
 | Scraping       | Laravel Dusk + ChromeDriver (list.am is JS-rendered)                                   |
 | Queue          | Redis + Laravel Horizon                                                                |
 | Storage        | Backblaze B2 (screenshots + DB backups), rclone                                        |
-| Screenshots    | Screenshotone API → Backblaze B2                                                       |
+| Screenshots    | Screenshotone API (headless browser as a service) → Backblaze B2                       |
 | Exchange Rates | open.er-api.com (free, no auth, daily)                                                 |
 | Monitoring     | Sentry, UptimeRobot, Telegram alerts                                                   |
 | DevOps         | Docker, Caddy (HTTPS), Vultr VPS, GitHub Actions CI/CD                                 |
@@ -155,7 +155,7 @@ All authenticated endpoints require a Sanctum Bearer token. Create one at `/yere
 
 A full Postman collection is available at [`postman/atlas.postman_collection.json`](postman/atlas.postman_collection.json). Import it, set `base_url`, `market` and `token` variables and every endpoint is ready to use.
 
-**Market-aware endpoints** - Pass `?market=yerevan` (or `baku`/`tbilisi`) to scope results. Pass `market=global` in AI chat body for cross-market assistant context:
+**Market-aware endpoints** - pass `?market=yerevan` (or `baku`/`tbilisi`) to scope results:
 
 ```
 GET  /api/v1/public/snapshot?market=yerevan          - public market snapshot (no auth)
