@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Atlas API - Multi-Market Real Estate Intelligence",
-        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.",
+        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.\n\nThread 14 additions: /api/v1/trends/volume and /api/v1/trends/price for time-series trend charts.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
@@ -23,7 +23,7 @@
         {
             "key": "market",
             "value": "yerevan",
-            "description": "Active market. Options: yerevan, baku, tbilisi"
+            "description": "Active market. Options: yerevan, baku, tbilisi. Use global in AI chat body for cross-market context."
         }
     ],
     "item": [
@@ -652,6 +652,94 @@
                             "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"url\": \"https://list.am/en/item/23952670\",\n      \"district\": \"Kentron\",\n      \"price\": 185000,\n      \"area\": 78,\n      \"rooms\": 3,\n      \"status\": \"active\"\n    }\n  ],\n  \"total\": 142,\n  \"per_page\": 20,\n  \"current_page\": 1,\n  \"last_page\": 8\n}"
                         }
                     ]
+                },
+                {
+                    "name": "Market trend \u2014 listing volume",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/trends/volume?market={{market}}&groupBy=month",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "trends", "volume"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                },
+                                {
+                                    "key": "groupBy",
+                                    "value": "month",
+                                    "description": "Grouping period: month or quarter"
+                                }
+                            ]
+                        },
+                        "description": "Returns monthly or quarterly listing volume for a market, split by listing_type (sale/rent). Powers the Market Stats trend charts.\n\nUses listing_date (when seller posted) not scraped_at \u2014 reflects real market activity.\n\nGroupBy options: month (default), quarter. Year support deferred until sufficient historical data."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"series\": [\n    {\"period\": \"2025-07\", \"sale\": 45, \"rent\": 12},\n    {\"period\": \"2025-08\", \"sale\": 52, \"rent\": 18}\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Market trend \u2014 median price/sqm",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/trends/price?market={{market}}&groupBy=month",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "trends", "price"],
+                            "query": [
+                                {
+                                    "key": "market",
+                                    "value": "{{market}}",
+                                    "description": "Market slug: yerevan, baku, tbilisi"
+                                },
+                                {
+                                    "key": "groupBy",
+                                    "value": "month",
+                                    "description": "Grouping period: month or quarter"
+                                }
+                            ]
+                        },
+                        "description": "Returns monthly or quarterly median sale price/sqm for a market. Sale listings only \u2014 rent price/sqm on the same axis as sale is misleading.\n\nUses PostgreSQL percentile_cont(0.5) for true median (not average). All prices in USD."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"series\": [\n    {\"period\": \"2025-07\", \"median_price_per_sqm\": 1820},\n    {\"period\": \"2025-08\", \"median_price_per_sqm\": 1950}\n  ]\n}"
+                        }
+                    ]
                 }
             ]
         },
@@ -820,7 +908,7 @@
         },
         {
             "name": "AI Assistant",
-            "description": "Chat with the AI assistant and manage feedback. The agent has access to 8 tools: category list, category stats, district breakdown, comparable listing finder, Excel export, price change detection, rental yield estimate, and semantic search.",
+            "description": "AI assistant endpoints. All require a Bearer token. Supports per-market (pass market in body) and global context (market='global' \u2014 queries all markets). 9 callable tools including compareMarkets for cross-market comparison.",
             "item": [
                 {
                     "name": "AI health check",
