@@ -42,6 +42,11 @@ class ScrapeCompletedJob implements ShouldQueue
         $encounteredCount = $run->encountered_listings ?? 0;
 
         if ($encounteredCount === 0 && $savedCount === 0) {
+            Log::warning('Chrome failure suspected — 0 encountered and 0 saved', [
+                'run_id' => $this->scraperRunId,
+                'source' => $this->source,
+            ]);
+
             try {
                 app(TelegramNotifier::class)->notify([
                     'source' => $this->source,

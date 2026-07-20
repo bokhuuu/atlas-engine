@@ -57,7 +57,7 @@ class DriftDetector
             return;
         }
 
-        $message = "Drift detected: only {$listingCount} listings scraped (minimum: {$minimum})";
+        $message = "Drift detected: only {$listingCount} listings encountered on source pages (minimum: {$minimum}). Chrome may have failed to load pages.";
 
         Log::warning('Drift detection: low listing count', [
             'run_id' => $scraperRunId,
