@@ -368,7 +368,7 @@ return [
         'city_id' => env('BINAZ_CITY_ID', '1'),
         'persisted_query_hash' => env(
             'BINAZ_PERSISTED_QUERY_HASH',
-            '55232d32b6adb3055bc3e1f0a5627adb2812a29c4d93d29eaa46df1da5b4170d'
+            '0411196b53414c016d897220337db3bd777dee1a71fdfafa4d98ce3502b38754'
         ),
     ],
 
