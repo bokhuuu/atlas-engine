@@ -35,12 +35,12 @@ test('market stats only shows yerevan categories', function () {
     ))->toBeTrue();
 });
 
-test('market stats shows empty categories for baku with no profiles', function () {
-    $this->get('/baku/admin/market-stats')
-        ->assertOk()
-        ->assertInertia(
-            fn ($page) => $page
-                ->component('admin/market-stats')
-                ->where('categories', [])
-        );
+test('market stats shows binaz categories for baku', function () {
+    $response = $this->get('/baku/admin/market-stats');
+
+    $categories = $response->original->getData()['page']['props']['categories'];
+
+    expect(collect($categories)->every(
+        fn ($cat) => str_starts_with($cat['source'], 'binaz_')
+    ))->toBeTrue();
 });
