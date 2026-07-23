@@ -7,6 +7,7 @@ use App\Modules\Scraper\Exports\ExcelExporter;
 use App\Modules\Scraper\Exports\JsonExporter;
 use App\Modules\Scraper\Exports\RealEstateMarketReport;
 use App\Modules\Scraper\Profiles\ApartmentsForSaleProfile;
+use App\Modules\Scraper\Profiles\BinazLandSaleProfile;
 use App\Modules\Scraper\Profiles\CommercialForRentProfile;
 use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
 use App\Modules\Scraper\Profiles\HousesForSaleProfile;
@@ -178,6 +179,8 @@ return [
         'listam_commercial_rent' => CommercialForRentProfile::class,
         'listam_land_sale' => LandForSaleProfile::class,
         'listam_new_developments_sale' => NewDevelopmentApartmentsProfile::class,
+
+        'binaz_land_sale' => BinazLandSaleProfile::class,
     ],
 
     /*
@@ -320,6 +323,11 @@ return [
             'max_pages' => env('LISTAM_NEW_DEVELOPMENTS_SALE_MAX_PAGES', 1),
             'listings_per_page' => env('LISTAM_NEW_DEVELOPMENTS_SALE_LISTINGS_PER_PAGE', 39),
         ],
+
+        'binaz_land_sale' => [
+            'request_delay' => env('BINAZ_LAND_SALE_REQUEST_DELAY', 2),
+            'max_pages' => env('BINAZ_LAND_SALE_MAX_PAGES', 5),
+        ],
     ],
 
     /*
@@ -336,6 +344,32 @@ return [
     'listam_auth' => [
         'email' => env('LISTAM_EMAIL'),
         'password' => env('LISTAM_PASSWORD'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | bina.az API Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Settings for the bina.az GraphQL API used by all binaz_* profiles.
+    |
+    | city_id              - Baku is city 1 in bina.az's taxonomy. Only Baku
+    |                        is scraped — all profiles filter by this ID.
+    | persisted_query_hash - SHA256 hash identifying the SearchItems GraphQL
+    |                        query on bina.az's frontend. This hash is tied
+    |                        to their frontend build and may rotate when they
+    |                        deploy a new version. If GraphQL calls start
+    |                        returning errors, update this value from DevTools
+    |                        Network tab → SearchItems → Payload → extensions.
+    |                        Store the new hash in .env as BINAZ_PERSISTED_QUERY_HASH.
+    |
+    */
+    'binaz' => [
+        'city_id' => env('BINAZ_CITY_ID', '1'),
+        'persisted_query_hash' => env(
+            'BINAZ_PERSISTED_QUERY_HASH',
+            '55232d32b6adb3055bc3e1f0a5627adb2812a29c4d93d29eaa46df1da5b4170d'
+        ),
     ],
 
     /*
@@ -561,5 +595,105 @@ return [
         'azn_usd' => (float) env('FALLBACK_AZN_USD_RATE', 0.588),
         'gel_usd' => (float) env('FALLBACK_GEL_USD_RATE', 0.357),
         'eur_usd' => (float) env('FALLBACK_EUR_USD_RATE', 0.876),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Russian → English Normalization Dictionaries
+    |--------------------------------------------------------------------------
+    |
+    | Used by NormalizeToEnglishStage to translate structured fields from
+    | Russian-language sources (bina.az) into English at pipeline time.
+    | Zero API calls - instant lookup against these config arrays.
+    |
+    | Add unknown values here after inspecting real scraped data.
+    | Portable: any future Russian-language market uses the same stage
+    | with its own key under normalization.{market}.
+    |
+    */
+    'normalization' => [
+        'baku' => [
+            'districts' => [
+                // Administrative districts (районы)
+                'Наримановский' => 'Narimanov',
+                'Наримановский район' => 'Narimanov',
+                'Хатаинский' => 'Khatai',
+                'Хатаинский район' => 'Khatai',
+                'Насиминский' => 'Nasimi',
+                'Насиминский район' => 'Nasimi',
+                'Бинагадинский' => 'Binagadi',
+                'Бинагадинский район' => 'Binagadi',
+                'Сабаильский' => 'Sabail',
+                'Сабаильский район' => 'Sabail',
+                'Сураханский' => 'Surakhani',
+                'Сураханский район' => 'Surakhani',
+                'Низаминский' => 'Nizami',
+                'Низаминский район' => 'Nizami',
+                'Пираллахинский' => 'Pirallahi',
+                'Гарадагский' => 'Garadagh',
+                'Абшеронский' => 'Absheron',
+
+                // Metro stations (м.)
+                'Насими' => 'Nasimi',
+                'Низами' => 'Nizami',
+                'Сахил' => 'Sahil',
+                '28 мая' => '28 May',
+                '8 ноября' => '8 November',
+                'Иншаатчылар' => 'Inshaatchilar',
+                'Халглар Достлугу' => 'Halglar Dostlugu',
+                'Шах Исмаил Хатаи' => 'Shah Ismail Khatai',
+                'Азадлыг проспекти' => 'Azadlig Avenue',
+                'Элмляр Академиясы' => 'Elmlar Akademiyasi',
+                'Нариман Нариманов' => 'Nariman Narimanov',
+                'Баилова' => 'Bailova',
+                'Ахмедлы' => 'Ahmadli',
+                'Ази Асланов' => 'Hazi Aslanov',
+                'Аг шехер' => 'Agh Sheker',
+
+                // Settlements (пос.)
+                'Мардакан' => 'Mardakan',
+                'Нардаран' => 'Nardaran',
+                'Новханы' => 'Novkhani',
+                'Бузовна' => 'Buzovna',
+                'Бильгях' => 'Bilgah',
+                'Шувеляны' => 'Shuvalan',
+                'Ходжасан' => 'Khojasan',
+                'Горадил' => 'Goradil',
+                'Геокмалы' => 'Geokmaly',
+                'Рамана' => 'Ramana',
+                'Тюркан' => 'Turkan',
+                'Масазыр' => 'Masazir',
+                'Кюрдаханы' => 'Kurdakhani',
+                'Бинагади' => 'Binagadi',
+                'Балаханы' => 'Balakhani',
+                'Бинэ' => 'Bine',
+                'Забрат' => 'Zabrat',
+                'Маштага' => 'Mashtaga',
+                'Пираллахи' => 'Pirallahi',
+                'Сарай' => 'Saray',
+                'Гобустан' => 'Gobustan',
+            ],
+
+            'building_types' => [
+                'Монолит' => 'Monolith',
+                'Кирпич' => 'Brick',
+                'Панель' => 'Panel',
+                'Бизнес центр' => 'Business Center',
+                'Жилое здание' => 'Residential Building',
+                'Административное здание' => 'Administrative Building',
+                'Производственное здание' => 'Industrial Building',
+                'Частный дом' => 'Private House',
+                'Новостройка' => 'New Building',
+            ],
+
+            'conditions' => [
+                'С ремонтом' => 'Renovated',
+                'Без ремонта' => 'Needs renovation',
+                'Евроремонт' => 'Euro renovation',
+                'Хорошее' => 'Good',
+                'Среднее' => 'Average',
+                'Требует ремонта' => 'Needs renovation',
+            ],
+        ],
     ],
 ];

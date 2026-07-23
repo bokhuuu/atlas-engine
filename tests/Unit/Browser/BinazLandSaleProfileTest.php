@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Modules\Scraper\Browser\BinazScraper;
+use App\Modules\Scraper\Pipeline\Stages\NormalizeToEnglishStage;
+use App\Modules\Scraper\Profiles\BinazLandSaleProfile;
+
+$profile = new BinazLandSaleProfile;
+
+test('profile has correct name', function () use ($profile) {
+    expect($profile->getName())->toBe('binaz_land_sale');
+});
+
+test('profile has correct category id', function () use ($profile) {
+    expect($profile->getCategoryId())->toBe(9);
+});
+
+test('profile has correct listing type', function () use ($profile) {
+    expect($profile->getListingType())->toBe('sale');
+});
+
+test('profile has correct property type', function () use ($profile) {
+    expect($profile->getPropertyType())->toBe('land');
+});
+
+test('profile returns max pages of 1 for sequential cursor pagination', function () use ($profile) {
+    expect($profile->getMaxPages())->toBe(1);
+});
+
+test('profile uses BinazScraper', function () use ($profile) {
+    expect($profile->getScraperClass())->toBe(BinazScraper::class);
+});
+
+test('profile pipeline includes NormalizeToEnglishStage', function () use ($profile) {
+    $stages = $profile->getPipelineStages();
+
+    $hasNormalizeStage = collect($stages)->contains(
+        fn ($stage) => $stage instanceof NormalizeToEnglishStage
+    );
+
+    expect($hasNormalizeStage)->toBeTrue();
+});
+
+test('profile includes real estate report export', function () use ($profile) {
+    expect($profile->getExports())->toContain('real_estate_report');
+});
+
+test('profile base url is bina az russian version', function () use ($profile) {
+    expect($profile->getBaseUrl())->toBe('https://ru.bina.az');
+});

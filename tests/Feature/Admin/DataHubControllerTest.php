@@ -36,12 +36,12 @@ test('data hub only shows yerevan categories', function () {
     ))->toBeTrue();
 });
 
-test('data hub shows empty categories for baku with no profiles', function () {
-    $this->get('/baku/admin/data-hub')
-        ->assertOk()
-        ->assertInertia(
-            fn ($page) => $page
-                ->component('admin/data-hub')
-                ->where('categories', [])
-        );
+test('data hub shows binaz categories for baku', function () {
+    $response = $this->get('/baku/admin/data-hub');
+
+    $categories = $response->original->getData()['page']['props']['categories'];
+
+    expect(collect($categories)->every(
+        fn ($cat) => str_starts_with($cat['source'], 'binaz_')
+    ))->toBeTrue();
 });
