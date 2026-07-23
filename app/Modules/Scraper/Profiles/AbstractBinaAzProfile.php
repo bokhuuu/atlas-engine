@@ -157,7 +157,10 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
     public function getQueueConfig(): array
     {
         return [
-            'concurrency' => (int) config('scraper.default_concurrency'),
+            'concurrency' => (int) config(
+                "scraper.profile_config.{$this->getName()}.concurrency",
+                10
+            ),
             'retry_times' => (int) config('scraper.default_retry_times'),
             'timeout' => (int) config(
                 "scraper.profile_config.{$this->getName()}.timeout",

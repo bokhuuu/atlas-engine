@@ -328,6 +328,7 @@ return [
             'request_delay' => env('BINAZ_LAND_SALE_REQUEST_DELAY', 2),
             'max_pages' => env('BINAZ_LAND_SALE_MAX_PAGES', 5),
             'timeout' => env('BINAZ_LAND_SALE_TIMEOUT', 1800),
+            'concurrency' => env('BINAZ_LAND_SALE_CONCURRENCY', 10),
         ],
     ],
 
