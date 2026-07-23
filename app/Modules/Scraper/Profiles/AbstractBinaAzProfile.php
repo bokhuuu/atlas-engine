@@ -144,4 +144,25 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
             parent::getRequestDelay()
         );
     }
+
+    /**
+     * Extended timeout for bina.az profiles.
+     *
+     * Unlike Yerevan (one job per page, 60s each), bina.az runs the full
+     * cursor pagination loop inside a single CrawlIndexPageJob. A backfill
+     * run of 282 fetches at 2s delay needs ~10 minutes just for index fetching,
+     * plus detail page time per listing. 1800s (30 min) covers this safely.
+     * Override per-profile via scraper.profile_config.{name}.timeout in config.
+     */
+    public function getQueueConfig(): array
+    {
+        return [
+            'concurrency' => (int) config('scraper.default_concurrency'),
+            'retry_times' => (int) config('scraper.default_retry_times'),
+            'timeout' => (int) config(
+                "scraper.profile_config.{$this->getName()}.timeout",
+                1800
+            ),
+        ];
+    }
 }
