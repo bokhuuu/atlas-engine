@@ -32,6 +32,7 @@ interface FilterState {
     rooms: string[];
     agency: string;
     has_bill_of_sale: string;
+    exclude_duplicates: boolean;
     scraped_from: string;
     scraped_to: string;
     listing_date_from: string;
@@ -61,6 +62,7 @@ const makeDefault = (categories: Category[]): FilterState => ({
     rooms: [],
     agency: '',
     has_bill_of_sale: '',
+    exclude_duplicates: true,
     scraped_from: '',
     scraped_to: '',
     listing_date_from: '',
@@ -175,6 +177,11 @@ export default function DataHub({ categories, districts }: Props) {
                 params.set('listing_date_to', f.listing_date_to);
             }
 
+            params.set(
+                'exclude_duplicates',
+                f.exclude_duplicates ? 'true' : 'false',
+            );
+
             return params.toString();
         },
         [market],
@@ -288,6 +295,10 @@ export default function DataHub({ categories, districts }: Props) {
         }
 
         if (filters.has_bill_of_sale) {
+            count++;
+        }
+
+        if (!filters.exclude_duplicates) {
             count++;
         }
 
@@ -506,6 +517,43 @@ export default function DataHub({ categories, districts }: Props) {
                                         {o.label}
                                     </button>
                                 ))}
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-2">
+                            <div className="flex items-center justify-between rounded-lg border border-border px-4 py-3">
+                                <div>
+                                    <p className="text-sm font-medium">
+                                        Hide probable duplicates
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Same plot listed by multiple agencies
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() =>
+                                        setFilters((p) => ({
+                                            ...p,
+                                            exclude_duplicates:
+                                                !p.exclude_duplicates,
+                                        }))
+                                    }
+                                    className={
+                                        'relative inline-flex h-6 w-11 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ' +
+                                        (filters.exclude_duplicates
+                                            ? 'bg-primary'
+                                            : 'bg-muted')
+                                    }
+                                >
+                                    <span
+                                        className={
+                                            'inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200 ' +
+                                            (filters.exclude_duplicates
+                                                ? 'translate-x-5'
+                                                : 'translate-x-0')
+                                        }
+                                    />
+                                </button>
                             </div>
                         </div>
 
