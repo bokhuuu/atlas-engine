@@ -92,7 +92,6 @@ class BinazScraper extends BaseScraper
             $urls = array_merge($urls, $result['urls']);
             $cursor = $result['cursor'];
 
-            // No more pages available
             if (! $result['hasNextPage']) {
                 break;
             }
@@ -128,10 +127,9 @@ class BinazScraper extends BaseScraper
 
         $price = $jsonLd['offers']['price'] ?? null;
         $currency = $jsonLd['offers']['priceCurrency'] ?? 'AZN';
-        $areaUnit = $this->extractAreaUnit($html);
+        $areaUnit = $this->extractAreaUnit($crawler, $html);
         $area = $this->extractArea($crawler, $html);
 
-        // Convert sotka to m² - 1 сот = 100 m²
         $areaSqm = ($areaUnit === 'сот' && $area !== null)
             ? $area * 100
             : $area;
@@ -146,7 +144,7 @@ class BinazScraper extends BaseScraper
             'property_type' => $this->profile->getPropertyType(),
             'price' => $price !== null ? (float) $price : null,
             'currency' => $currency,
-            'price_per_sqm' => null, // calculated by CalculatePricePerSqmStage
+            'price_per_sqm' => null,
             'area' => $areaSqm,
             'rooms' => $this->extractPropertyRow($crawler, 'Количество комнат'),
             'floor' => $this->extractPropertyRow($crawler, 'Этаж'),
@@ -161,8 +159,8 @@ class BinazScraper extends BaseScraper
             'phone' => $this->fetchPhone($id),
             'image_urls' => $jsonLd['image'] ?? [],
             'listing_date' => $this->extractListingDate($crawler),
+            'has_bill_of_sale' => $this->extractHasBillOfSale($crawler),
             'extras' => [
-                'has_bill_of_sale' => $this->extractHasBillOfSale($crawler),
                 'original_price_azn' => $price !== null ? (float) $price : null,
                 'area_unit' => $areaUnit,
             ],
@@ -283,25 +281,22 @@ class BinazScraper extends BaseScraper
     }
 
     /**
-     * Extract area value from the page title or property row.
-     * Title format: "Участок - 10 сот - пос. Бузовна, Баку"
+     * Extract area value from the property row table.
+     * bina.az shows "Площадь" row with value like "7 сот" or "85 м²".
+     * Returns null if the property row is not found.
      */
     private function extractArea(Crawler $crawler, string $html): ?float
     {
         try {
-            preg_match('/-\s*([\d.,]+)\s*(?:сот|м²)/u', $html, $matches);
-            if (! empty($matches[1])) {
-                return (float) str_replace(',', '.', $matches[1]);
-            }
-
             $value = $this->extractPropertyRow($crawler, 'Площадь');
-            if ($value !== null) {
-                preg_match('/([\d.,]+)/', $value, $m);
 
-                return isset($m[1]) ? (float) str_replace(',', '.', $m[1]) : null;
+            if ($value === null) {
+                return null;
             }
 
-            return null;
+            preg_match('/([\d.,]+)/', $value, $m);
+
+            return isset($m[1]) ? (float) str_replace(',', '.', $m[1]) : null;
         } catch (Throwable) {
             return null;
         }
@@ -310,10 +305,12 @@ class BinazScraper extends BaseScraper
     /**
      * Extract the area unit (сот or м²) from the page title.
      */
-    private function extractAreaUnit(string $html): string
+    private function extractAreaUnit(Crawler $crawler, string $html): string
     {
-        if (preg_match('/-\s*[\d.,]+\s*(сот)/u', $html)) {
-            return 'сот';
+        $value = $this->extractPropertyRow($crawler, 'Площадь');
+
+        if ($value !== null) {
+            return str_contains($value, 'сот') ? 'сот' : 'м²';
         }
 
         return 'м²';

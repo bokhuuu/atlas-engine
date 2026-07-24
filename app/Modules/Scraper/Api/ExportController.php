@@ -118,6 +118,8 @@ class ExportController extends Controller
             'min_area',
             'max_area',
             'agency',
+            'has_bill_of_sale',
+            'exclude_duplicates',
             'scraped_from',
             'scraped_to',
             'status',

@@ -49,3 +49,7 @@ test('profile includes real estate report export', function () use ($profile) {
 test('profile base url is bina az russian version', function () use ($profile) {
     expect($profile->getBaseUrl())->toBe('https://ru.bina.az');
 });
+
+test('profile has extended timeout for cursor pagination loop', function () use ($profile) {
+    expect($profile->getQueueConfig()['timeout'])->toBe(1800);
+});

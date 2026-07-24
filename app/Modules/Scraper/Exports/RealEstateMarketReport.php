@@ -74,7 +74,7 @@ class RealEstateMarketReport implements ExporterInterface
             public function sheets(): array
             {
                 $sheets = [
-                    new AllListingsSheet($this->rawData),
+                    new AllListingsSheet($this->deduplicatedData),
                     new MarketOverviewSheet($this->deduplicatedData),
                     new DistrictAnalysisSheet($this->deduplicatedData),
                 ];
@@ -105,9 +105,8 @@ class RealEstateMarketReport implements ExporterInterface
     /**
      * Collapses duplicate groups into one averaged row before any
      * aggregate sheet computes from this data - a flagged duplicate
-     * pair counts as one data point, not two. AllListingsSheet uses
-     * the raw $data directly instead, since it's the client-facing
-     * full dataset - every real row stays visible there.
+     * pair counts as one data point, not two. All sheets including
+     * AllListingsSheet use this deduplicated data.
      */
     public static function deduplicateForAggregation(array $data): array
     {
@@ -179,6 +178,8 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'building_type',
         'condition',
         'is_new_building',
+        'has_bill_of_sale',
+        'phone',
         'agency_name',
         'listing_date',
         'scraped_at',
@@ -199,7 +200,11 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 
     public function headings(): array
     {
-        return $this->clientColumns;
+        return array_map(fn ($col) => match ($col) {
+            'price' => 'price_usd',
+            'price_per_sqm' => 'price_per_sqm_usd',
+            default => $col,
+        }, $this->clientColumns);
     }
 
     public function array(): array
@@ -228,7 +233,17 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                 );
             }
 
-            return array_map(fn ($col) => $row[$col] ?? null, $this->clientColumns);
+            return array_map(function ($col) use ($row) {
+                $value = $row[$col] ?? null;
+                if ($col === 'price' && $value !== null) {
+                    return (int) round((float) $value);
+                }
+                if ($col === 'price_per_sqm' && $value !== null) {
+                    return round((float) $value, 2);
+                }
+
+                return $value;
+            }, $this->clientColumns);
         }, $this->data);
     }
 }
@@ -295,6 +310,11 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['New Construction %',         count($this->data) > 0 ? round($newBuildingCount / count($this->data) * 100, 1).'%' : 'N/A'],
             ['Agency Listings',            count($agencies)],
             ['Owner Listings',             count($this->data) - count($agencies)],
+            ['', ''],
+            ['--- DOCUMENT STATUS ---',    ''],
+            ['With Bill of Sale',          count(array_filter(array_column($this->data, 'has_bill_of_sale')))],
+            ['Without Bill of Sale',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false))],
+            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null))],
         ];
     }
 

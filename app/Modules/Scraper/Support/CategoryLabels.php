@@ -22,6 +22,8 @@ class CategoryLabels
         'listam_commercial_rent' => 'Commercial for Rent',
         'listam_land_sale' => 'Land for Sale',
         'listam_new_developments_sale' => 'New Development Apartments',
+
+        'binaz_land_sale' => 'Land for Sale',
     ];
 
     public static function forSource(string $source): string
