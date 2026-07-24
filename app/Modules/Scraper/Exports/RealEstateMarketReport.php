@@ -239,11 +239,17 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                 if ($col === 'price' && $value !== null) {
                     return (int) round((float) $value);
                 }
+
                 if ($col === 'price_per_sqm' && $value !== null) {
                     return round((float) $value, 2);
                 }
+
                 if ($col === 'original_price_azn') {
                     $azn = $row['extras']['original_price_azn'] ?? null;
+
+                    if ($col === 'has_bill_of_sale') {
+                        return $value === null ? null : ($value ? 'Yes' : 'No');
+                    }
 
                     return $azn !== null ? (int) round((float) $azn) : null;
                 }
@@ -303,24 +309,24 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['Districts Covered',          count(array_unique($districts))],
             ['', ''],
             ['--- PRICING ---',            ''],
-            ['Average Price (USD)',        $avgPrice],
-            ['Median Price (USD)',         $medianPrice],
-            ['Average Price/sqm (USD)',    $avgSqm],
-            ['Median Price/sqm (USD)',     $medianSqm],
-            ['Average Area (sqm)',         $avgArea],
-            ['Min Price (USD)',            count($prices) ? min($prices) : 'N/A'],
-            ['Max Price (USD)',            count($prices) ? max($prices) : 'N/A'],
+            ['Average Price (USD)',        is_numeric($avgPrice) ? (int) round($avgPrice) : $avgPrice],
+            ['Median Price (USD)',         is_numeric($medianPrice) ? (int) round($medianPrice) : $medianPrice],
+            ['Average Price/sqm (USD)',    is_numeric($avgSqm) ? round($avgSqm, 2) : $avgSqm],
+            ['Median Price/sqm (USD)',     is_numeric($medianSqm) ? round($medianSqm, 2) : $medianSqm],
+            ['Average Area (sqm)',         is_numeric($avgArea) ? (int) round($avgArea) : $avgArea],
+            ['Min Price (USD)',            count($prices) ? (int) round(min($prices)) : 'N/A'],
+            ['Max Price (USD)',            count($prices) ? (int) round(max($prices)) : 'N/A'],
             ['', ''],
             ['--- MARKET COMPOSITION ---', ''],
-            ['New Construction Listings',  $newBuildingCount],
+            ['New Construction Listings',  $newBuildingCount ?: 0],
             ['New Construction %',         count($this->data) > 0 ? round($newBuildingCount / count($this->data) * 100, 1).'%' : 'N/A'],
-            ['Agency Listings',            count($agencies)],
-            ['Owner Listings',             count($this->data) - count($agencies)],
+            ['Agency Listings',            count($agencies) ?: 0],
+            ['Owner Listings',             (count($this->data) - count($agencies)) ?: 0],
             ['', ''],
             ['--- DOCUMENT STATUS ---',    ''],
-            ['With Bill of Sale',          count(array_filter(array_column($this->data, 'has_bill_of_sale')))],
-            ['Without Bill of Sale',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false))],
-            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null))],
+            ['With Bill of Sale',          count(array_filter(array_column($this->data, 'has_bill_of_sale'))) ?: 0],
+            ['Without Bill of Sale',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false)) ?: 0],
+            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null)) ?: 0],
         ];
     }
 

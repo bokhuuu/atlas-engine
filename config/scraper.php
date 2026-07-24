@@ -695,6 +695,7 @@ return [
                 'Кара Караев' => 'Khatai',
                 'Хатаинский' => 'Khatai',
                 'Хатаинский район' => 'Khatai',
+                'Хатаинский р.' => 'Khatai',
 
                 // Narimanov district (central Baku)
                 'Нариман Нариманов' => 'Narimanov',
@@ -725,6 +726,8 @@ return [
                 'Масазыр' => 'Absheron',
                 'Новханы' => 'Absheron',
                 'Абшеронский' => 'Absheron',
+                'Абшеронcкий р.' => 'Absheron',
+                'Абшеронский р.' => 'Absheron',
 
                 // Metro stations → their district
                 'Насими' => 'Nasimi',
