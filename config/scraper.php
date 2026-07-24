@@ -630,6 +630,8 @@ return [
                 'Sea Breeze' => 'Khazar',
                 'Хазарский р.' => 'Khazar',
                 'Хазарский район' => 'Khazar',
+                'Зире' => 'Khazar',
+                'Гала' => 'Khazar',
 
                 // Sabunchu district (northern Baku)
                 'Бакиханова' => 'Sabunchu',
@@ -685,6 +687,7 @@ return [
                 'Кобу' => 'Garadagh',
                 'Гарадагский' => 'Garadagh',
                 'Гарадагский район' => 'Garadagh',
+                'Гарадагский р.' => 'Garadagh',
 
                 // Khatai district (eastern Baku)
                 'Ени Гюнешли' => 'Khatai',
@@ -705,6 +708,7 @@ return [
                 // Nizami district (central Baku)
                 'Низаминский' => 'Nizami',
                 'Низаминский район' => 'Nizami',
+                'Низаминский р.' => 'Nizami',
 
                 // Pirallahi district (island)
                 'Пираллахи' => 'Pirallahi',
