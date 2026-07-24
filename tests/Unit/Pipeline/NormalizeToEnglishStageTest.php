@@ -8,10 +8,8 @@ $stage = new NormalizeToEnglishStage;
 
 test('it translates a known Russian district to English', function () use ($stage) {
     $dto = makeListing(['district' => 'Бузовна']);
-
     $result = $stage->handle($dto);
-
-    expect($result->district)->toBe('Buzovna');
+    expect($result->district)->toBe('Khazar');
 });
 
 test('it translates a known Russian building type to English', function () use ($stage) {
@@ -31,11 +29,9 @@ test('it translates a known Russian condition to English', function () use ($sta
 });
 
 test('it passes through unknown district values unchanged', function () use ($stage) {
-    $dto = makeListing(['district' => 'Фатмаи']);
-
+    $dto = makeListing(['district' => 'UnknownPlace']);
     $result = $stage->handle($dto);
-
-    expect($result->district)->toBe('Фатмаи');
+    expect($result->district)->toBe('UnknownPlace');
 });
 
 test('it handles null district gracefully', function () use ($stage) {

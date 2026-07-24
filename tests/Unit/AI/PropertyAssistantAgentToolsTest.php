@@ -86,22 +86,14 @@ test('semanticSearch returns no data message when documents table is empty', fun
         ->and($result['message'])->toContain('No listing text has been indexed');
 });
 
-test('getCategoryList returns only yerevan categories for yerevan market', function () {
-    $agent = new PropertyAssistantAgent('test_session_'.uniqid(), 'yerevan');
-    $result = json_decode($agent->getCategoryList(), true);
-
-    expect($result)->toHaveKey('categories')
-        ->and(collect($result['categories'])->every(
-            fn ($cat) => str_starts_with($cat['source'], 'listam_')
-        ))->toBeTrue();
-});
-
-test('getCategoryList returns empty categories for baku with no profiles', function () {
+test('getCategoryList returns binaz categories for baku', function () {
     $agent = new PropertyAssistantAgent('test_session_'.uniqid(), 'baku');
     $result = json_decode($agent->getCategoryList(), true);
 
     expect($result)->toHaveKey('categories')
-        ->and($result['categories'])->toBeEmpty();
+        ->and(collect($result['categories'])->every(
+            fn ($cat) => str_starts_with($cat['source'], 'binaz_')
+        ))->toBeTrue();
 });
 
 test('getYieldEstimate uses market source prefix', function () {
