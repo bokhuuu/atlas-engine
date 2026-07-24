@@ -43,6 +43,8 @@ final class ListingDTO
         public ?string $condition,
         public ?bool $isNewBuilding,
 
+        public ?bool $hasBillOfSale,
+
         public ?string $district,
         public ?string $address,
 
@@ -91,6 +93,9 @@ final class ListingDTO
             totalFloors: isset($data['total_floors']) ? (int) $data['total_floors'] : null,
             ceilingHeight: isset($data['ceiling_height']) ? (float) $data['ceiling_height'] : null,
             buildingType: $data['building_type'] ?? null,
+            hasBillOfSale: isset($data['has_bill_of_sale'])
+                ? (bool) $data['has_bill_of_sale']
+                : null,
             condition: $data['condition'] ?? null,
             isNewBuilding: isset($data['is_new_building'])
                 ? filter_var($data['is_new_building'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
@@ -141,6 +146,7 @@ final class ListingDTO
             'rooms' => $this->rooms,
             'bathrooms' => $this->bathrooms,
             'floor' => $this->floor,
+            'has_bill_of_sale' => $this->hasBillOfSale,
             'total_floors' => $this->totalFloors,
             'ceiling_height' => $this->ceilingHeight,
             'building_type' => $this->buildingType,
