@@ -356,7 +356,7 @@ return [
     | Settings for the bina.az GraphQL API used by all binaz_* profiles.
     |
     | city_id              - Baku is city 1 in bina.az's taxonomy. Only Baku
-    |                        is scraped — all profiles filter by this ID.
+    |                        is scraped - all profiles filter by this ID.
     | persisted_query_hash - SHA256 hash identifying the SearchItems GraphQL
     |                        query on bina.az's frontend. This hash is tied
     |                        to their frontend build and may rotate when they
@@ -608,72 +608,137 @@ return [
     | Russian-language sources (bina.az) into English at pipeline time.
     | Zero API calls - instant lookup against these config arrays.
     |
+    | Districts map settlements → their parent administrative district.
+    | Baku has 12 official districts - all settlements normalize to one of them.
     | Add unknown values here after inspecting real scraped data.
-    | Portable: any future Russian-language market uses the same stage
-    | with its own key under normalization.{market}.
     |
     */
     'normalization' => [
         'baku' => [
             'districts' => [
-                // Administrative districts (районы)
-                'Наримановский' => 'Narimanov',
-                'Наримановский район' => 'Narimanov',
-                'Хатаинский' => 'Khatai',
-                'Хатаинский район' => 'Khatai',
-                'Насиминский' => 'Nasimi',
-                'Насиминский район' => 'Nasimi',
-                'Бинагадинский' => 'Binagadi',
-                'Бинагадинский район' => 'Binagadi',
-                'Сабаильский' => 'Sabail',
-                'Сабаильский район' => 'Sabail',
+                // Khazar district (eastern Absheron peninsula)
+                'Мардакан' => 'Khazar',
+                'Бина' => 'Khazar',
+                'Шаган' => 'Khazar',
+                'Бузовна' => 'Khazar',
+                'Шувеляны' => 'Khazar',
+                'Тюркан' => 'Khazar',
+                'Бильгях' => 'Khazar',
+                'Вишнёвка' => 'Khazar',
+                'Дюбенди' => 'Khazar',
+                'Бинэ' => 'Khazar',
+                'Sea Breeze' => 'Khazar',
+                'Хазарский р.' => 'Khazar',
+                'Хазарский район' => 'Khazar',
+
+                // Sabunchu district (northern Baku)
+                'Бакиханова' => 'Sabunchu',
+                'Забрат' => 'Sabunchu',
+                'Кюрдаханы' => 'Sabunchu',
+                'Маштага' => 'Sabunchu',
+                'Маштаги' => 'Sabunchu',
+                'Нардаран' => 'Sabunchu',
+                'Пиршаги' => 'Sabunchu',
+                'Сабунчу' => 'Sabunchu',
+                'Балаханы' => 'Sabunchu',
+                'Рамана' => 'Sabunchu',
+                'Ени Балаханы' => 'Sabunchu',
+                'Ени Романы' => 'Sabunchu',
+                'Сабунчинский р.' => 'Sabunchu',
+                'Сабунчинский район' => 'Sabunchu',
+
+                // Surakhani district (southeast Baku)
+                'Говсан' => 'Surakhani',
+                'Амирджаны' => 'Surakhani',
+                'Гарачухур' => 'Surakhani',
+                'Зых' => 'Surakhani',
+                'Ени Сураханы' => 'Surakhani',
+                'Мехтиабад' => 'Surakhani',
+                'Фатмаи' => 'Surakhani',
+                'Мамедли' => 'Surakhani',
                 'Сураханский' => 'Surakhani',
                 'Сураханский район' => 'Surakhani',
+
+                // Binagadi district (northwest Baku)
+                'Биладжары' => 'Binagadi',
+                'Бинагади' => 'Binagadi',
+                'Бакмил' => 'Binagadi',
+                'Ходжасан' => 'Binagadi',
+                'Бинагадинский' => 'Binagadi',
+                'Бинагадинский район' => 'Binagadi',
+
+                // Sabail district (central/southern Baku)
+                'Бадамдар' => 'Sabail',
+                'Шихов' => 'Sabail',
+                'Сабаильский' => 'Sabail',
+                'Сабаильский район' => 'Sabail',
+
+                // Garadagh district (southern Baku)
+                'Мушфигабад' => 'Garadagh',
+                'Гобустан' => 'Garadagh',
+                'Пута' => 'Garadagh',
+                'Локбатан' => 'Garadagh',
+                'Аляты' => 'Garadagh',
+                'Сахиль' => 'Garadagh',
+                'Дигях' => 'Garadagh',
+                'Гюздек' => 'Garadagh',
+                'Кобу' => 'Garadagh',
+                'Гарадагский' => 'Garadagh',
+                'Гарадагский район' => 'Garadagh',
+
+                // Khatai district (eastern Baku)
+                'Ени Гюнешли' => 'Khatai',
+                'Старые Гюнешли' => 'Khatai',
+                'Кара Караев' => 'Khatai',
+                'Хатаинский' => 'Khatai',
+                'Хатаинский район' => 'Khatai',
+
+                // Narimanov district (central Baku)
+                'Нариман Нариманов' => 'Narimanov',
+                'Наримановский' => 'Narimanov',
+                'Наримановский район' => 'Narimanov',
+
+                // Nasimi district (central Baku)
+                'Насиминский' => 'Nasimi',
+                'Насиминский район' => 'Nasimi',
+
+                // Nizami district (central Baku)
                 'Низаминский' => 'Nizami',
                 'Низаминский район' => 'Nizami',
+
+                // Pirallahi district (island)
+                'Пираллахи' => 'Pirallahi',
                 'Пираллахинский' => 'Pirallahi',
-                'Гарадагский' => 'Garadagh',
+
+                // Yasamal district (central Baku)
+                'Ясамальский р.' => 'Yasamal',
+                'Ясамальский район' => 'Yasamal',
+
+                // Absheron (outside Baku but listings appear)
+                'Сарай' => 'Absheron',
+                'Горадил' => 'Absheron',
+                'Геокмалы' => 'Absheron',
+                'Масазыр' => 'Absheron',
+                'Новханы' => 'Absheron',
                 'Абшеронский' => 'Absheron',
 
-                // Metro stations (м.)
+                // Metro stations → their district
                 'Насими' => 'Nasimi',
                 'Низами' => 'Nizami',
-                'Сахил' => 'Sahil',
-                '28 мая' => '28 May',
-                '8 ноября' => '8 November',
-                'Иншаатчылар' => 'Inshaatchilar',
-                'Халглар Достлугу' => 'Halglar Dostlugu',
-                'Шах Исмаил Хатаи' => 'Shah Ismail Khatai',
-                'Азадлыг проспекти' => 'Azadlig Avenue',
-                'Элмляр Академиясы' => 'Elmlar Akademiyasi',
-                'Нариман Нариманов' => 'Nariman Narimanov',
-                'Баилова' => 'Bailova',
-                'Ахмедлы' => 'Ahmadli',
-                'Ази Асланов' => 'Hazi Aslanov',
-                'Аг шехер' => 'Agh Sheker',
-
-                // Settlements (пос.)
-                'Мардакан' => 'Mardakan',
-                'Нардаран' => 'Nardaran',
-                'Новханы' => 'Novkhani',
-                'Бузовна' => 'Buzovna',
-                'Бильгях' => 'Bilgah',
-                'Шувеляны' => 'Shuvalan',
-                'Ходжасан' => 'Khojasan',
-                'Горадил' => 'Goradil',
-                'Геокмалы' => 'Geokmaly',
-                'Рамана' => 'Ramana',
-                'Тюркан' => 'Turkan',
-                'Масазыр' => 'Masazir',
-                'Кюрдаханы' => 'Kurdakhani',
-                'Бинагади' => 'Binagadi',
-                'Балаханы' => 'Balakhani',
-                'Бинэ' => 'Bine',
-                'Забрат' => 'Zabrat',
-                'Маштага' => 'Mashtaga',
-                'Пираллахи' => 'Pirallahi',
-                'Сарай' => 'Saray',
-                'Гобустан' => 'Gobustan',
+                'Сахил' => 'Sabail',
+                '28 мая' => 'Nasimi',
+                '8 ноября' => 'Narimanov',
+                'Иншаатчылар' => 'Narimanov',
+                'Халглар Dostlugu' => 'Surakhani',
+                'Шах Исмаил Хатаи' => 'Khatai',
+                'Азадлыг проспекти' => 'Binagadi',
+                'Элмляр Академиясы' => 'Narimanov',
+                'Баилова' => 'Sabail',
+                'Ахмедлы' => 'Khatai',
+                'Ази Асланов' => 'Khatai',
+                'Ази Асланова' => 'Khatai',
+                'Аг шехер' => 'Khatai',
+                '20 января' => 'Nasimi',
             ],
 
             'building_types' => [
