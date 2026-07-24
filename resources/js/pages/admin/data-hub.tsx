@@ -31,6 +31,7 @@ interface FilterState {
     max_area: string;
     rooms: string[];
     agency: string;
+    has_bill_of_sale: string;
     scraped_from: string;
     scraped_to: string;
     listing_date_from: string;
@@ -59,6 +60,7 @@ const makeDefault = (categories: Category[]): FilterState => ({
     max_area: '',
     rooms: [],
     agency: '',
+    has_bill_of_sale: '',
     scraped_from: '',
     scraped_to: '',
     listing_date_from: '',
@@ -151,6 +153,10 @@ export default function DataHub({ categories, districts }: Props) {
 
             if (f.agency) {
                 params.set('agency', f.agency);
+            }
+
+            if (f.has_bill_of_sale) {
+                params.set('has_bill_of_sale', f.has_bill_of_sale);
             }
 
             if (f.scraped_from) {
@@ -278,6 +284,10 @@ export default function DataHub({ categories, districts }: Props) {
         }
 
         if (filters.listing_date_from || filters.listing_date_to) {
+            count++;
+        }
+
+        if (filters.has_bill_of_sale) {
             count++;
         }
 
@@ -466,6 +476,39 @@ export default function DataHub({ categories, districts }: Props) {
                             </div>
                         </div>
 
+                        <div>
+                            {sectionLabel('Bill of Sale (Купчая)')}
+                            <div className="flex flex-wrap gap-2">
+                                {[
+                                    { value: '', label: 'All' },
+                                    {
+                                        value: 'true',
+                                        label: '✓ Has Bill of Sale',
+                                    },
+                                    {
+                                        value: 'false',
+                                        label: '✗ No Bill of Sale',
+                                    },
+                                ].map((o) => (
+                                    <button
+                                        key={o.value}
+                                        onClick={() =>
+                                            setFilters((p) => ({
+                                                ...p,
+                                                has_bill_of_sale: o.value,
+                                            }))
+                                        }
+                                        className={chipCls(
+                                            filters.has_bill_of_sale ===
+                                                o.value,
+                                        )}
+                                    >
+                                        {o.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                         <div className="sm:col-span-2">
                             {sectionLabel('Status')}
                             <div className="flex flex-wrap gap-2">
@@ -585,11 +628,11 @@ export default function DataHub({ categories, districts }: Props) {
                             {errors.area && errorMsg(errors.area)}
                         </div>
 
-                        {/* Posted on list.am - primary date filter */}
+                        {/* Listing Date - primary date filter */}
                         <div className="sm:col-span-2">
                             <label className="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-emerald-600 uppercase dark:text-emerald-400">
                                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                                Posted on list.am
+                                Listing Date
                             </label>
                             <div className="grid grid-cols-2 gap-2">
                                 <input
