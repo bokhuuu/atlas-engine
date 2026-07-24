@@ -179,6 +179,7 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'building_type',
         'condition',
         'is_new_building',
+        'has_bill_of_sale',
         'agency_name',
         'listing_date',
         'scraped_at',
@@ -295,6 +296,11 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['New Construction %',         count($this->data) > 0 ? round($newBuildingCount / count($this->data) * 100, 1).'%' : 'N/A'],
             ['Agency Listings',            count($agencies)],
             ['Owner Listings',             count($this->data) - count($agencies)],
+            ['', ''],
+            ['--- DOCUMENT STATUS ---',    ''],
+            ['With Bill of Sale',          count(array_filter(array_column($this->data, 'has_bill_of_sale')))],
+            ['Without Bill of Sale',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false))],
+            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null))],
         ];
     }
 
