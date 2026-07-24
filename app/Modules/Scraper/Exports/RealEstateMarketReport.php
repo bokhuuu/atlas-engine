@@ -168,6 +168,7 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'price_change_pct',
         'price_changed_at',
         'currency',
+        'original_price_azn',
         'price_per_sqm',
         'area',
         'rooms',
@@ -240,6 +241,11 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                 }
                 if ($col === 'price_per_sqm' && $value !== null) {
                     return round((float) $value, 2);
+                }
+                if ($col === 'original_price_azn') {
+                    $azn = $row['extras']['original_price_azn'] ?? null;
+
+                    return $azn !== null ? (int) round((float) $azn) : null;
                 }
 
                 return $value;
