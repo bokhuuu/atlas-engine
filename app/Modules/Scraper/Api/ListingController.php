@@ -172,6 +172,7 @@ class ListingController extends Controller
             'min_area',
             'max_area',
             'agency',
+            'has_bill_of_sale',
             'scraped_from',
             'scraped_to',
             'status',

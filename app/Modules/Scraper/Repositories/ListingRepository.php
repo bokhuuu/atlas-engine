@@ -174,6 +174,10 @@ class ListingRepository
             }
         }
 
+        if (isset($filters['has_bill_of_sale']) && $filters['has_bill_of_sale'] !== '') {
+            $query->where('has_bill_of_sale', (bool) $filters['has_bill_of_sale']);
+        }
+
         if (! empty($filters['scraped_from'])) {
             $query->where('scraped_at', '>=', $filters['scraped_from']);
         }
