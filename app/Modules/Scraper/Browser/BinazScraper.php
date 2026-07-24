@@ -74,6 +74,10 @@ class BinazScraper extends BaseScraper
      */
     public function crawlIndexPage(int $page): array
     {
+        if ($page > 1) {
+            return [];
+        }
+
         $maxFetches = (int) config(
             "scraper.profile_config.{$this->profile->getName()}.max_pages",
             config('scraper.default_max_pages')
