@@ -11,7 +11,6 @@ use App\Modules\Scraper\Notifications\TelegramNotifier;
 use App\Modules\Scraper\Pipeline\Stages\CalculatePricePerSqmStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanAreaStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanBuildingTypeStage;
-use App\Modules\Scraper\Pipeline\Stages\CleanPhoneStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanPriceStage;
 use App\Modules\Scraper\Pipeline\Stages\DeduplicateStage;
 use App\Modules\Scraper\Pipeline\Stages\DetectPriceChangeStage;
@@ -108,7 +107,9 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
             app(NormalizeToEnglishStage::class),
             app(ValidateRequiredFieldsStage::class, ['requiredFields' => $this->getRequiredFields()]),
             app(CleanPriceStage::class),
-            app(CleanPhoneStage::class),
+            // CleanPhoneStage intentionally excluded for bina.az —
+            // phone format from API is already human-readable: "(050) 210-31-20"
+            // CleanPhoneStage would strip formatting and lose the leading zero.
             app(CleanAreaStage::class),
             app(CalculatePricePerSqmStage::class),
             app(CleanBuildingTypeStage::class),

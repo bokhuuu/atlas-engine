@@ -41,7 +41,9 @@ class Listing extends Model
         'building_type',
         'condition',
         'is_new_building',
+
         'has_bill_of_sale',
+        'has_mortgage',
 
         'district',
         'address',

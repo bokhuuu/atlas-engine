@@ -164,6 +164,7 @@ class BinazScraper extends BaseScraper
             'image_urls' => $jsonLd['image'] ?? [],
             'listing_date' => $this->extractListingDate($crawler),
             'has_bill_of_sale' => $this->extractHasBillOfSale($crawler),
+            'has_mortgage' => $this->extractHasMortgage($crawler),
             'extras' => [
                 'original_price_azn' => $price !== null ? (float) $price : null,
                 'area_unit' => $areaUnit,
@@ -397,6 +398,23 @@ class BinazScraper extends BaseScraper
     {
         try {
             return $crawler->filter('.product-labels__i-icon--bill-of-sale')->count() > 0;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function extractHasMortgage(Crawler $crawler): bool
+    {
+        try {
+            $hasMortgage = false;
+
+            $crawler->filter('.product-labels__i')->each(function (Crawler $node) use (&$hasMortgage) {
+                if (str_contains($node->text(''), 'ипотека')) {
+                    $hasMortgage = true;
+                }
+            });
+
+            return $hasMortgage;
         } catch (Throwable) {
             return false;
         }
