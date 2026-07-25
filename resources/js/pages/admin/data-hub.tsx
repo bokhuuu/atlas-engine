@@ -32,6 +32,7 @@ interface FilterState {
     rooms: string[];
     agency: string;
     has_bill_of_sale: string;
+    has_mortgage: string;
     exclude_duplicates: boolean;
     scraped_from: string;
     scraped_to: string;
@@ -62,6 +63,7 @@ const makeDefault = (categories: Category[]): FilterState => ({
     rooms: [],
     agency: '',
     has_bill_of_sale: '',
+    has_mortgage: '',
     exclude_duplicates: true,
     scraped_from: '',
     scraped_to: '',
@@ -159,6 +161,10 @@ export default function DataHub({ categories, districts }: Props) {
 
             if (f.has_bill_of_sale) {
                 params.set('has_bill_of_sale', f.has_bill_of_sale);
+            }
+
+            if (f.has_mortgage) {
+                params.set('has_mortgage', f.has_mortgage);
             }
 
             if (f.scraped_from) {
@@ -295,6 +301,10 @@ export default function DataHub({ categories, districts }: Props) {
         }
 
         if (filters.has_bill_of_sale) {
+            count++;
+        }
+
+        if (filters.has_mortgage) {
             count++;
         }
 
@@ -512,6 +522,32 @@ export default function DataHub({ categories, districts }: Props) {
                                         className={chipCls(
                                             filters.has_bill_of_sale ===
                                                 o.value,
+                                        )}
+                                    >
+                                        {o.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            {sectionLabel('Mortgage (Ипотека)')}
+                            <div className="flex flex-wrap gap-2">
+                                {[
+                                    { value: '', label: 'All' },
+                                    { value: 'true', label: '✓ Has Mortgage' },
+                                    { value: 'false', label: '✗ No Mortgage' },
+                                ].map((o) => (
+                                    <button
+                                        key={o.value}
+                                        onClick={() =>
+                                            setFilters((p) => ({
+                                                ...p,
+                                                has_mortgage: o.value,
+                                            }))
+                                        }
+                                        className={chipCls(
+                                            filters.has_mortgage === o.value,
                                         )}
                                     >
                                         {o.label}

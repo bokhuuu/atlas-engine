@@ -180,8 +180,10 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'condition',
         'is_new_building',
         'has_bill_of_sale',
+        'has_mortgage',
         'phone',
         'agency_name',
+        'translated_description',
         'listing_date',
         'scraped_at',
         'duplicate_group_id',
@@ -248,6 +250,10 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                     $azn = $row['extras']['original_price_azn'] ?? null;
 
                     if ($col === 'has_bill_of_sale') {
+                        return $value === null ? null : ($value ? 'Yes' : 'No');
+                    }
+
+                    if ($col === 'has_mortgage') {
                         return $value === null ? null : ($value ? 'Yes' : 'No');
                     }
 
@@ -318,15 +324,20 @@ class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
             ['Max Price (USD)',            count($prices) ? (int) round(max($prices)) : 'N/A'],
             ['', ''],
             ['--- MARKET COMPOSITION ---', ''],
-            ['New Construction Listings',  $newBuildingCount ?: 0],
+            ['New Construction Listings',  (int) $newBuildingCount],
             ['New Construction %',         count($this->data) > 0 ? round($newBuildingCount / count($this->data) * 100, 1).'%' : 'N/A'],
-            ['Agency Listings',            count($agencies) ?: 0],
-            ['Owner Listings',             (count($this->data) - count($agencies)) ?: 0],
+            ['Agency Listings',            (int) count($agencies)],
+            ['Owner Listings',             (int) (count($this->data) - count($agencies))],
             ['', ''],
             ['--- DOCUMENT STATUS ---',    ''],
-            ['With Bill of Sale',          count(array_filter(array_column($this->data, 'has_bill_of_sale'))) ?: 0],
-            ['Without Bill of Sale',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false)) ?: 0],
-            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null)) ?: 0],
+            ['With Bill of Sale',          (int) count(array_filter(array_column($this->data, 'has_bill_of_sale')))],
+            ['Without Bill of Sale',       (int) count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false))],
+            ['Bill of Sale Unknown',       (int) count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null))],
+            ['', ''],
+            ['--- MORTGAGE STATUS ---',   ''],
+            ['With Mortgage',             (int) count(array_filter(array_column($this->data, 'has_mortgage')))],
+            ['Without Mortgage',          (int) count(array_filter(array_column($this->data, 'has_mortgage'), fn ($v) => $v === false))],
+            ['Mortgage Unknown',          (int) count(array_filter(array_column($this->data, 'has_mortgage'), fn ($v) => $v === null))],
         ];
     }
 
@@ -414,7 +425,7 @@ class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
                 count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
                 $medianSqm ?? 'N/A',
                 count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
-                $newCount,
+                (int) $newCount,
                 $count > 0 ? round($newCount / $count * 100, 1).'%' : 'N/A',
             ];
         }
