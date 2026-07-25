@@ -619,6 +619,7 @@ return [
                 // Absheron district
                 'Абшеронский р.' => 'Absheron',
                 'Абшеронcкий р.' => 'Absheron',
+                'Абшеронcкий  р.' => 'Absheron',
                 'Абшеронский район' => 'Absheron',
                 'Абшеронский' => 'Absheron',
                 'Атъялы' => 'Absheron',
