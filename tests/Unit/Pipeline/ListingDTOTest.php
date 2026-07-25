@@ -21,3 +21,18 @@ test('has_bill_of_sale is included in toArray output', function () {
     $dto = makeListing(['has_bill_of_sale' => true]);
     expect($dto->toArray())->toHaveKey('has_bill_of_sale');
 });
+
+test('has_mortgage maps true correctly from array', function () {
+    $dto = makeListing(['has_mortgage' => true]);
+    expect($dto->hasMortgage)->toBeTrue();
+});
+
+test('has_mortgage is null when not provided', function () {
+    $dto = makeListing([]);
+    expect($dto->hasMortgage)->toBeNull();
+});
+
+test('has_mortgage is included in toArray output', function () {
+    $dto = makeListing(['has_mortgage' => true]);
+    expect($dto->toArray())->toHaveKey('has_mortgage');
+});

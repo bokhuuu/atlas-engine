@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Modules\Scraper\Browser\BinazScraper;
+use App\Modules\Scraper\Pipeline\Stages\CleanPhoneStage;
 use App\Modules\Scraper\Pipeline\Stages\NormalizeToEnglishStage;
 use App\Modules\Scraper\Profiles\BinazLandSaleProfile;
 
@@ -52,4 +53,14 @@ test('profile base url is bina az russian version', function () use ($profile) {
 
 test('profile has extended timeout for cursor pagination loop', function () use ($profile) {
     expect($profile->getQueueConfig()['timeout'])->toBe(1800);
+});
+
+test('profile pipeline excludes CleanPhoneStage to preserve phone formatting', function () use ($profile) {
+    $stages = $profile->getPipelineStages();
+
+    $hasCleanPhone = collect($stages)->contains(
+        fn ($stage) => $stage instanceof CleanPhoneStage
+    );
+
+    expect($hasCleanPhone)->toBeFalse();
 });
