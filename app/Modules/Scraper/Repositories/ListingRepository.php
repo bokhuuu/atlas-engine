@@ -178,6 +178,10 @@ class ListingRepository
             $query->where('has_bill_of_sale', (bool) $filters['has_bill_of_sale']);
         }
 
+        if (isset($filters['has_mortgage']) && $filters['has_mortgage'] !== '') {
+            $query->where('has_mortgage', (bool) $filters['has_mortgage']);
+        }
+
         if (! empty($filters['scraped_from'])) {
             $query->where('scraped_at', '>=', $filters['scraped_from']);
         }

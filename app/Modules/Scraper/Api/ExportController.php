@@ -119,6 +119,7 @@ class ExportController extends Controller
             'max_area',
             'agency',
             'has_bill_of_sale',
+            'has_mortgage',
             'exclude_duplicates',
             'scraped_from',
             'scraped_to',
