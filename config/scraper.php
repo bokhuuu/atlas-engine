@@ -657,6 +657,7 @@ return [
                 'Сулутепе' => 'Binagadi',
                 'Ходжасан' => 'Binagadi',
                 'Хутор' => 'Binagadi',
+                'Бакмил' => 'Binagadi',
 
                 // Garadagh district
                 'Гарадагский р.' => 'Garadagh',
@@ -671,6 +672,7 @@ return [
                 'Сангачал' => 'Garadagh',
                 'Сахиль' => 'Garadagh',
                 'Шубаны' => 'Garadagh',
+                'Дернегюль' => 'Garadagh',
 
                 // Narimanov district
                 'Наримановский р.' => 'Narimanov',

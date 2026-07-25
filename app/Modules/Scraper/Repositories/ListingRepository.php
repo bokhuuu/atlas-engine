@@ -175,11 +175,11 @@ class ListingRepository
         }
 
         if (isset($filters['has_bill_of_sale']) && $filters['has_bill_of_sale'] !== '') {
-            $query->where('has_bill_of_sale', (bool) $filters['has_bill_of_sale']);
+            $query->where('has_bill_of_sale', $filters['has_bill_of_sale'] === 'true');
         }
 
         if (isset($filters['has_mortgage']) && $filters['has_mortgage'] !== '') {
-            $query->where('has_mortgage', (bool) $filters['has_mortgage']);
+            $query->where('has_mortgage', $filters['has_mortgage'] === 'true');
         }
 
         if (! empty($filters['scraped_from'])) {

@@ -421,11 +421,26 @@ class BinazScraper extends BaseScraper
     }
 
     /**
-     * Extract agency or owner name from the contact block.
+     * Extract agency name from the contact block.
+     *
+     * Returns null for private owners (собственник) so the listing
+     * appears under "Owner" in Data Hub filters - matching how bina.az
+     * distinguishes between owners and agents.
+     *
+     * Returns the contact name only for agents/agencies (посредник).
+     * This maps correctly to the agency_name column used by the
+     * "Listed by" filter in Data Hub.
      */
     private function extractAgencyName(Crawler $crawler): ?string
     {
         try {
+            $typeNode = $crawler->filter('.product-owner__info-region');
+            $type = $typeNode->count() > 0 ? trim($typeNode->text('')) : '';
+
+            if (mb_stripos($type, 'собственник') !== false) {
+                return null;
+            }
+
             $node = $crawler->filter('.product-owner__info-name');
 
             return $node->count() > 0 ? trim($node->text('')) : null;
