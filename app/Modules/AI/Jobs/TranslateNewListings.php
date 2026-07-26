@@ -92,5 +92,25 @@ class TranslateNewListings implements ShouldQueue
             'translated' => $translated,
             'failed' => $failed,
         ]);
+
+        Log::info('TranslateNewListings: batch complete', [
+            'source' => $this->source ?? 'all',
+            'translated' => $translated,
+            'failed' => $failed,
+        ]);
+
+        // If there are still untranslated listings, dispatch another batch
+        $remaining = Listing::whereNotNull('description')
+            ->whereNull('translated_description')
+            ->when($this->source !== null, fn ($q) => $q->where('source_profile_name', $this->source))
+            ->count();
+
+        if ($remaining > 0) {
+            self::dispatch($this->source)->delay(now()->addSeconds(5));
+            Log::info('TranslateNewListings: dispatching next batch', [
+                'remaining' => $remaining,
+                'source' => $this->source ?? 'all',
+            ]);
+        }
     }
 }
