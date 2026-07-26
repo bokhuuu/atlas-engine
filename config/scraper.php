@@ -805,6 +805,12 @@ return [
                 'Азадлыг проспекти' => 'Binagadi',
                 'Элмляр Академиясы' => 'Narimanov',
                 '20 января' => 'Nasimi',
+                'Ичеришехер' => 'Sabail',
+                'Гянджлик' => 'Narimanov',
+                'Мемар Аджеми' => 'Narimanov',
+                'Улдуз' => 'Narimanov',
+                'Нефтчиляр' => 'Surakhani',
+                'Автовокзал' => 'Binagadi',
             ],
 
             'building_types' => [

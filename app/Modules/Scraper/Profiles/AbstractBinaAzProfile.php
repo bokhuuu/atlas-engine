@@ -14,7 +14,7 @@ use App\Modules\Scraper\Pipeline\Stages\CleanBuildingTypeStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanPriceStage;
 use App\Modules\Scraper\Pipeline\Stages\DeduplicateStage;
 use App\Modules\Scraper\Pipeline\Stages\DetectPriceChangeStage;
-use App\Modules\Scraper\Pipeline\Stages\FlagProbableDuplicatesStage;
+use App\Modules\Scraper\Pipeline\Stages\FlagBinazDuplicatesStage;
 use App\Modules\Scraper\Pipeline\Stages\NormalizeStringFieldsStage;
 use App\Modules\Scraper\Pipeline\Stages\NormalizeToEnglishStage;
 use App\Modules\Scraper\Pipeline\Stages\ValidateRequiredFieldsStage;
@@ -97,7 +97,7 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
      *
      * NormalizeToEnglishStage runs first - translates Russian district names
      * and building types to English before any other stage reads them.
-     * DetectPriceChangeStage and FlagProbableDuplicatesStage run last,
+     * DetectPriceChangeStage and FlagBinazDuplicatesStage run last,
      * same as Yerevan, for cross-poster duplicate detection.
      */
     public function getPipelineStages(): array
@@ -115,7 +115,7 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
             app(CleanBuildingTypeStage::class),
             app(DeduplicateStage::class),
             app(DetectPriceChangeStage::class),
-            app(FlagProbableDuplicatesStage::class),
+            app(FlagBinazDuplicatesStage::class),
         ];
     }
 
