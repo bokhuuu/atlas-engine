@@ -681,6 +681,8 @@ return [
                 'Наримановский' => 'Narimanov',
                 'Бёюк-Шор' => 'Narimanov',
                 'Нариман Нариманов' => 'Narimanov',
+                'Наримановский  р.' => 'Narimanov',
+                'Кероглу' => 'Narimanov',
 
                 // Nasimi district
                 'Насиминский р.' => 'Nasimi',
@@ -699,12 +701,14 @@ return [
                 'Низаминский' => 'Nizami',
                 '8-й километр' => 'Nizami',
                 'Кешля' => 'Nizami',
+                'Низаминский  р.' => 'Nizami',
 
                 // Pirallahi district
                 'Пираллахинский р.' => 'Pirallahi',
                 'Пираллахинский район' => 'Pirallahi',
                 'Пираллахинский' => 'Pirallahi',
                 'Пираллахи' => 'Pirallahi',
+                'Пираллахи р.' => 'Pirallahi',
 
                 // Sabail district
                 'Сабаильский р.' => 'Sabail',
@@ -736,6 +740,7 @@ return [
                 'Сабунчу' => 'Sabunchu',
                 'Савалан' => 'Sabunchu',
                 'Sea Breeze' => 'Sabunchu',
+                'Сабунчинский  р.' => 'Sabunchu',
 
                 // Surakhani district
                 'Сураханский р.' => 'Surakhani',
@@ -759,6 +764,7 @@ return [
                 'Массив Д' => 'Surakhani',
                 'Сураханы' => 'Surakhani',
                 'Шерг' => 'Surakhani',
+                'Сураханский  р.' => 'Surakhani',
 
                 // Khazar district
                 'Хазарский р.' => 'Khazar',
