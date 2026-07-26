@@ -11,19 +11,15 @@ use App\Modules\Scraper\Pipeline\PipelineStageInterface;
 /**
  * Flags probable duplicate listings for bina.az profiles.
  *
- * Uses two complementary signals to catch the two common duplicate patterns
- * on bina.az - same owner relisting, and same plot listed by multiple agencies:
+ * Identifies the same physical plot listed by multiple agencies
+ * using price and area proximity:
  *
- * Signal 1 - Phone match (same owner, different agency):
- *   Same phone + same district + area within ±5%
- *   → Owner listed same plot through multiple brokers
- *
- * Signal 2 - Price+Area match (different phones, same plot):
  *   Same district + area within ±2% + price within ±3%
  *   → Same physical plot listed by competing agencies at identical price
  *
- * Flagged listings share a duplicate_group_id so Data Hub filters them
- * out by default, showing only unique plots in market statistics.
+ * Stricter tolerances than the generic FlagProbableDuplicatesStage
+ * to avoid false positives in the Baku land market where many
+ * legitimate plots share similar characteristics.
  *
  * Yerevan profiles use FlagProbableDuplicatesStage - this stage is
  * bina.az only and does not affect list.am scraping.
@@ -36,7 +32,7 @@ final class FlagBinazDuplicatesStage implements PipelineStageInterface
             return $dto;
         }
 
-        $existing = $this->findByPhone($dto) ?? $this->findByPriceArea($dto);
+        $existing = $this->findByPriceArea($dto);
 
         if ($existing === null) {
             return $dto;
@@ -52,29 +48,6 @@ final class FlagBinazDuplicatesStage implements PipelineStageInterface
         $dto->extras['duplicate_group_id'] = $groupId;
 
         return $dto;
-    }
-
-    /**
-     * Find duplicate by phone number match.
-     * Same phone + same district + area within ±5% → same owner, different agency.
-     */
-    private function findByPhone(ListingDTO $dto): ?Listing
-    {
-        if ($dto->phone === null) {
-            return null;
-        }
-
-        $areaTolerance = 0.05;
-        $areaMin = $dto->area * (1 - $areaTolerance);
-        $areaMax = $dto->area * (1 + $areaTolerance);
-
-        return Listing::query()
-            ->where('phone', $dto->phone)
-            ->where('district', $dto->district)
-            ->whereBetween('area', [$areaMin, $areaMax])
-            ->where('source_profile_name', $dto->sourceProfileName)
-            ->where('external_id', '!=', $dto->externalId)
-            ->first();
     }
 
     /**

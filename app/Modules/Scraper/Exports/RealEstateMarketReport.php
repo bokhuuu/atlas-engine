@@ -244,25 +244,35 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                 if ($col === 'price' && $value !== null) {
                     return (int) round((float) $value);
                 }
+
                 if ($col === 'price_per_sqm' && $value !== null) {
                     return round((float) $value, 2);
                 }
+
                 if ($col === 'original_price_azn') {
                     $azn = $row['extras']['original_price_azn'] ?? null;
 
                     return $azn !== null ? (int) round((float) $azn) : null;
                 }
+
                 if ($col === 'has_bill_of_sale') {
                     return $value === null ? null : ($value ? 'Yes' : 'No');
                 }
+
                 if ($col === 'has_mortgage') {
                     return $value === null ? null : ($value ? 'Yes' : 'No');
                 }
+
+                if ($col === 'area' && $value !== null) {
+                    return round((float) $value, 1);
+                }
+
                 if ($col === 'area_sotka') {
                     $area = $row['area'] ?? null;
 
                     return $area !== null ? round((float) $area / 100, 2) : null;
                 }
+
                 if ($col === 'price_per_sotka_usd') {
                     $price = $row['price'] ?? null;
                     $area = $row['area'] ?? null;
