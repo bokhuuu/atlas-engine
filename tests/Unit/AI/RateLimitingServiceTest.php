@@ -19,7 +19,7 @@ test('check returns true when under limit', function () {
 });
 
 test('check returns false when limit exceeded', function () {
-    Cache::put('ai_rate_limit:user_1:text_generation', 51, 3600);
+    Cache::put('ai_rate_limit:user_1:text_generation', 201, 3600);
 
     $result = $this->service->check('text_generation', 'user_1');
     expect($result)->toBeFalse();
@@ -30,12 +30,12 @@ test('increment increases counter', function () {
     $this->service->increment('text_generation', 'user_1');
 
     $remaining = $this->service->remaining('text_generation', 'user_1');
-    expect($remaining)->toBe(48);
+    expect($remaining)->toBe(198);
 });
 
 test('remaining returns correct count', function () {
     $remaining = $this->service->remaining('text_generation', 'user_1');
-    expect($remaining)->toBe(50);
+    expect($remaining)->toBe(200);
 });
 
 test('different users have separate counters', function () {
@@ -45,6 +45,6 @@ test('different users have separate counters', function () {
     $user1remaining = $this->service->remaining('text_generation', 'user_1');
     $user2remaining = $this->service->remaining('text_generation', 'user_2');
 
-    expect($user1remaining)->toBe(48);
-    expect($user2remaining)->toBe(50);
+    expect($user1remaining)->toBe(198);
+    expect($user2remaining)->toBe(200);
 });

@@ -46,7 +46,7 @@ test('tracks usage after generation', function () {
 });
 
 test('throws exception when rate limit exceeded', function () {
-    Cache::put('ai_rate_limit:user_1:text_generation', 51, 3600);
+    Cache::put('ai_rate_limit:user_1:text_generation', 201, 3600);
 
     expect(fn () => $this->service->generate('Any question', '', 'user_1'))
         ->toThrow(RuntimeException::class, 'Rate limit exceeded');
