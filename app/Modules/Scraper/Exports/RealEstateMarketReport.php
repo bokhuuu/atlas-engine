@@ -171,6 +171,8 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'original_price_azn',
         'price_per_sqm',
         'area',
+        'area_sotka',
+        'price_per_sotka_usd',
         'rooms',
         'bathrooms',
         'floor',
@@ -238,26 +240,37 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 
             return array_map(function ($col) use ($row) {
                 $value = $row[$col] ?? null;
+
                 if ($col === 'price' && $value !== null) {
                     return (int) round((float) $value);
                 }
-
                 if ($col === 'price_per_sqm' && $value !== null) {
                     return round((float) $value, 2);
                 }
-
                 if ($col === 'original_price_azn') {
                     $azn = $row['extras']['original_price_azn'] ?? null;
 
-                    if ($col === 'has_bill_of_sale') {
-                        return $value === null ? null : ($value ? 'Yes' : 'No');
-                    }
-
-                    if ($col === 'has_mortgage') {
-                        return $value === null ? null : ($value ? 'Yes' : 'No');
-                    }
-
                     return $azn !== null ? (int) round((float) $azn) : null;
+                }
+                if ($col === 'has_bill_of_sale') {
+                    return $value === null ? null : ($value ? 'Yes' : 'No');
+                }
+                if ($col === 'has_mortgage') {
+                    return $value === null ? null : ($value ? 'Yes' : 'No');
+                }
+                if ($col === 'area_sotka') {
+                    $area = $row['area'] ?? null;
+
+                    return $area !== null ? round((float) $area / 100, 2) : null;
+                }
+                if ($col === 'price_per_sotka_usd') {
+                    $price = $row['price'] ?? null;
+                    $area = $row['area'] ?? null;
+                    if ($price && $area && $area > 0) {
+                        return (int) round((float) $price / ((float) $area / 100));
+                    }
+
+                    return null;
                 }
 
                 return $value;
