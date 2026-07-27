@@ -33,7 +33,7 @@ class TranslateNewListings implements ShouldQueue
 
     public int $tries = 3;
 
-    public int $timeout = 300;
+    public int $timeout = 3600;
 
     public function __construct(
         private readonly ?string $source = null,
@@ -93,13 +93,6 @@ class TranslateNewListings implements ShouldQueue
             'failed' => $failed,
         ]);
 
-        Log::info('TranslateNewListings: batch complete', [
-            'source' => $this->source ?? 'all',
-            'translated' => $translated,
-            'failed' => $failed,
-        ]);
-
-        // If there are still untranslated listings, dispatch another batch
         $remaining = Listing::whereNotNull('description')
             ->whereNull('translated_description')
             ->when($this->source !== null, fn ($q) => $q->where('source_profile_name', $this->source))
