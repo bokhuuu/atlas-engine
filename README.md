@@ -10,40 +10,40 @@ One platform, multiple markets. Switching between Yerevan and Baku changes which
 
 ## What's Live
 
-| Screen                   | URL                           | Description                                                                                                                                                                                                                  |
-| ------------------------ | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Combined Overview        | `/`                           | Public combined view. All markets, total listings, per-market cards, animated counter. No login.                                                                                                                             |
-| Per-Market Snapshot      | `/yerevan` `/baku` `/tbilisi` | Public market snapshot per market. No login. Median price/sqm, listing counts, animated count-up, live badge.                                                                                                                |
-| Scraper Control          | `/yerevan/admin/dashboard`    | Scraper control panel scoped to market. Start scrapes, live status, listing volume chart, Excel exports.                                                                                                                     |
-| Market Stats             | `/yerevan/admin/market-stats` | District-level price breakdown by category. Median + average price/sqm, heat-shaded ranking, price reductions, disappeared and stale counts, commercial yield, AI summary, monthly/quarterly trend charts.                   |
-| Data Hub                 | `/yerevan/admin/data-hub`     | Filterable listing explorer scoped to market. Filter by category, district, status, rooms, price, area, agency/owner, posted date, collected date. Live count, race-condition protection. Download filtered Excel instantly. |
-| AI Assistant             | `/yerevan/admin/assistant`    | Chat interface powered by Claude Haiku. Market-aware - answers scoped to selected market. 9 callable tools, persistent per-user history per market, context-aware suggested queries.                                         |
-| Global Dashboard         | `/global/admin/dashboard`     | Cross-market overview - total listings, median prices, last scraped, active categories per market.                                                                                                                           |
-| Global Market Comparison | `/global/admin/market-stats`  | Per-category price comparison table across all configured markets.                                                                                                                                                           |
-| Global AI Assistant      | `/global/admin/assistant`     | Cross-market AI - all sources accessible, compareMarkets tool, context-aware suggested queries.                                                                                                                              |
+| Screen                   | URL                           | Description                                                                                                                                                                                                                                                                      |
+| ------------------------ | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Combined Overview        | `/`                           | Public combined view. All markets, total listings, per-market cards, animated counter. No login.                                                                                                                                                                                 |
+| Per-Market Snapshot      | `/yerevan` `/baku` `/tbilisi` | Public market snapshot per market. No login. Median price/sqm, listing counts, animated count-up, live badge.                                                                                                                                                                    |
+| Scraper Control          | `/yerevan/admin/dashboard`    | Scraper control panel scoped to market. Start scrapes, live status, listing volume chart, Excel exports.                                                                                                                                                                         |
+| Market Stats             | `/yerevan/admin/market-stats` | District-level price breakdown by category. Median + average price/sqm, heat-shaded ranking, price reductions, disappeared and stale counts, commercial yield, AI summary, monthly/quarterly trend charts.                                                                       |
+| Data Hub                 | `/yerevan/admin/data-hub`     | Filterable listing explorer scoped to market. Filter by category, district, status, rooms, price, area, agency/owner, bill of sale, mortgage, probable duplicates toggle, posted date, collected date. Live count, race-condition protection. Download filtered Excel instantly. |
+| AI Assistant             | `/yerevan/admin/assistant`    | Chat interface powered by Claude Haiku. Market-aware - answers scoped to selected market. 9 callable tools, persistent per-user history per market, context-aware suggested queries.                                                                                             |
+| Global Dashboard         | `/global/admin/dashboard`     | Cross-market overview - total listings, median prices, last scraped, active categories per market.                                                                                                                                                                               |
+| Global Market Comparison | `/global/admin/market-stats`  | Per-category price comparison table across all configured markets.                                                                                                                                                                                                               |
+| Global AI Assistant      | `/global/admin/assistant`     | Cross-market AI - all sources accessible, compareMarkets tool, context-aware suggested queries.                                                                                                                                                                                  |
 
 Old `/admin/*` URLs redirect automatically to `/yerevan/admin/*`.
 
-**279 tests passing** across unit, feature and integration layers (PostgreSQL 16 backend, Pest framework).
+**306 tests passing** across unit, feature and integration layers (PostgreSQL 16 backend, Pest framework).
 
 ---
 
 ## Tech Stack
 
-| Layer          | Choice                                                                                 |
-| -------------- | -------------------------------------------------------------------------------------- |
-| Backend        | Laravel 12 (PHP 8.4), layered architecture (Controller → Service → Repository → Model) |
-| Frontend       | Inertia.js + React + TypeScript, Tailwind, shadcn/Radix UI                             |
-| Auth           | Fortify + Sanctum, Spatie roles/permissions                                            |
-| AI             | Prism → OpenRouter, LarAgent, `anthropic/claude-haiku-4-5`                             |
-| Database       | PostgreSQL 16 + pgvector                                                               |
-| Scraping       | Laravel Dusk + ChromeDriver (list.am is JS-rendered)                                   |
-| Queue          | Redis + Laravel Horizon                                                                |
-| Storage        | Backblaze B2 (screenshots + DB backups), rclone                                        |
-| Screenshots    | Screenshotone API (headless browser as a service) → Backblaze B2                       |
-| Exchange Rates | open.er-api.com (free, no auth, daily)                                                 |
-| Monitoring     | Sentry, UptimeRobot, Telegram alerts                                                   |
-| DevOps         | Docker, Caddy (HTTPS), Vultr VPS, GitHub Actions CI/CD                                 |
+| Layer          | Choice                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| Backend        | Laravel 12 (PHP 8.4), layered architecture (Controller → Service → Repository → Model)                 |
+| Frontend       | Inertia.js + React + TypeScript, Tailwind, shadcn/Radix UI                                             |
+| Auth           | Fortify + Sanctum, Spatie roles/permissions                                                            |
+| AI             | Prism → OpenRouter, LarAgent, `anthropic/claude-haiku-4-5`                                             |
+| Database       | PostgreSQL 16 + pgvector                                                                               |
+| Scraping       | Laravel Dusk + ChromeDriver (list.am is JS-rendered); Guzzle + DomCrawler (bina.az is server-rendered) |
+| Queue          | Redis + Laravel Horizon                                                                                |
+| Storage        | Backblaze B2 (screenshots + DB backups), rclone                                                        |
+| Screenshots    | Screenshotone API (headless browser as a service) → Backblaze B2                                       |
+| Exchange Rates | open.er-api.com (free, no auth, daily)                                                                 |
+| Monitoring     | Sentry, UptimeRobot, Telegram alerts                                                                   |
+| DevOps         | Docker, Caddy (HTTPS), Vultr VPS, GitHub Actions CI/CD                                                 |
 
 ---
 
@@ -86,11 +86,11 @@ No manual steps needed for code or frontend changes.
 
 ## Markets
 
-| Market  | Slug    | Flag | Data Source       | Status  |
-| ------- | ------- | ---- | ----------------- | ------- |
-| Yerevan | yerevan | 🇦🇲   | list.am           | ✅ Live |
-| Baku    | baku    | 🇦🇿   | bina.az           | ⬜      |
-| Tbilisi | tbilisi | 🇬🇪   | myhome.ge + ss.ge | ⬜      |
+| Market  | Slug    | Flag | Data Source       | Status     |
+| ------- | ------- | ---- | ----------------- | ---------- |
+| Yerevan | yerevan | 🇦🇲   | list.am           | ✅ Live    |
+| Baku    | baku    | 🇦🇿   | bina.az           | ✅ Live    |
+| Tbilisi | tbilisi | 🇬🇪   | myhome.ge + ss.ge | ⬜ Planned |
 
 Adding a new market: add entry to `config/scraper.php` markets array + create scraper profiles. No other code changes needed.
 
@@ -114,13 +114,46 @@ All currencies accepted (AMD, EUR, USD). Prices converted to USD at pipeline tim
 
 ---
 
+## Data Sources (Baku)
+
+All Baku data is scraped from [bina.az](https://ru.bina.az) via GraphQL API (no browser required):
+
+| Category      | Profile Name    | categoryId | Deal Type |
+| ------------- | --------------- | ---------- | --------- |
+| Land for Sale | binaz_land_sale | 9          | Sale      |
+
+More categories planned for milestone 2 (apartments, offices, houses, commercial).
+
+**bina.az scraping approach:**
+
+- GraphQL POST to `/graphql` with cursor-based pagination (16 listings per fetch)
+- Plain HTTP GET to `/items/{id}` for detail page (server-rendered HTML, no JS execution needed)
+- Plain HTTP GET to `/items/{id}/phones?react=true` for phone number
+- No Selenium, no ChromeDriver, no browser sessions required
+
+**Baku-specific fields:**
+
+- `has_bill_of_sale` (купчая) - significantly affects land pricing, filterable in Data Hub
+- `has_mortgage` - mortgage availability, filterable in Data Hub
+- `original_price_azn` - original AZN price preserved in extras
+- `area_sotka` - area in sotka (computed in Excel: area_m² ÷ 100)
+- `price_per_sotka_usd` - price per sotka in USD (computed in Excel)
+
+**District normalization:** Russian settlement names normalized to their parent administrative district (e.g. "Мардакан" → "Khazar", "Нардаран" → "Sabunchu") via `NormalizeToEnglishStage`.
+
+**Duplicate detection:** `FlagBinazDuplicatesStage` flags probable duplicates using price ±3% + area ±2% + same district - catches same plot listed by multiple agencies. More precise than Yerevan's stage which uses looser tolerances.
+
+**Persisted query hash:** The GraphQL hash `0411196b53414c016d897220337db3bd777dee1a71fdfafa4d98ce3502b38754` is stored in `config/scraper.php` and `.env` as `BINAZ_PERSISTED_QUERY_HASH`. If bina.az deploys a new frontend build this hash rotates - update from DevTools: Network → SearchItems → Payload → extensions.
+
+---
+
 ## Listing Lifecycle
 
 Every listing is tracked through its full lifecycle:
 
 | Field                    | Description                                                |
 | ------------------------ | ---------------------------------------------------------- |
-| `listing_date`           | When the seller posted on the source site                  |
+| `listing_date`           | When the seller last updated/bumped on the source site     |
 | `scraped_at`             | When the listing was first collected by Atlas              |
 | `last_seen_at`           | Last time confirmed live via HTTP check                    |
 | `last_checked_at`        | Last time check-listings ran against it                    |
@@ -128,24 +161,47 @@ Every listing is tracked through its full lifecycle:
 | `description`            | Raw listing description (native language)                  |
 | `translated_description` | English translation via Claude API                         |
 | `screenshot_url`         | B2 path of detail page screenshot                          |
+| `has_bill_of_sale`       | Bill of sale status (bina.az only, affects Baku pricing)   |
+| `has_mortgage`           | Mortgage availability (bina.az only)                       |
 | `days_on_market`         | Computed at export time from listing_date → disappeared_at |
 | `status`                 | Active / Stale (90+ days) / Disappeared                    |
 
 Stale detection uses `COALESCE(listing_date, scraped_at)` consistently across Data Hub, Market Stats and Excel exports.
 
-The `atlas:check-listings` command checks 5% of active listings per run. Currently disabled - requires residential proxies (list.am returns 403 to non-browser requests from server IPs).
+**Note on bina.az listing_date:** bina.az only exposes `updatedAt` (last bumped date), not original posting date. Original posting date is not available from the API or HTML.
+
+The `atlas:check-listings` command checks 5% of active listings per run. Currently disabled for list.am - requires residential proxies. Can be enabled for bina.az (server-rendered, no proxy needed).
 
 ---
 
 ## Scheduled Jobs
 
-| Command                      | Schedule                    | Description                                                 |
-| ---------------------------- | --------------------------- | ----------------------------------------------------------- |
-| `atlas:capture-screenshots`  | Daily 00:00                 | Screenshot new listings via Screenshotone API → B2 (66/day) |
-| `atlas:fetch-exchange-rates` | Daily 04:00                 | Fetch AMD/AZN/GEL/EUR rates from open.er-api.com            |
-| `scraper:run [category]`     | Mon/Wed/Fri 05:00 Tbilisi   | Scrape one category from list.am                            |
-| `atlas:check-listings`       | Commented out               | Requires residential proxies                                |
-| `scripts/backup-db.sh`       | Daily 03:00 UTC (host cron) | pg_dump → B2 via rclone                                     |
+| Command                      | Schedule                    | Description                                                  |
+| ---------------------------- | --------------------------- | ------------------------------------------------------------ |
+| `atlas:capture-screenshots`  | Daily 00:00                 | Screenshot new listings via Screenshotone API → B2 (200/day) |
+| `atlas:fetch-exchange-rates` | Daily 04:00                 | Fetch AMD/AZN/GEL/EUR rates from open.er-api.com             |
+| `scraper:run [category]`     | Mon/Wed/Fri 05:00 Tbilisi   | Scrape one category from list.am (Yerevan)                   |
+| `atlas:check-listings`       | Commented out               | Requires residential proxies for list.am                     |
+| `scripts/backup-db.sh`       | Daily 03:00 UTC (host cron) | pg_dump → B2 via rclone                                      |
+
+**Pending (add after Colliers confirmation):**
+
+- `scraper:run binaz_land_sale --pages=1` - daily Baku land scrape
+- `atlas:embed-listings --market=baku` - activate RAG after translations complete
+
+---
+
+## Excel Export (Baku)
+
+The `real_estate_market_report_binaz_land_sale_*.xlsx` contains 4 sheets:
+
+**Sheet 1 - All Listings:** Full dataset with 36 columns including `area_sotka`, `price_per_sotka_usd`, `has_bill_of_sale` (Yes/No), `has_mortgage` (Yes/No), `original_price_azn`, `translated_description`, `phone`, `agency_name`.
+
+**Sheet 2 - Market Overview:** Headline stats including supply, pricing (USD), market composition (agency vs owner), document status (bill of sale counts), mortgage status.
+
+**Sheet 3 - District Analysis:** Pricing by district - average and median price/sqm and price/plot, listing counts, market share.
+
+**Sheet 4 - Price Distribution:** Market segmentation by USD price bracket.
 
 ---
 
