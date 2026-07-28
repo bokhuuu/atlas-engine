@@ -103,7 +103,7 @@ class ScreenshotService
             'block_cookie_banners' => 'true',
             'block_trackers' => 'true',
             'block_chats' => 'true',
-            'full_page' => 'false',
+            'full_page' => 'true',
             'viewport_width' => 1280,
             'viewport_height' => 1200,
             'timeout' => 30,
