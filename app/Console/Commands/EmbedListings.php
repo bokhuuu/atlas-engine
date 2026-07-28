@@ -35,7 +35,7 @@ class EmbedListings extends Command
 
         $query = Listing::query()
             ->where('source_profile_name', $source)
-            ->whereNotNull('title')
+            ->whereNotNull('translated_description')
             ->whereNotIn('id', $alreadyIndexed->keys()->all());
 
         $total = $query->count();
@@ -57,7 +57,7 @@ class EmbedListings extends Command
             foreach ($listings as $listing) {
                 try {
                     $text = trim(implode(' ', array_filter([
-                        $listing->title,
+                        $listing->translated_description,
                         $listing->description ?? null,
                     ])));
 
