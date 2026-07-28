@@ -639,6 +639,36 @@
                                     "key": "market",
                                     "value": "{{market}}",
                                     "description": "Market slug: yerevan, baku, tbilisi"
+                                },
+                                {
+                                    "key": "has_bill_of_sale",
+                                    "value": "",
+                                    "description": "Filter by bill of sale: true or false (optional, bina.az only)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "has_mortgage",
+                                    "value": "",
+                                    "description": "Filter by mortgage availability: true or false (optional, bina.az only)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "exclude_duplicates",
+                                    "value": "true",
+                                    "description": "Exclude probable duplicates (same plot, multiple agencies). Default true.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "listing_date_from",
+                                    "value": "",
+                                    "description": "Filter by listing date from YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "listing_date_to",
+                                    "value": "",
+                                    "description": "Filter by listing date to YYYY-MM-DD (optional)",
+                                    "disabled": true
                                 }
                             ]
                         },
@@ -883,6 +913,36 @@
                                     "key": "scraped_to",
                                     "value": "",
                                     "description": "To date YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "has_bill_of_sale",
+                                    "value": "",
+                                    "description": "Filter by bill of sale: true or false (optional, bina.az only)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "has_mortgage",
+                                    "value": "",
+                                    "description": "Filter by mortgage availability: true or false (optional, bina.az only)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "exclude_duplicates",
+                                    "value": "true",
+                                    "description": "Exclude probable duplicates (same plot, multiple agencies). Default true.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "listing_date_from",
+                                    "value": "",
+                                    "description": "Filter by listing date from YYYY-MM-DD (optional)",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "listing_date_to",
+                                    "value": "",
+                                    "description": "Filter by listing date to YYYY-MM-DD (optional)",
                                     "disabled": true
                                 }
                             ]
