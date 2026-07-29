@@ -15,12 +15,18 @@ Schedule::command('atlas:capture-screenshots')->dailyAt('00:00');
 Schedule::command('atlas:fetch-exchange-rates')->dailyAt('04:00');
 
 Schedule::command('scraper:run listam_apartments_sale --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_apartments_rent --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_houses_sale --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('05:00');
+Schedule::command('scraper:run listam_apartments_rent --pages=1')->days([1, 3, 5])->at('05:05');
+Schedule::command('scraper:run listam_houses_sale --pages=1')->days([1, 3, 5])->at('05:10');
+Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5])->at('05:15');
+Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('05:20');
+Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('05:25');
+Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('05:30');
+
+// Baku market — bina.az land listings
+// Runs daily after Yerevan scrapes complete. max_pages=5 for ongoing runs (covers ~80 new listings/day).
+// Change BINAZ_LAND_SALE_MAX_PAGES=5 in .env after initial backfill is confirmed.
+Schedule::command('scraper:run binaz_land_sale --pages=1')->dailyAt('12:00');
+// Schedule::command('atlas:capture-screenshots --market=baku')->dailyAt('15:00');
 
 // Requires residential proxies to bypass list.am server IP block on non-browser requests
 // Schedule::command('atlas:check-listings')->days([0, 2, 4, 6])->at('10:00');
