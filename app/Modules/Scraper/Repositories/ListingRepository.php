@@ -258,6 +258,24 @@ class ListingRepository
     }
 
     /**
+     * Count distinct properties for all sources in one query.
+     *
+     * Same dedup logic as countDistinctBySource() but fetches every
+     * source in a single grouped query instead of one query per source.
+     * Returns an array keyed by source_profile_name → count.
+     * Sources with zero listings are absent from the result - callers
+     * must use ?? 0 when reading a specific key.
+     */
+    public function countDistinctAllSources(): array
+    {
+        return DB::table('listings')
+            ->selectRaw('source_profile_name, COUNT(DISTINCT COALESCE(duplicate_group_id, id)) as total')
+            ->groupBy('source_profile_name')
+            ->pluck('total', 'source_profile_name')
+            ->toArray();
+    }
+
+    /**
      * Median price per sqm for a given source, across all its
      * deduplicated listings citywide.
      *
@@ -269,7 +287,7 @@ class ListingRepository
      * exactly this kind of extreme-but-real listing, not a scraping bug.
      *
      * Uses PostgreSQL's native PERCENTILE_CONT(0.5) ordered-set aggregate,
-     * which computes a true interpolated median in a single pass —
+     * which computes a true interpolated median in a single pass -
      * cleaner and faster than the window-function workaround required on MySQL.
      * Cached for 1 hour, same pattern as getDistrictPriceStats().
      */
@@ -305,7 +323,7 @@ class ListingRepository
     /**
      * Median price per sqm grouped by district for a given source.
      *
-     * Companion to getDistrictPriceStats() (which provides AVG) — uses
+     * Companion to getDistrictPriceStats() (which provides AVG) - uses
      * PostgreSQL's native PERCENTILE_CONT(0.5) ordered-set aggregate
      * partitioned by district. Average alone is fragile against
      * real-but-extreme listings; with smaller per-district sample

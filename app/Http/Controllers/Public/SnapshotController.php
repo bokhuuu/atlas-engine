@@ -47,11 +47,13 @@ class SnapshotController extends Controller
         $marketConfig = $this->marketRegistry->fromSlug($marketSlug);
         $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
 
+        $counts = $this->listingRepository->countDistinctAllSources();
+
         $allLabels = CategoryLabels::all();
         $sources = collect($allLabels)
             ->filter(fn ($label, $source) => collect($sourcePrefixes)
                 ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_')))
-            ->map(fn ($label, $source) => $this->buildCategorySnapshot($source, $label))
+            ->map(fn ($label, $source) => $this->buildCategorySnapshot($source, $label, $counts))
             ->values();
 
         return response()->json([
@@ -59,20 +61,14 @@ class SnapshotController extends Controller
         ]);
     }
 
-    /**
-     * Build one category's snapshot: city-wide median price/sqm,
-     * deduplicated total count, and deal type parsed from the
-     * source name itself (every real source name ends in _sale or
-     * _rent - no separate hardcoded map needed for that).
-     */
-    private function buildCategorySnapshot(string $source, string $label): array
+    private function buildCategorySnapshot(string $source, string $label, array $counts): array
     {
         return [
             'source' => $source,
             'label' => $label,
             'deal_type' => Str::endsWith($source, '_rent') ? 'rent' : 'sale',
             'median_price_per_sqm' => $this->listingRepository->getMedianPricePerSqm($source),
-            'total_listings' => $this->listingRepository->countDistinctBySource($source),
+            'total_listings' => $counts[$source] ?? 0,
         ];
     }
 }

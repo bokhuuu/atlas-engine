@@ -50,6 +50,8 @@ class DashboardController extends Controller
         $scraperCategories = [];
         $grandTotalListings = 0;
 
+        $counts = $this->listingRepository->countDistinctAllSources();
+
         foreach (config('scraper.profiles', []) as $source => $profileClass) {
             $belongsToMarket = collect($sourcePrefixes)
                 ->contains(fn ($prefix) => str_starts_with($source, $prefix.'_'));
@@ -58,7 +60,7 @@ class DashboardController extends Controller
                 continue;
             }
 
-            $totalListings = $this->listingRepository->countDistinctBySource($source);
+            $totalListings = $counts[$source] ?? 0;
             $grandTotalListings += $totalListings;
 
             $scraperCategories[] = [

@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Repositories;
 use App\Modules\Scraper\Enums\ScraperState;
 use App\Modules\Scraper\Models\ScraperRun;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Handles all database interactions for the ScraperRun model.
@@ -100,6 +101,26 @@ class ScraperRunRepository
     public function findLatest(string $source): ?ScraperRun
     {
         return ScraperRun::where('source', $source)->latest('started_at')->first();
+    }
+
+    /**
+     * Retrieve the latest completed run for every source in one query.
+     *
+     * Uses PostgreSQL DISTINCT ON (source) to get one row per source -
+     * the one with the most recent finished_at - in a single round trip.
+     * Returns a Collection keyed by source name.
+     * Sources with no completed runs are absent - callers must use ?? null.
+     */
+    public function findLatestCompletedPerSource(): Collection
+    {
+        $rows = DB::select(<<<'SQL'
+        SELECT DISTINCT ON (source) source, finished_at, state
+        FROM scraper_runs
+        WHERE state = 'completed'
+        ORDER BY source, finished_at DESC
+    SQL);
+
+        return collect($rows)->keyBy('source');
     }
 
     /**

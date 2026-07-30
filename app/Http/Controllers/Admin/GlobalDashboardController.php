@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Scraper\Models\ScraperRun;
 use App\Modules\Scraper\Repositories\ListingRepository;
+use App\Modules\Scraper\Repositories\ScraperRunRepository;
 use App\Services\MarketRegistry;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,6 +24,7 @@ class GlobalDashboardController extends Controller
     public function __construct(
         private readonly MarketRegistry $marketRegistry,
         private readonly ListingRepository $listingRepository,
+        private readonly ScraperRunRepository $scraperRunRepository,
     ) {}
 
     /**
@@ -34,6 +35,9 @@ class GlobalDashboardController extends Controller
     public function index(): Response
     {
         $markets = [];
+
+        $counts = $this->listingRepository->countDistinctAllSources();
+        $latestRuns = $this->scraperRunRepository->findLatestCompletedPerSource();
 
         foreach ($this->marketRegistry->allSlugs() as $slug) {
             $marketConfig = $this->marketRegistry->fromSlug($slug);
@@ -52,17 +56,15 @@ class GlobalDashboardController extends Controller
                     continue;
                 }
 
-                $count = $this->listingRepository->countDistinctBySource($source);
+                $count = $counts[$source] ?? 0;
                 $totalListings += $count;
 
                 $totalCategories++;
                 if ($count > 0) {
                     $activeCategories++;
                 }
-                $latestRun = ScraperRun::where('source', $source)
-                    ->where('state', 'completed')
-                    ->latest('finished_at')
-                    ->first();
+
+                $latestRun = $latestRuns[$source] ?? null;
 
                 if ($latestRun && (! $lastScrapedAt || $latestRun->finished_at > $lastScrapedAt)) {
                     $lastScrapedAt = $latestRun->finished_at;
@@ -81,7 +83,7 @@ class GlobalDashboardController extends Controller
                 'active_categories' => $activeCategories,
                 'total_categories' => $totalCategories,
                 'median_sale_price_per_sqm' => $medianPricePerSqm,
-                'last_scraped_at' => $lastScrapedAt?->toDateTimeString(),
+                'last_scraped_at' => $lastScrapedAt,
                 'has_data' => $totalListings > 0,
             ];
         }
