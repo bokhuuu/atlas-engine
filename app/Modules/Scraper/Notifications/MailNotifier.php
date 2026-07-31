@@ -19,6 +19,10 @@ class MailNotifier implements NotifierInterface
     {
         $to = config('services.mail.scraper_to');
 
+        if (empty($to)) {
+            return;
+        }
+
         Mail::raw(
             $this->buildMessage($payload),
             function ($message) use ($to): void {
