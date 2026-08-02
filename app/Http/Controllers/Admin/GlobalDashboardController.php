@@ -71,9 +71,6 @@ class GlobalDashboardController extends Controller
                 }
             }
 
-            $saleSource = ($sourcePrefixes[0] ?? 'listam').'_apartments_sale';
-            $medianPricePerSqm = $this->listingRepository->getMedianPricePerSqm($saleSource);
-
             $markets[] = [
                 'slug' => $slug,
                 'label' => $marketConfig['label'] ?? ucfirst($slug),
@@ -82,7 +79,6 @@ class GlobalDashboardController extends Controller
                 'total_listings' => $totalListings,
                 'active_categories' => $activeCategories,
                 'total_categories' => $totalCategories,
-                'median_sale_price_per_sqm' => $medianPricePerSqm,
                 'last_scraped_at' => $lastScrapedAt,
                 'has_data' => $totalListings > 0,
             ];

@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { TrendingUp, Building2, Clock } from 'lucide-react';
+import { Building2, Clock } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -11,7 +11,6 @@ interface MarketData {
     total_listings: number;
     active_categories: number;
     total_categories: number;
-    median_sale_price_per_sqm: number | null;
     last_scraped_at: string | null;
     has_data: boolean;
 }
@@ -95,18 +94,6 @@ export default function GlobalDashboard({
                                     </div>
                                     <span className="font-semibold">
                                         {market.total_listings.toLocaleString()}
-                                    </span>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                        <TrendingUp className="h-3.5 w-3.5" />
-                                        <span>Median Sale/sqm</span>
-                                    </div>
-                                    <span className="font-semibold">
-                                        {market.median_sale_price_per_sqm
-                                            ? `$${Math.round(market.median_sale_price_per_sqm).toLocaleString()}`
-                                            : '—'}
                                     </span>
                                 </div>
 
