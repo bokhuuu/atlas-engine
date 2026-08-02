@@ -124,6 +124,25 @@ class ScraperRunRepository
     }
 
     /**
+     * Retrieve the latest run (any state) for a given list of sources.
+     * One query instead of N - fixes the N+1 in statusAll().
+     * Returns a Collection keyed by source name.
+     */
+    public function findLatestPerSource(array $sources): Collection
+    {
+        $rows = DB::select(<<<'SQL'
+        SELECT DISTINCT ON (source) *
+        FROM scraper_runs
+        WHERE source = ANY(?)
+        ORDER BY source, started_at DESC
+    SQL, ['{'.implode(',', $sources).'}']);
+
+        return ScraperRun::hydrate(
+            array_map(fn ($row) => (array) $row, $rows)
+        )->keyBy('source');
+    }
+
+    /**
      * Atomically increment the encountered-listings counter for a run.
      *
      * Called once per index page crawled, with the count of listing URLs

@@ -144,9 +144,10 @@ class ScrapeController extends Controller
 
     /**
      * Return the latest scrape run state for every registered category,
-     * plus the current dedup-aware total listing count for each - so
-     * the dashboard's totals stay live on the same polling cycle as
-     * run state, instead of going stale until a full page reload.
+     * plus the current dedup-aware total listing count for each.
+     *
+     * Uses batch queries - one query for all runs, one for all counts -
+     * instead of N queries per source. Fixes N+1 flagged by Sentry.
      *
      * Categories with no run yet appear with state "never_run" instead
      * of causing the whole response to fail.
@@ -155,9 +156,13 @@ class ScrapeController extends Controller
     {
         $sources = $this->currentMarketSources();
 
-        $statuses = array_map(function (string $source): array {
-            $run = $this->runRepository->findLatest($source);
-            $totalListings = $this->listingRepository->countDistinctBySource($source);
+        // Batch fetch - one query each instead of N queries per source
+        $latestRuns = $this->runRepository->findLatestPerSource($sources);
+        $listingCounts = $this->listingRepository->countDistinctAllSources();
+
+        $statuses = array_map(function (string $source) use ($latestRuns, $listingCounts): array {
+            $run = $latestRuns[$source] ?? null;
+            $totalListings = $listingCounts[$source] ?? 0;
 
             if (! $run) {
                 return [
