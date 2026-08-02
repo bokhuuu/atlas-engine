@@ -6,16 +6,26 @@ namespace App\Modules\Scraper\Listeners;
 
 use App\Modules\Scraper\Events\ScrapeCompleted;
 use App\Modules\Scraper\Exports\ExportManager;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Delegates entirely to ExportManager - this listener's only job is
- * to bridge the event system and the export layer.
+ * Generates exports after a scrape completes.
+ *
+ * Implements ShouldQueue so export generation runs as a background job -
+ * ScrapeCompletedJob dispatches this listener and completes immediately
+ * without waiting for potentially slow Excel generation (4,000+ listings
+ * can take 2+ minutes, exceeding the 120s Horizon worker timeout).
+ *
  * Which formats run is declared in the profile's getExports().
  */
-class TriggerScrapeExport
+class TriggerScrapeExport implements ShouldQueue
 {
-    /** Takes the export manager used to actually generate the export files. */
+    use InteractsWithQueue;
+
+    public int $timeout = 600;
+
     public function __construct(
         private readonly ExportManager $exportManager,
     ) {}
