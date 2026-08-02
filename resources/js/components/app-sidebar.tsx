@@ -13,6 +13,7 @@ import {
     Globe,
     Database,
     ExternalLink,
+    Sparkles,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import AppLogo from '@/components/app-logo';
@@ -36,6 +37,7 @@ import type { NavItem } from '@/types';
 
 interface NavItemWithRoles extends NavItem {
     roles: string[];
+    featured?: boolean;
 }
 
 interface Market {
@@ -106,12 +108,14 @@ function buildNavItems(market: string): {
                       href: `${base}/data-hub`,
                       icon: Database,
                       roles: ['super_admin', 'admin'],
+                      featured: true,
                   },
                   {
                       title: 'AI Assistant',
                       href: `${base}/assistant`,
                       icon: Bot,
                       roles: ['super_admin', 'admin', 'editor'],
+                      featured: true,
                   },
                   {
                       title: 'AI Feedback',
@@ -198,10 +202,18 @@ function NavGroup({
                                     : isCurrentOrParentUrl(item.href)
                             }
                             tooltip={{ children: item.title }}
+                            className={
+                                item.featured
+                                    ? 'relative rounded-lg bg-sidebar-accent/20 font-medium text-sidebar-foreground ring-1 ring-sidebar-border/60 hover:bg-sidebar-accent/40 dark:bg-sidebar-accent/10 dark:hover:bg-sidebar-accent/25'
+                                    : ''
+                            }
                         >
                             <Link href={item.href} prefetch>
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
+                                {item.featured && (
+                                    <Sparkles className="ml-auto h-3 w-3 text-amber-400 dark:text-amber-300" />
+                                )}
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
