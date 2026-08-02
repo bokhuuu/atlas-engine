@@ -158,21 +158,23 @@ class RealEstateMarketReport implements ExporterInterface
 class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 {
     private array $clientColumns = [
+        // Identity
         'url',
         'listing_type',
         'property_type',
         'district',
         'address',
+
+        // Pricing
         'price',
-        'previous_price',
-        'price_change_pct',
-        'price_changed_at',
-        'currency',
         'original_price_azn',
         'price_per_sqm',
-        'area',
         'area_sotka',
         'price_per_sotka_usd',
+        'currency',
+
+        // Property details
+        'area',
         'rooms',
         'bathrooms',
         'floor',
@@ -181,18 +183,31 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'building_type',
         'condition',
         'is_new_building',
+
+        // Baku-specific
         'has_bill_of_sale',
         'has_mortgage',
+
+        // Contact
         'phone',
         'agency_name',
+
+        // Content
         'translated_description',
+
+        // Dates & lifecycle
         'listing_date',
         'scraped_at',
-        'duplicate_group_id',
+        'previous_price',
+        'price_change_pct',
+        'price_changed_at',
         'last_seen_at',
         'disappeared_at',
         'days_on_market',
         'status',
+
+        // Internal reference
+        'duplicate_group_id',
         'screenshot_url',
     ];
 
