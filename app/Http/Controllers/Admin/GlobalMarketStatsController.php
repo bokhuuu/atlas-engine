@@ -55,8 +55,9 @@ class GlobalMarketStatsController extends Controller
                 if (! $belongsToMarket) {
                     continue;
                 }
+                $canonicalType = preg_replace('/^[a-z]+_/', '', $source);
 
-                $markets[$slug]['categories'][$source] = [
+                $markets[$slug]['categories'][$canonicalType] = [
                     'label' => $label,
                     'source' => $source,
                     'median_price_per_sqm' => $this->listingRepository->getMedianPricePerSqm($source),
@@ -64,11 +65,15 @@ class GlobalMarketStatsController extends Controller
             }
         }
 
-        $allCategories = collect($allLabels)->map(fn ($label, $source) => [
-            'source' => $source,
-            'label' => $label,
-            'listing_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
-        ])->values();
+        $allCategories = collect($allLabels)
+            ->map(fn ($label, $source) => [
+                'source' => $source,
+                'canonical_type' => preg_replace('/^[a-z]+_/', '', $source),
+                'label' => $label,
+                'listing_type' => str_contains($source, '_rent') ? 'rent' : 'sale',
+            ])
+            ->unique('canonical_type')
+            ->values();
 
         return Inertia::render('admin/global-market-stats', [
             'marketStats' => array_values($markets),

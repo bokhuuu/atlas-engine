@@ -36,6 +36,8 @@ class OverviewController extends Controller
         $markets = [];
         $totalListingsAllMarkets = 0;
 
+        $allCounts = $this->listingRepository->countDistinctAllSources();
+
         foreach ($this->marketRegistry->allSlugs() as $slug) {
             $marketConfig = $this->marketRegistry->fromSlug($slug);
             $sourcePrefixes = $marketConfig['source_prefixes'] ?? [];
@@ -53,7 +55,7 @@ class OverviewController extends Controller
                 }
 
                 $totalCategories++;
-                $count = $this->listingRepository->countDistinctBySource($source);
+                $count = $allCounts[$source] ?? 0;
                 $totalListings += $count;
 
                 if ($count > 0) {

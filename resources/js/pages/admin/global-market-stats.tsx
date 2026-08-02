@@ -17,6 +17,7 @@ interface MarketStat {
 
 interface Category {
     source: string;
+    canonical_type: string;
     label: string;
     listing_type: 'sale' | 'rent';
 }
@@ -73,7 +74,7 @@ export default function GlobalMarketStats({
                     <tbody>
                         {categories.map((category, i) => (
                             <tr
-                                key={category.source}
+                                key={category.canonical_type}
                                 className={`border-b last:border-0 ${
                                     i % 2 === 0 ? '' : 'bg-muted/20'
                                 }`}
@@ -86,10 +87,12 @@ export default function GlobalMarketStats({
                                         key={market.slug}
                                         className="px-4 py-3 tabular-nums"
                                     >
-                                        {market.categories?.[category.source]
+                                        {market.categories?.[
+                                            category.canonical_type
+                                        ]
                                             ? formatPrice(
                                                   market.categories[
-                                                      category.source
+                                                      category.canonical_type
                                                   ].median_price_per_sqm,
                                               )
                                             : '—'}
