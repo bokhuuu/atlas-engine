@@ -41,11 +41,17 @@ class ExportController extends Controller
     }
 
     /**
-     * Generate and download a fresh export for one category, built
-     * from whatever is currently in the database for that source.
+     * Bundle pre-generated exports for every category into a single ZIP.
      *
-     * Only spreadsheet formats are offered - if a category's getExports()
-     * includes 'json', it's skipped here (API-only, not a file download).
+     * Uses today's already-generated Excel files when available - avoids
+     * regenerating all listings into memory on every click, which causes
+     * OOM errors as dataset grows (4,500+ listings × multiple categories).
+     *
+     * Falls back to regenerating if no file exists for today (first download
+     * of the day before TriggerScrapeExport has run).
+     *
+     * Filtered exports (Data Hub) always regenerate - they must reflect
+     * current filter state and cannot use pre-generated files.
      */
     public function download(string $source): BinaryFileResponse|Response
     {
@@ -70,10 +76,19 @@ class ExportController extends Controller
     {
         $sources = $this->currentMarketSources();
         $allPaths = [];
+        $exportPath = config('scraper.export_path');
 
         foreach ($sources as $source) {
-            $paths = $this->exportManager->runForSource($source, onlySpreadsheets: true);
-            $allPaths = [...$allPaths, ...$paths];
+            $todayFile = storage_path(
+                'app/private/'.$exportPath.'/real_estate_market_report_'.$source.'_'.now()->format('d_m_Y').'.xlsx'
+            );
+
+            if (file_exists($todayFile)) {
+                $allPaths[] = $todayFile;
+            } else {
+                $paths = $this->exportManager->runForSource($source, onlySpreadsheets: true);
+                $allPaths = [...$allPaths, ...$paths];
+            }
         }
 
         if (empty($allPaths)) {
@@ -81,16 +96,14 @@ class ExportController extends Controller
         }
 
         $zipPath = storage_path(
-            'app/private/'.config('scraper.export_path').'/atlas_export_'.now()->format('Y_m_d_His').'.zip'
+            'app/private/'.$exportPath.'/atlas_export_'.now()->format('Y_m_d_His').'.zip'
         );
 
         $zip = new ZipArchive;
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
         foreach ($allPaths as $path) {
             $zip->addFile($path, basename($path));
         }
-
         $zip->close();
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
