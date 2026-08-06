@@ -544,6 +544,7 @@ class PropertyAssistantAgent extends Agent
     private function calculateListingStats(Collection $listings): array
     {
         $prices = $listings->pluck('price')->filter()->values();
+        $sqmPrices = $listings->pluck('price_per_sqm')->filter()->values();
         $areas = $listings->pluck('area')->filter()->values();
         $billOfSale = $listings->whereNotNull('has_bill_of_sale');
 
@@ -555,6 +556,16 @@ class PropertyAssistantAgent extends Agent
             $median = $count % 2 === 0
                 ? ($sortedPrices[$mid - 1] + $sortedPrices[$mid]) / 2
                 : $sortedPrices[$mid];
+        }
+
+        $sortedSqmPrices = $sqmPrices->sort()->values();
+        $sqmCount = $sortedSqmPrices->count();
+        $medianSqm = 0;
+        if ($sqmCount > 0) {
+            $sqmMid = (int) floor($sqmCount / 2);
+            $medianSqm = $sqmCount % 2 === 0
+                ? ($sortedSqmPrices[$sqmMid - 1] + $sortedSqmPrices[$sqmMid]) / 2
+                : $sortedSqmPrices[$sqmMid];
         }
 
         $totalPrice = $prices->sum();
@@ -572,6 +583,9 @@ class PropertyAssistantAgent extends Agent
             'avg_price_usd' => $prices->count() ? (int) round($prices->avg()) : null,
             'median_price_usd' => $count > 0 ? (int) round($median) : null,
             'weighted_avg_price_per_sqm_usd' => $weightedAvgPriceSqm,
+            'min_price_per_sqm_usd' => $sqmCount > 0 ? round($sortedSqmPrices->min(), 2) : null,
+            'max_price_per_sqm_usd' => $sqmCount > 0 ? round($sortedSqmPrices->max(), 2) : null,
+            'median_price_per_sqm_usd' => $sqmCount > 0 ? round($medianSqm, 2) : null,
             'min_area_sqm' => $areas->count() ? round($areas->min(), 1) : null,
             'max_area_sqm' => $areas->count() ? round($areas->max(), 1) : null,
             'avg_area_sqm' => $areas->count() ? round($areas->avg(), 1) : null,
