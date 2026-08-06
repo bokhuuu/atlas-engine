@@ -9,9 +9,11 @@ use App\Modules\AI\Services\EmbeddingService;
 use App\Modules\AI\Services\PromptService;
 use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Exports\ExportManager;
+use App\Modules\Scraper\Models\Listing;
 use App\Modules\Scraper\Repositories\ListingRepository;
 use App\Modules\Scraper\Support\CategoryLabels;
 use App\Services\MarketRegistry;
+use Illuminate\Support\Collection;
 use LarAgent\Agent;
 use LarAgent\Attributes\Tool;
 
@@ -475,6 +477,106 @@ class PropertyAssistantAgent extends Agent
                 'source_id' => $doc->source_id,
             ])->values(),
         ]);
+    }
+
+    #[Tool('Get pricing statistics for a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Uses semantic search to find listings mentioning the location. source parameter is optional — omit to search across all categories.')]
+    public function getLocationStats(string $location_name, ?string $source = null): string
+    {
+        $service = app(EmbeddingService::class);
+
+        if (! $service->hasDocuments()) {
+            return json_encode([
+                'message' => 'No listing text has been indexed for semantic search yet.',
+            ]);
+        }
+
+        $results = $service->search($location_name, 50);
+
+        if ($results->isEmpty()) {
+            return json_encode(['message' => "No listings found mentioning '{$location_name}'."]);
+        }
+
+        $ids = $results->pluck('source_id')->filter()->values()->toArray();
+
+        $query = Listing::whereIn('id', $ids)->whereNotNull('price');
+
+        if ($source !== null) {
+            $query->where('source_profile_name', $source);
+        }
+
+        $listings = $query->get();
+
+        if ($listings->isEmpty()) {
+            return json_encode(['message' => "No listings with price data found for '{$location_name}'."]);
+        }
+
+        return json_encode([
+            'location' => $location_name,
+            'source_filter' => $source,
+            'currency' => 'USD',
+            'stats' => $this->calculateListingStats($listings),
+        ]);
+    }
+
+    #[Tool('Get pricing statistics for an entire district by its English name — e.g. "Khazar", "Sabail", "Narimanov". Queries the database directly by district column. source parameter is optional — omit to search across all categories.')]
+    public function getDistrictStats(string $district, ?string $source = null): string
+    {
+        $query = Listing::where('district', $district)->whereNotNull('price');
+
+        if ($source !== null) {
+            $query->where('source_profile_name', $source);
+        }
+
+        $listings = $query->get();
+
+        if ($listings->isEmpty()) {
+            return json_encode(['message' => "No listings found for district '{$district}'."]);
+        }
+
+        return json_encode([
+            'district' => $district,
+            'source_filter' => $source,
+            'currency' => 'USD',
+            'stats' => $this->calculateListingStats($listings),
+        ]);
+    }
+
+    private function calculateListingStats(Collection $listings): array
+    {
+        $prices = $listings->pluck('price')->filter()->values();
+        $areas = $listings->pluck('area')->filter()->values();
+        $billOfSale = $listings->whereNotNull('has_bill_of_sale');
+
+        $sortedPrices = $prices->sort()->values();
+        $count = $sortedPrices->count();
+        $median = 0;
+        if ($count > 0) {
+            $mid = (int) floor($count / 2);
+            $median = $count % 2 === 0
+                ? ($sortedPrices[$mid - 1] + $sortedPrices[$mid]) / 2
+                : $sortedPrices[$mid];
+        }
+
+        $totalPrice = $prices->sum();
+        $totalArea = $areas->sum();
+        $weightedAvgPriceSqm = ($totalArea > 0) ? round($totalPrice / $totalArea, 2) : null;
+
+        $billTotal = $billOfSale->count();
+        $billWithSale = $billOfSale->where('has_bill_of_sale', true)->count();
+        $billOfSalePct = $billTotal > 0 ? round($billWithSale / $billTotal * 100, 1) : null;
+
+        return [
+            'count' => $listings->count(),
+            'min_price_usd' => $prices->count() ? (int) round($prices->min()) : null,
+            'max_price_usd' => $prices->count() ? (int) round($prices->max()) : null,
+            'avg_price_usd' => $prices->count() ? (int) round($prices->avg()) : null,
+            'median_price_usd' => $count > 0 ? (int) round($median) : null,
+            'weighted_avg_price_per_sqm_usd' => $weightedAvgPriceSqm,
+            'min_area_sqm' => $areas->count() ? round($areas->min(), 1) : null,
+            'max_area_sqm' => $areas->count() ? round($areas->max(), 1) : null,
+            'avg_area_sqm' => $areas->count() ? round($areas->avg(), 1) : null,
+            'bill_of_sale_pct' => $billOfSalePct,
+        ];
     }
 
     private function defaultSystemPrompt(): string

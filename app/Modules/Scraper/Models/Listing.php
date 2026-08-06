@@ -75,6 +75,8 @@ class Listing extends Model
         'area' => 'float',
         'ceiling_height' => 'float',
         'is_new_building' => 'boolean',
+        'has_bill_of_sale' => 'boolean',
+        'has_mortgage' => 'boolean',
         'images' => 'array',
         'extras' => 'array',
         'listing_date' => 'datetime',
