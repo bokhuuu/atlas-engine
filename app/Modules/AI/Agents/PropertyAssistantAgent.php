@@ -479,7 +479,7 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
-    #[Tool('Get pricing statistics for a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Uses semantic search to find listings mentioning the location. source parameter is optional — omit to search across all categories.')]
+    #[Tool('Get pricing statistics for listings that mention a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Uses semantic search to find listings whose descriptions reference the location. These are typically properties near or around the development, not necessarily inside it. Always present results as "listings mentioning X" and note which districts they fall in. source parameter is optional — omit to search across all categories. Note: developments like White City are primarily offices/apartments — results will be sparse until those categories are scraped.')]
     public function getLocationStats(string $location_name, ?string $source = null): string
     {
         $service = app(EmbeddingService::class);
@@ -490,30 +490,39 @@ class PropertyAssistantAgent extends Agent
             ]);
         }
 
-        $results = $service->search($location_name, 50);
-
+        $results = $service->search($location_name, 200);
         if ($results->isEmpty()) {
             return json_encode(['message' => "No listings found mentioning '{$location_name}'."]);
         }
-
         $ids = $results->pluck('source_id')->filter()->values()->toArray();
-
-        $query = Listing::whereIn('id', $ids)->whereNotNull('price');
-
+        $query = Listing::whereIn('id', $ids)
+            ->whereNotNull('price')
+            ->where('translated_description', 'ilike', '%'.$location_name.'%');
         if ($source !== null) {
             $query->where('source_profile_name', $source);
         }
-
         $listings = $query->get();
-
         if ($listings->isEmpty()) {
-            return json_encode(['message' => "No listings with price data found for '{$location_name}'."]);
+            return json_encode([
+                'message' => "No listings explicitly mention '{$location_name}' in their description. This location may have data in other categories not yet scraped (e.g. offices, apartments).",
+            ]);
         }
+        if ($listings->count() < 5) {
+            return json_encode([
+                'message' => "Only {$listings->count()} listing(s) explicitly mention '{$location_name}'. Insufficient data for reliable statistics. This location likely has more data in other categories not yet scraped.",
+            ]);
+        }
+        $districts = $listings->groupBy('district')
+            ->map(fn ($group) => $group->count())
+            ->sortDesc()
+            ->toArray();
 
         return json_encode([
             'location' => $location_name,
+            'note' => "These are listings whose descriptions mention '{$location_name}' — typically nearby properties, not necessarily inside the development.",
             'source_filter' => $source,
             'currency' => 'USD',
+            'districts' => $districts,
             'stats' => $this->calculateListingStats($listings),
         ]);
     }
@@ -606,6 +615,7 @@ Rules you must follow without exception:
 - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
 - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
 - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
+- When getLocationStats returns results, always clarify that these are listings mentioning the location name in their description — typically nearby properties, not necessarily inside the development. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
