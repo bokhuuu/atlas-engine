@@ -479,39 +479,30 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
-    #[Tool('Get pricing statistics for listings that mention a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Uses semantic search to find listings whose descriptions reference the location. These are typically properties near or around the development, not necessarily inside it. Always present results as "listings mentioning X" and note which districts they fall in. source parameter is optional — omit to search across all categories. Note: developments like White City are primarily offices/apartments — results will be sparse until those categories are scraped.')]
+    #[Tool('Get pricing statistics for listings that mention a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Searches listing descriptions directly for the location name. These are typically properties near or around the development, not necessarily inside it. Always present results as "listings mentioning X" and note which districts they fall in. source parameter is optional — omit to search across all categories. Note: developments like White City are primarily offices/apartments — results will be sparse until those categories are scraped.')]
     public function getLocationStats(string $location_name, ?string $source = null): string
     {
-        $service = app(EmbeddingService::class);
-
-        if (! $service->hasDocuments()) {
-            return json_encode([
-                'message' => 'No listing text has been indexed for semantic search yet.',
-            ]);
-        }
-
-        $results = $service->search($location_name, 200);
-        if ($results->isEmpty()) {
-            return json_encode(['message' => "No listings found mentioning '{$location_name}'."]);
-        }
-        $ids = $results->pluck('source_id')->filter()->values()->toArray();
-        $query = Listing::whereIn('id', $ids)
-            ->whereNotNull('price')
+        $query = Listing::whereNotNull('price')
             ->where('translated_description', 'ilike', '%'.$location_name.'%');
+
         if ($source !== null) {
             $query->where('source_profile_name', $source);
         }
+
         $listings = $query->get();
+
         if ($listings->isEmpty()) {
             return json_encode([
                 'message' => "No listings explicitly mention '{$location_name}' in their description. This location may have data in other categories not yet scraped (e.g. offices, apartments).",
             ]);
         }
+
         if ($listings->count() < 5) {
             return json_encode([
                 'message' => "Only {$listings->count()} listing(s) explicitly mention '{$location_name}'. Insufficient data for reliable statistics. This location likely has more data in other categories not yet scraped.",
             ]);
         }
+
         $districts = $listings->groupBy('district')
             ->map(fn ($group) => $group->count())
             ->sortDesc()

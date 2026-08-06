@@ -38,12 +38,12 @@ function seedBakuListing(array $overrides = []): Listing
 // getLocationStats
 // ---------------------------------------------------------------------------
 
-test('getLocationStats returns no indexed data message when documents table is empty', function () {
+test('getLocationStats returns not found message when no listings mention the location', function () {
     $agent = makeStatsAgent();
     $result = json_decode($agent->getLocationStats('Sea Breeze'), true);
 
     expect($result)->toHaveKey('message')
-        ->and($result['message'])->toContain('No listing text has been indexed');
+        ->and($result['message'])->toContain('No listings explicitly mention');
 });
 
 // ---------------------------------------------------------------------------
