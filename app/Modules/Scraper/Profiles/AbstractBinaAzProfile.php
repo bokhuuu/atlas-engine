@@ -87,6 +87,17 @@ abstract class AbstractBinaAzProfile extends AbstractScraperProfile
         return 1;
     }
 
+    /**
+     * Optional bina.az location IDs to filter listings by named development.
+     * Returns null by default - no location filter applied.
+     * Override in concrete profiles to scope scraping to a specific development
+     * e.g. Sea Breeze (locationId 380).
+     */
+    public function getLocationIds(): ?array
+    {
+        return null;
+    }
+
     public function getRequiredFields(): array
     {
         return ['sourceProfileName', 'externalId', 'url', 'price'];

@@ -178,13 +178,19 @@ class BinazScraper extends BaseScraper
      */
     private function fetchGraphQlPage(?string $cursor): array
     {
+        $filter = [
+            'cityId' => config('scraper.binaz.city_id', '1'),
+            'categoryId' => (string) $this->profile->getCategoryId(),
+            'leased' => $this->profile->getListingType() === 'rent',
+        ];
+
+        if ($this->profile->getLocationIds() !== null) {
+            $filter['locationIds'] = $this->profile->getLocationIds();
+        }
+
         $variables = [
             'first' => 16,
-            'filter' => [
-                'cityId' => config('scraper.binaz.city_id', '1'),
-                'categoryId' => (string) $this->profile->getCategoryId(),
-                'leased' => $this->profile->getListingType() === 'rent',
-            ],
+            'filter' => $filter,
             'sort' => 'BUMPED_AT_DESC',
         ];
 

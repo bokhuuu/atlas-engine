@@ -24,6 +24,7 @@ class CategoryLabels
         'listam_new_developments_sale' => 'New Development Apartments',
 
         'binaz_land_sale' => 'Land for Sale',
+        'binaz_land_sale_sea_breeze' => 'Land for Sale — Sea Breeze',
     ];
 
     public static function forSource(string $source): string

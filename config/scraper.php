@@ -8,6 +8,7 @@ use App\Modules\Scraper\Exports\JsonExporter;
 use App\Modules\Scraper\Exports\RealEstateMarketReport;
 use App\Modules\Scraper\Profiles\ApartmentsForSaleProfile;
 use App\Modules\Scraper\Profiles\BinazLandSaleProfile;
+use App\Modules\Scraper\Profiles\BinazLandSaleSeaBreezeProfile;
 use App\Modules\Scraper\Profiles\CommercialForRentProfile;
 use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
 use App\Modules\Scraper\Profiles\HousesForSaleProfile;
@@ -181,6 +182,7 @@ return [
         'listam_new_developments_sale' => NewDevelopmentApartmentsProfile::class,
 
         'binaz_land_sale' => BinazLandSaleProfile::class,
+        'binaz_land_sale_sea_breeze' => BinazLandSaleSeaBreezeProfile::class,
     ],
 
     /*
@@ -330,6 +332,12 @@ return [
             'timeout' => env('BINAZ_LAND_SALE_TIMEOUT', 1800),
             'concurrency' => env('BINAZ_LAND_SALE_CONCURRENCY', 10),
         ],
+        'binaz_land_sale_sea_breeze' => [
+            'request_delay' => env('BINAZ_LAND_SALE_SEA_BREEZE_REQUEST_DELAY', 2),
+            'max_pages' => env('BINAZ_LAND_SALE_SEA_BREEZE_MAX_PAGES', 5),
+            'timeout' => env('BINAZ_LAND_SALE_SEA_BREEZE_TIMEOUT', 1800),
+            'concurrency' => env('BINAZ_LAND_SALE_SEA_BREEZE_CONCURRENCY', 10),
+        ],
     ],
 
     /*
@@ -372,6 +380,9 @@ return [
             'BINAZ_PERSISTED_QUERY_HASH',
             '0411196b53414c016d897220337db3bd777dee1a71fdfafa4d98ce3502b38754'
         ),
+        'locations' => [
+            'sea_breeze' => env('BINAZ_LOCATION_SEA_BREEZE', '380'),
+        ],
     ],
 
     /*
