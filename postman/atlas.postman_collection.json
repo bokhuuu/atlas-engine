@@ -1,14 +1,14 @@
 {
     "info": {
         "name": "Atlas API - Multi-Market Real Estate Intelligence",
-        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or your VPS URL\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.\n\nThread 14 additions: /api/v1/trends/volume and /api/v1/trends/price for time-series trend charts.",
+        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or https://45-32-154-101.nip.io (production)\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.\n\nThread 14 additions: /api/v1/trends/volume and /api/v1/trends/price for time-series trend charts.\nThread 16 additions: getLocationStats and getDistrictStats AI tools (11 tools total), DELETE assistant/history endpoint to clear chat history.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
         {
             "key": "base_url",
             "value": "http://localhost:8080",
-            "description": "Base URL - change to your VPS URL when deployed"
+            "description": "Base URL - change to https://45-32-154-101.nip.io for production"
         },
         {
             "key": "token",
@@ -18,7 +18,7 @@
         {
             "key": "source",
             "value": "listam_apartments_sale",
-            "description": "Scraper source key for Yerevan. Options: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale"
+            "description": "Scraper source key. Yerevan: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale. Baku: binaz_land_sale, binaz_land_sale_sea_breeze"
         },
         {
             "key": "market",
@@ -67,7 +67,7 @@
                                 }
                             ]
                         },
-                        "description": "Returns headline stats for all 7 property categories: median price/sqm, total listing count and deal type (sale/rent). Powers the public Screen 0 page. No auth required.\n\nPass ?market=yerevan (or baku/tbilisi) to scope to a specific market."
+                        "description": "Returns headline stats for all property categories: median price/sqm, total listing count and deal type (sale/rent). Powers the public Screen 0 page. No auth required.\n\nPass ?market=yerevan (or baku/tbilisi) to scope to a specific market."
                     },
                     "response": [
                         {
@@ -162,7 +162,7 @@
                                 }
                             ]
                         },
-                        "description": "Start a scrape run for all 7 categories at once using the same page count. Categories already running are skipped automatically."
+                        "description": "Start a scrape run for all categories at once using the same page count. Categories already running are skipped automatically."
                     },
                     "response": [
                         {
@@ -194,10 +194,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "scrape", "status"],
                             "query": [
-                                {
-                                    "key": "source",
-                                    "value": "{{source}}"
-                                }
+                                { "key": "source", "value": "{{source}}" }
                             ]
                         },
                         "description": "Get the latest run state for one category. States: pending, running, completed, failed, cancelled."
@@ -207,7 +204,7 @@
                             "name": "200 OK",
                             "status": "OK",
                             "code": 200,
-                            "body": "{\n  \"run_id\": 42,\n  \"source\": \"listam_apartments_sale\",\n  \"state\": \"completed\",\n  \"started_at\": \"2026-06-29T10:00:00Z\",\n  \"finished_at\": \"2026-06-29T10:05:00Z\",\n  \"scraped_pages\": 1,\n  \"saved_listings\": 99\n}"
+                            "body": "{\n  \"run_id\": 42,\n  \"source\": \"listam_apartments_sale\",\n  \"state\": \"completed\",\n  \"started_at\": \"2026-08-09T12:00:00Z\",\n  \"finished_at\": \"2026-08-09T12:06:00Z\",\n  \"scraped_pages\": 1,\n  \"saved_listings\": 20\n}"
                         }
                     ]
                 },
@@ -239,7 +236,7 @@
                                 }
                             ]
                         },
-                        "description": "Get the latest run state for all 7 categories at once, including live total listing counts. Used by the dashboard polling loop."
+                        "description": "Get the latest run state for all categories at once, including live total listing counts. Used by the dashboard polling loop."
                     },
                     "response": [
                         {
@@ -271,10 +268,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "scrape", "trend"],
                             "query": [
-                                {
-                                    "key": "source",
-                                    "value": "{{source}}"
-                                }
+                                { "key": "source", "value": "{{source}}" }
                             ]
                         },
                         "description": "Returns a time-series of completed scrape runs for one category grouped by date. Each point includes new_listings (added that day) and cumulative_listings (running total). Powers the trend chart on the dashboard."
@@ -379,14 +373,8 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings"],
                             "query": [
-                                {
-                                    "key": "source",
-                                    "value": "{{source}}"
-                                },
-                                {
-                                    "key": "page",
-                                    "value": "1"
-                                },
+                                { "key": "source", "value": "{{source}}" },
+                                { "key": "page", "value": "1" },
                                 {
                                     "key": "district",
                                     "value": "Kentron",
@@ -443,10 +431,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "stats"],
                             "query": [
-                                {
-                                    "key": "source",
-                                    "value": "{{source}}"
-                                }
+                                { "key": "source", "value": "{{source}}" }
                             ]
                         },
                         "description": "Returns average and median price/sqm per district for a category, plus price reduction count per district in the last 7 days. Powers the Market Stats page. Results cached 1 hour."
@@ -481,10 +466,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "listings", "summary"],
                             "query": [
-                                {
-                                    "key": "source",
-                                    "value": "{{source}}"
-                                }
+                                { "key": "source", "value": "{{source}}" }
                             ]
                         },
                         "description": "Returns a one-paragraph AI-generated market summary for a category, based on real scraped data. Cached 6 hours. Cache clears automatically when a new scrape completes."
@@ -579,14 +561,8 @@
                                     "value": "active",
                                     "description": "Status filter: active, stale, disappeared"
                                 },
-                                {
-                                    "key": "status[]",
-                                    "value": "stale"
-                                },
-                                {
-                                    "key": "status[]",
-                                    "value": "disappeared"
-                                },
+                                { "key": "status[]", "value": "stale" },
+                                { "key": "status[]", "value": "disappeared" },
                                 {
                                     "key": "min_price",
                                     "value": "",
@@ -653,12 +629,6 @@
                                     "disabled": true
                                 },
                                 {
-                                    "key": "exclude_duplicates",
-                                    "value": "true",
-                                    "description": "Exclude probable duplicates (same plot, multiple agencies). Default true.",
-                                    "disabled": false
-                                },
-                                {
                                     "key": "listing_date_from",
                                     "value": "",
                                     "description": "Filter by listing date from YYYY-MM-DD (optional)",
@@ -672,7 +642,7 @@
                                 }
                             ]
                         },
-                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited \u2014 safe for UI polling. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to."
+                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited — safe for UI polling. All listings returned including probable duplicates — no deduplication applied. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to, has_bill_of_sale, has_mortgage, listing_date_from/to."
                     },
                     "response": [
                         {
@@ -684,7 +654,7 @@
                     ]
                 },
                 {
-                    "name": "Market trend \u2014 listing volume",
+                    "name": "Market trend — listing volume",
                     "request": {
                         "method": "GET",
                         "header": [
@@ -716,19 +686,19 @@
                                 }
                             ]
                         },
-                        "description": "Returns monthly or quarterly listing volume for a market, split by listing_type (sale/rent). Powers the Market Stats trend charts.\n\nUses listing_date (when seller posted) not scraped_at \u2014 reflects real market activity.\n\nGroupBy options: month (default), quarter. Year support deferred until sufficient historical data."
+                        "description": "Returns monthly or quarterly listing volume for a market, split by listing_type (sale/rent). Powers the Market Stats trend charts.\n\nUses listing_date (when seller posted) not scraped_at — reflects real market activity.\n\nGroupBy options: month (default), quarter. Year support deferred until sufficient historical data."
                     },
                     "response": [
                         {
                             "name": "200 OK",
                             "status": "OK",
                             "code": 200,
-                            "body": "{\n  \"series\": [\n    {\"period\": \"2025-07\", \"sale\": 45, \"rent\": 12},\n    {\"period\": \"2025-08\", \"sale\": 52, \"rent\": 18}\n  ]\n}"
+                            "body": "{\n  \"series\": [\n    {\"period\": \"2026-07\", \"sale\": 45, \"rent\": 12},\n    {\"period\": \"2026-08\", \"sale\": 52, \"rent\": 18}\n  ]\n}"
                         }
                     ]
                 },
                 {
-                    "name": "Market trend \u2014 median price/sqm",
+                    "name": "Market trend — median price/sqm",
                     "request": {
                         "method": "GET",
                         "header": [
@@ -760,14 +730,14 @@
                                 }
                             ]
                         },
-                        "description": "Returns monthly or quarterly median sale price/sqm for a market. Sale listings only \u2014 rent price/sqm on the same axis as sale is misleading.\n\nUses PostgreSQL percentile_cont(0.5) for true median (not average). All prices in USD."
+                        "description": "Returns monthly or quarterly median sale price/sqm for a market. Sale listings only — rent price/sqm on the same axis as sale is misleading.\n\nUses PostgreSQL percentile_cont(0.5) for true median (not average). All prices in USD."
                     },
                     "response": [
                         {
                             "name": "200 OK",
                             "status": "OK",
                             "code": 200,
-                            "body": "{\n  \"series\": [\n    {\"period\": \"2025-07\", \"median_price_per_sqm\": 1820},\n    {\"period\": \"2025-08\", \"median_price_per_sqm\": 1950}\n  ]\n}"
+                            "body": "{\n  \"series\": [\n    {\"period\": \"2026-07\", \"median_price_per_sqm\": 1820},\n    {\"period\": \"2026-08\", \"median_price_per_sqm\": 1950}\n  ]\n}"
                         }
                     ]
                 }
@@ -793,7 +763,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "exports", "{{source}}"]
                         },
-                        "description": "Download an Excel export for one category. Returns the .xlsx file directly. Generates from the current full DB dataset, not scoped to any single run. Apartments and Rentals include a 5-sheet market report; other categories include a single raw listings sheet."
+                        "description": "Download an Excel export for one category. Returns the .xlsx file directly. Generates from the current full DB dataset, not scoped to any single run. Two sheets: All Listings (raw data, no deduplication) + category-specific analysis (Land Size Analysis for land, Room Type Analysis for apartments/houses/new dev, Building Type Analysis for offices/commercial). All listings included — counts match source site exactly."
                     }
                 },
                 {
@@ -819,7 +789,7 @@
                                 }
                             ]
                         },
-                        "description": "Download all 7 category exports in a single zip file. Returns a .zip containing one .xlsx per category."
+                        "description": "Download all category exports in a single zip file. Returns a .zip containing one .xlsx per category."
                     }
                 },
                 {
@@ -859,14 +829,8 @@
                                     "value": "active",
                                     "description": "Status: active, stale, disappeared"
                                 },
-                                {
-                                    "key": "status[]",
-                                    "value": "stale"
-                                },
-                                {
-                                    "key": "status[]",
-                                    "value": "disappeared"
-                                },
+                                { "key": "status[]", "value": "stale" },
+                                { "key": "status[]", "value": "disappeared" },
                                 {
                                     "key": "min_price",
                                     "value": "",
@@ -928,12 +892,6 @@
                                     "disabled": true
                                 },
                                 {
-                                    "key": "exclude_duplicates",
-                                    "value": "true",
-                                    "description": "Exclude probable duplicates (same plot, multiple agencies). Default true.",
-                                    "disabled": false
-                                },
-                                {
                                     "key": "listing_date_from",
                                     "value": "",
                                     "description": "Filter by listing date from YYYY-MM-DD (optional)",
@@ -968,7 +926,7 @@
         },
         {
             "name": "AI Assistant",
-            "description": "AI assistant endpoints. All require a Bearer token. Supports per-market (pass market in body) and global context (market='global' \u2014 queries all markets). 9 callable tools including compareMarkets for cross-market comparison.",
+            "description": "AI assistant endpoints. All require a Bearer token. Supports per-market (pass market in body) and global context (market='global' — queries all markets). 11 callable tools including compareMarkets for cross-market comparison.\n\nTools added in Thread 16:\n- getLocationStats: exact data for named developments (Sea Breeze via bina.az locationId 380) or keyword search fallback. Returns AZN+USD prices, size range breakdown with weighted avg.\n- getDistrictStats: full stats for a district — AZN+USD prices, size range breakdown per property type, weighted avg price/sqm.\n\nModel: claude-sonnet-4-6 (agent), claude-haiku-4-5 (translation pipeline).",
             "item": [
                 {
                     "name": "AI health check",
@@ -1024,7 +982,7 @@
                             "host": ["{{base_url}}"],
                             "path": ["api", "v1", "ai", "chat"]
                         },
-                        "description": "Send a message to the AI assistant. The market field scopes responses to the selected market. History is stored per user per market."
+                        "description": "Send a message to the AI assistant. The market field scopes responses to the selected market. History is stored per user per market. Model: claude-sonnet-4-6."
                     },
                     "response": [
                         {
@@ -1071,6 +1029,49 @@
                         },
                         "description": "Fetch the last 20 AI chat messages for the current user, scoped to the selected market. History is stored separately per user per market."
                     }
+                },
+                {
+                    "name": "Clear chat history (web route)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "X-XSRF-TOKEN",
+                                "value": "<cookie value>",
+                                "type": "text",
+                                "description": "Read from XSRF-TOKEN cookie. Required for web route CSRF protection."
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/{{market}}/admin/assistant/history",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "{{market}}",
+                                "admin",
+                                "assistant",
+                                "history"
+                            ]
+                        },
+                        "description": "Clear the current user's chat history for a market. Deletes all laragent_messages for the session key derived from user ID and market slug. The Clear Chat button in the AI assistant UI calls this endpoint. Note: this is a web route (not API route) — requires session cookie auth and X-XSRF-TOKEN header, not Bearer token."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "body": "{\n  \"success\": true\n}"
+                        }
+                    ]
                 },
                 {
                     "name": "AI usage - current user",
