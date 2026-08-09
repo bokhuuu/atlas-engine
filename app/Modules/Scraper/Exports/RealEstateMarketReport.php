@@ -515,8 +515,6 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
                 count($this->listings),
                 count($areas) ? round(min($areas), 1) : 'N/A',
                 count($areas) ? round(max($areas), 1) : 'N/A',
-                count($areas) ? round(min($areas) / 100, 2) : 'N/A',
-                count($areas) ? round(max($areas) / 100, 2) : 'N/A',
                 count($aznSqmPrices) ? round(min($aznSqmPrices), 2) : 'N/A',
                 count($aznSqmPrices) ? round(max($aznSqmPrices), 2) : 'N/A',
                 $weightedSqmAzn ?? 'N/A',
@@ -525,7 +523,7 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
                 $weightedSqmUsd ?? 'N/A',
             ],
 
-            ['', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', ''],
         ];
 
         // Size range rows
@@ -567,8 +565,6 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
                 count($inRange),
                 count($rangeAreas) ? round(min($rangeAreas), 1) : 'N/A',
                 count($rangeAreas) ? round(max($rangeAreas), 1) : 'N/A',
-                count($rangeAreas) ? round(min($rangeAreas) / 100, 2) : 'N/A',
-                count($rangeAreas) ? round(max($rangeAreas) / 100, 2) : 'N/A',
                 count($rangeAznSqmPrices) ? round(min($rangeAznSqmPrices), 2) : 'N/A',
                 count($rangeAznSqmPrices) ? round(max($rangeAznSqmPrices), 2) : 'N/A',
                 $rangeWeightedAzn ?? 'N/A',
@@ -598,18 +594,16 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
     public function columnWidths(): array
     {
         return [
-            'A' => 30,
-            'B' => 10,
-            'C' => 16,
-            'D' => 16,
-            'E' => 16,
-            'F' => 16,
-            'G' => 20,
-            'H' => 20,
-            'I' => 24,
-            'J' => 20,
-            'K' => 20,
-            'L' => 24,
+            'A' => 22,
+            'B' => 8,
+            'C' => 18,
+            'D' => 18,
+            'E' => 22,
+            'F' => 22,
+            'G' => 26,
+            'H' => 22,
+            'I' => 22,
+            'J' => 26,
         ];
     }
 }
