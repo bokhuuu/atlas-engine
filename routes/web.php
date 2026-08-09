@@ -43,6 +43,7 @@ foreach (app(MarketRegistry::class)->allSlugs() as $slug) {
                     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
                     Route::get('market-stats', [MarketStatsController::class, 'index'])->name('market-stats');
                     Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
+                    Route::delete('assistant/history', [AssistantController::class, 'clearHistory'])->name('assistant.history.clear');
                     Route::get('exports/{source}', [ExportController::class, 'download'])->name('exports.download');
 
                     Route::middleware(['role:super_admin|admin'])->prefix('users')->name('users.')->group(function () {
@@ -101,6 +102,7 @@ Route::middleware(['auth', 'admin'])
     ->group(function () {
         Route::get('dashboard', [GlobalDashboardController::class, 'index'])->name('dashboard');
         Route::get('assistant', [AssistantController::class, 'index'])->name('assistant');
+        Route::delete('assistant/history', [AssistantController::class, 'clearHistory'])->name('assistant.history.clear');
         Route::get('market-stats', [GlobalMarketStatsController::class, 'index'])->name('market-stats');
     });
 

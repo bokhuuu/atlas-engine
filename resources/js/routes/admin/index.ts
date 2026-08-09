@@ -173,7 +173,7 @@ marketStats.form = marketStatsForm
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 export const assistant = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -188,7 +188,7 @@ assistant.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 assistant.url = (options?: RouteQueryOptions) => {
@@ -197,7 +197,7 @@ assistant.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -207,7 +207,7 @@ assistant.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -217,7 +217,7 @@ assistant.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -227,7 +227,7 @@ const assistantForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -237,7 +237,7 @@ assistantForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\AssistantController::assistant
-* @see app/Http/Controllers/Admin/AssistantController.php:19
+* @see app/Http/Controllers/Admin/AssistantController.php:22
 * @route '/yerevan/admin/assistant'
 */
 assistantForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

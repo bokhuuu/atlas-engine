@@ -12,10 +12,23 @@ import {
     ThumbsUp,
     TrendingDown,
     Zap,
+    SquarePen,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
 import { useMarket } from '@/hooks/use-market';
 import AppLayout from '@/layouts/app-layout';
 import { formatCost } from '@/lib/format-cost';
@@ -170,6 +183,7 @@ export default function Assistant() {
     const [streaming, setStreaming] = useState(false);
     const [usage, setUsage] = useState<UsageStats | null>(null);
     const [usageFlash, setUsageFlash] = useState(false);
+    const [clearSuccess, setClearSuccess] = useState(false);
 
     const { market, adminUrl } = useMarket();
     const suggestedQueries = getSuggestedQueries(market);
@@ -375,6 +389,26 @@ export default function Assistant() {
         }
     };
 
+    const handleClearChat = async () => {
+        try {
+            await fetch(adminUrl('/assistant/history'), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN':
+                        document.querySelector<HTMLMetaElement>(
+                            'meta[name="csrf-token"]',
+                        )?.content ?? '',
+                },
+            });
+            setMessages([]);
+            setClearSuccess(true);
+            setTimeout(() => setClearSuccess(false), 3000);
+            setInput('');
+        } catch (e) {
+            console.error('Failed to clear chat history', e);
+        }
+    };
+
     const fetchUsage = async () => {
         try {
             const r = await fetch('/api/v1/ai/usage', {
@@ -443,34 +477,76 @@ export default function Assistant() {
                         <span className="text-sm font-medium text-foreground">
                             Atlas AI Assistant
                         </span>
-                        {usage && (
-                            <div
-                                className={`ml-auto flex items-center gap-3 transition-all duration-300 ${
-                                    usageFlash
-                                        ? 'text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.6)]'
-                                        : 'text-muted-foreground'
-                                }`}
-                            >
-                                <span className="flex items-center gap-1 text-xs">
-                                    <DollarSign className="h-3 w-3" />
-                                    <span
-                                        className={`animate-pulse tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'} text-emerald-400`}
-                                    >
-                                        {formatCost(usage.this_month.cost_usd)}
+                        <div className="ml-auto flex items-center gap-2">
+                            {usage && (
+                                <div
+                                    className={`flex items-center gap-3 transition-all duration-300 ${
+                                        usageFlash
+                                            ? 'text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.6)]'
+                                            : 'text-muted-foreground'
+                                    }`}
+                                >
+                                    <span className="flex items-center gap-1 text-xs">
+                                        <DollarSign className="h-3 w-3" />
+                                        <span
+                                            className={`animate-pulse tabular-nums transition-all duration-300 ${usageFlash ? 'scale-105' : 'scale-100'} text-emerald-400`}
+                                        >
+                                            {formatCost(
+                                                usage.this_month.cost_usd,
+                                            )}
+                                        </span>
+                                        <span className="text-muted-foreground/60">
+                                            this month
+                                        </span>
                                     </span>
-                                    <span className="text-muted-foreground/60">
-                                        this month
-                                    </span>
+                                </div>
+                            )}
+                            {!usage && (
+                                <span className="text-xs text-muted-foreground">
+                                    {market.charAt(0).toUpperCase() +
+                                        market.slice(1)}{' '}
+                                    market data
                                 </span>
-                            </div>
-                        )}
-                        {!usage && (
-                            <span className="ml-auto text-xs text-muted-foreground">
-                                {market.charAt(0).toUpperCase() +
-                                    market.slice(1)}{' '}
-                                market data
-                            </span>
-                        )}
+                            )}
+                            {clearSuccess && (
+                                <span className="text-xs text-emerald-400">
+                                    Cleared ✓
+                                </span>
+                            )}
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <button
+                                        className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                        title="Clear conversation history"
+                                    >
+                                        <SquarePen className="h-3.5 w-3.5" />
+                                        Clear Chat
+                                    </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Clear conversation history?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This will permanently delete your
+                                            chat history for this market. This
+                                            action cannot be undone.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={handleClearChat}
+                                        >
+                                            Clear Chat
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
                     </div>
 
                     {/* Messages */}
