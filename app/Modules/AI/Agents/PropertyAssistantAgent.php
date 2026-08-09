@@ -479,7 +479,7 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
-    #[Tool('Get pricing statistics for a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". For known developments uses exact scraped data; for others searches listing descriptions. Always presents AZN prices (primary) with USD in parentheses, area in sqm and sotka for land. Includes size range breakdown. source parameter is optional.')]
+    #[Tool('Get pricing statistics for a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". For known developments uses exact scraped data; for others searches listing descriptions. Always presents AZN prices (primary) with USD in parentheses. Includes size range breakdown. source parameter is optional.')]
     public function getLocationStats(string $location_name, ?string $source = null): string
     {
         // Check if we have an exact profile for this location
@@ -637,7 +637,7 @@ class PropertyAssistantAgent extends Agent
         $ranges = config("scraper.area_ranges.{$propertyType}", []);
         $isLand = $propertyType === 'land';
 
-        $areaRanges = collect($ranges)->map(function ($range) use ($listings, $isLand) {
+        $areaRanges = collect($ranges)->map(function ($range) use ($listings) {
             $inRange = $listings->filter(
                 fn ($l) => $l->area !== null
                     && $l->area >= $range['min']
@@ -673,11 +673,6 @@ class PropertyAssistantAgent extends Agent
                 'max_price_per_sqm_azn' => $rangeAznSqmPrices->count() ? round($rangeAznSqmPrices->max(), 2) : null,
                 'weighted_avg_price_per_sqm_azn' => $rangeWeightedSqmAzn,
             ];
-
-            if ($isLand) {
-                $result['min_area_sotka'] = $rangeAreas->count() ? round($rangeAreas->min() / 100, 2) : null;
-                $result['max_area_sotka'] = $rangeAreas->count() ? round($rangeAreas->max() / 100, 2) : null;
-            }
 
             return $result;
         })->values()->toArray();
@@ -736,12 +731,6 @@ class PropertyAssistantAgent extends Agent
             'area_ranges' => $areaRanges,
         ];
 
-        if ($isLand) {
-            $stats['min_area_sotka'] = $areas->count() ? round($areas->min() / 100, 2) : null;
-            $stats['max_area_sotka'] = $areas->count() ? round($areas->max() / 100, 2) : null;
-            $stats['avg_area_sotka'] = $areas->count() ? round($areas->avg() / 100, 2) : null;
-        }
-
         return $stats;
     }
 
@@ -773,7 +762,7 @@ Rules you must follow without exception:
 - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
 - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
 - When getLocationStats returns results with data_source containing 'exact', present the data as precise development-specific data scraped directly from bina.az. When data_source contains 'keyword search', clarify these are nearby properties whose descriptions mention the location. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
-- Always present prices in AZN as primary with USD in parentheses — e.g. "₼125,000 AZN ($73,500 USD)". Always present land area in sqm with sotka in parentheses — e.g. "1,200 sqm (12 sotka)". Apply this format consistently across all tools when responding about Baku market data.
+- Always present prices in AZN as primary with USD in parentheses — e.g. "125,000 AZN ($73,500 USD)". Apply this format consistently across all tools when responding about Baku market data.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 

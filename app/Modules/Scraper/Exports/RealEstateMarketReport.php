@@ -8,7 +8,6 @@ use App\Modules\Scraper\Browser\ScreenshotService;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use App\Modules\Scraper\Exports\Concerns\CalculatesMedian;
 use App\Modules\Scraper\Exports\Contracts\ExporterInterface;
-use App\Services\MarketRegistry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -28,11 +27,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
  * bracketing, no imposed categories, no analytical judgment.
  *
  *   Sheet 1 - All Listings         : full raw dataset for analyst use
- *   Sheet 2 - Market Overview      : aggregated headline statistics
- *   Sheet 3 - District Analysis    : pricing and supply by district
- *   Sheet 4 - Room/Building Type   : product mix by room count (apartments/houses)
- *                                    or building type (commercial); omitted for land
- *   Sheet 5 - Price Distribution   : market segmentation by price bracket
+ *   Sheet 2 - Room Type Analysis   : product mix by room count (apartments/houses/new dev)
+ *           - Building Type        : product mix by building type (commercial/offices)
+ *           - Land Size Range      : size range breakdown with pricing (land)
  *
  * Sheet 4 variant is determined from the source profile name pattern -
  * market-portable, works for any prefix (listam_, binaz_, myhome_).
@@ -45,13 +42,12 @@ class RealEstateMarketReport implements ExporterInterface
      * Sheet 4 variant is determined from the source profile name pattern -
      * market-portable, works for any prefix (listam_, binaz_, myhome_).
      * 'room'     → apartments, houses, new developments
-     * 'building' → commercial sale and rent
-     * null       → land (4 sheets only, Sheet 4 omitted)
+     * 'building' → commercial, offices
+     * null       → land (size range analysis sheet)
      */
     public function export(array $data, ScraperProfileInterface $profile): string
     {
         $path = $this->buildPath($profile->getName());
-        $deduplicated = self::deduplicateForAggregation($data);
         $source = $profile->getName();
 
         $sheet4Type = match (true) {
@@ -59,33 +55,29 @@ class RealEstateMarketReport implements ExporterInterface
             str_contains($source, '_houses_') => 'room',
             str_contains($source, '_new_developments_') => 'room',
             str_contains($source, '_commercial_') => 'building',
+            str_contains($source, '_offices_') => 'building',
             str_contains($source, '_land_') => null,
             default => 'room',
         };
 
-        Excel::store(new class($data, $deduplicated, $sheet4Type) implements WithMultipleSheets
+        Excel::store(new class($data, $sheet4Type) implements WithMultipleSheets
         {
             public function __construct(
                 private readonly array $rawData,
-                private readonly array $deduplicatedData,
                 private readonly ?string $sheet4Type,
             ) {}
 
             public function sheets(): array
             {
-                $sheets = [
-                    new AllListingsSheet($this->deduplicatedData),
-                    new MarketOverviewSheet($this->deduplicatedData),
-                    new DistrictAnalysisSheet($this->deduplicatedData),
-                ];
+                $sheets = [new AllListingsSheet($this->rawData)];
 
                 if ($this->sheet4Type === 'room') {
-                    $sheets[] = new RoomTypeAnalysisSheet($this->deduplicatedData);
+                    $sheets[] = new RoomTypeAnalysisSheet($this->rawData);
                 } elseif ($this->sheet4Type === 'building') {
-                    $sheets[] = new BuildingTypeAnalysisSheet($this->deduplicatedData);
+                    $sheets[] = new BuildingTypeAnalysisSheet($this->rawData);
+                } elseif ($this->sheet4Type === null) {
+                    $sheets[] = new LandSizeRangeSheet($this->rawData);
                 }
-
-                $sheets[] = new PriceDistributionSheet($this->deduplicatedData);
 
                 return $sheets;
             }
@@ -305,176 +297,6 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 }
 
 /**
- * Sheet 2 - Executive headline statistics.
- * Single-page summary for decision makers.
- * Covers total supply, pricing averages, market composition.
- */
-class MarketOverviewSheet implements FromArray, WithHeadings, WithTitle
-{
-    use CalculatesMedian;
-
-    public function __construct(private readonly array $data) {}
-
-    public function title(): string
-    {
-        return 'Market Overview';
-    }
-
-    public function headings(): array
-    {
-        return ['Metric', 'Value'];
-    }
-
-    public function array(): array
-    {
-        $prices = array_filter(array_column($this->data, 'price'));
-        $sqmPrices = array_filter(array_column($this->data, 'price_per_sqm'));
-        $areas = array_filter(array_column($this->data, 'area'));
-        $districts = array_filter(array_column($this->data, 'district'));
-        $agencies = array_filter(array_column($this->data, 'agency_name'));
-
-        $avgPrice = count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A';
-        $avgSqm = count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A';
-        $avgArea = count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A';
-        $medianPrice = count($prices) ? $this->median(array_values($prices)) : 'N/A';
-        $medianSqm = count($sqmPrices) ? $this->median(array_values($sqmPrices)) : 'N/A';
-
-        $newBuildingCount = count(array_filter(
-            array_column($this->data, 'is_new_building'),
-            fn ($v) => $v === true || $v === 1
-        ));
-
-        return [
-            ['Report Date',                now()->format('d/m/Y H:i')],
-            ['Data Source', $this->resolveDataSource().($this->data[0]['property_type'] ?? 'Real Estate')],
-            ['', ''],
-            ['--- SUPPLY ---',             ''],
-            ['Total Active Listings',      count($this->data)],
-            ['Districts Covered',          count(array_unique($districts))],
-            ['', ''],
-            ['--- PRICING ---',            ''],
-            ['Average Price (USD)',        is_numeric($avgPrice) ? (int) round($avgPrice) : $avgPrice],
-            ['Median Price (USD)',         is_numeric($medianPrice) ? (int) round($medianPrice) : $medianPrice],
-            ['Average Price/sqm (USD)',    is_numeric($avgSqm) ? round($avgSqm, 2) : $avgSqm],
-            ['Median Price/sqm (USD)',     is_numeric($medianSqm) ? round($medianSqm, 2) : $medianSqm],
-            ['Average Area (sqm)',         is_numeric($avgArea) ? (int) round($avgArea) : $avgArea],
-            ['Min Price (USD)',            count($prices) ? (int) round(min($prices)) : 'N/A'],
-            ['Max Price (USD)',            count($prices) ? (int) round(max($prices)) : 'N/A'],
-            ['', ''],
-            ['--- MARKET COMPOSITION ---', ''],
-            ['New Construction Listings',  count(array_filter(array_column($this->data, 'is_new_building'), fn ($v) => $v === true || $v === 1)) ?: '0'],
-            ['New Construction %',         count($this->data) > 0 ? round($newBuildingCount / count($this->data) * 100, 1).'%' : 'N/A'],
-            ['Agency Listings',            (int) count($agencies)],
-            ['Owner Listings', (count($this->data) - count($agencies)) ?: '0'],
-            ['', ''],
-            ['--- DOCUMENT STATUS ---',    ''],
-            ['With Bill of Sale',          (int) count(array_filter(array_column($this->data, 'has_bill_of_sale')))],
-            ['Without Bill of Sale',       (int) count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === false))],
-            ['Bill of Sale Unknown',       count(array_filter(array_column($this->data, 'has_bill_of_sale'), fn ($v) => $v === null)) ?: '0'],
-            ['', ''],
-            ['--- MORTGAGE STATUS ---',   ''],
-            ['With Mortgage',             (int) count(array_filter(array_column($this->data, 'has_mortgage')))],
-            ['Without Mortgage',          (int) count(array_filter(array_column($this->data, 'has_mortgage'), fn ($v) => $v === false))],
-            ['Mortgage Unknown',           count(array_filter(array_column($this->data, 'has_mortgage'), fn ($v) => $v === null)) ?: '0'],
-        ];
-    }
-
-    /**
-     * Derives the data source label from the first listing's source profile name.
-     * Returns a market-aware string like "listam - Yerevan " or "binaz - Baku ".
-     */
-    private function resolveDataSource(): string
-    {
-        $source = $this->data[0]['source_profile_name'] ?? '';
-        $prefix = explode('_', $source)[0];
-        $registry = app(MarketRegistry::class);
-        $marketSlug = $registry->fromSourcePrefix($prefix);
-        $marketConfig = $marketSlug ? $registry->fromSlug($marketSlug) : null;
-        $label = $marketConfig['label'] ?? ucfirst($prefix);
-
-        return "{$prefix} - {$label} ";
-    }
-}
-
-/**
- * Sheet 3 - District-level supply and pricing analysis.
- * Sorted by listing count descending - most active districts first.
- * Includes new construction split per district for development potential assessment.
- */
-class DistrictAnalysisSheet implements FromArray, WithHeadings, WithTitle
-{
-    use CalculatesMedian;
-
-    public function __construct(private readonly array $data) {}
-
-    public function title(): string
-    {
-        return 'District Analysis';
-    }
-
-    public function headings(): array
-    {
-        return [
-            'District',
-            'Listings',
-            '% of Market',
-            'Avg Price (USD)',
-            'Median Price (USD)',
-            'Avg Price/sqm (USD)',
-            'Median Price/sqm (USD)',
-            'Avg Area (sqm)',
-            'New Construction',
-            'New Construction %',
-        ];
-    }
-
-    public function array(): array
-    {
-        $grouped = [];
-        $total = count($this->data);
-
-        foreach ($this->data as $row) {
-            $district = $row['district'] ?? 'Unknown';
-            $grouped[$district][] = $row;
-        }
-
-        $rows = [];
-
-        foreach ($grouped as $district => $listings) {
-            $prices = array_filter(array_column($listings, 'price'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $areas = array_filter(array_column($listings, 'area'));
-            $newCount = count(array_filter(
-                array_column($listings, 'is_new_building'),
-                fn ($v) => $v === true || $v === 1
-            ));
-
-            $median = count($prices) ? $this->median($prices) : null;
-            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
-
-            $count = count($listings);
-
-            $rows[] = [
-                $district,
-                $count,
-                round($count / $total * 100, 1).'%',
-                count($prices) ? round(array_sum($prices) / count($prices), 2) : 'N/A',
-                $median ?? 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-                $medianSqm ?? 'N/A',
-                count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
-                (int) $newCount,
-                $count > 0 ? round($newCount / $count * 100, 1).'%' : 'N/A',
-            ];
-        }
-
-        usort($rows, fn ($a, $b) => $b[1] <=> $a[1]);
-
-        return $rows;
-    }
-}
-
-/**
  * Sheet 4 - Product mix and pricing by bedroom count.
  * Answers: what is the dominant product type and what does each command?
  * Critical for understanding market demand segments.
@@ -629,91 +451,167 @@ class BuildingTypeAnalysisSheet implements FromArray, WithColumnWidths, WithStyl
 }
 
 /**
- * Sheet 5 - Price distribution by bracket.
- * Shows market segmentation - affordable, mid-market, premium, luxury.
- * USD brackets calibrated to Yerevan market range.
+ * Sheet 2 (Land) - Size range breakdown with pricing analysis.
+ * Directly answers Colliers' four questions for land categories:
+ * 1. Total listing count
+ * 2. Min/max area (sqm and sotka)
+ * 3. Count by size range (4 buckets)
+ * 4. Min/max/weighted avg price per sqm (AZN and USD)
  */
-class PriceDistributionSheet implements FromArray, WithHeadings, WithTitle
+class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, WithTitle
 {
     use CalculatesMedian;
 
-    public function __construct(private readonly array $data) {}
+    public function __construct(private readonly array $listings) {}
 
     public function title(): string
     {
-        return 'Price Distribution';
-    }
-
-    public function headings(): array
-    {
-        return ['Price Bracket (USD)', 'Listings', '% of Market', 'Avg Area (sqm)', 'Avg Price/sqm (USD)', 'Median Price/sqm (USD)'];
+        return 'Land Size Analysis';
     }
 
     public function array(): array
     {
-        $dealType = $this->data[0]['listing_type'] ?? 'sale';
-        $brackets = $dealType === 'rent' ? $this->rentBrackets() : $this->saleBrackets();
-        $buckets = array_fill_keys(array_keys($brackets), []);
+        $prices = array_filter(array_column($this->listings, 'price'));
+        $areas = array_filter(array_column($this->listings, 'area'));
+        $sqmPrices = array_filter(array_column($this->listings, 'price_per_sqm'));
 
-        foreach ($this->data as $row) {
-            $price = $row['price'] ?? null;
-            if (! $price) {
-                continue;
-            }
+        $aznPrices = array_filter(array_map(
+            fn ($r) => $r['extras']['original_price_azn'] ?? null,
+            $this->listings
+        ));
 
-            foreach ($brackets as $label => [$min, $max]) {
-                if ($price >= $min && $price < $max) {
-                    $buckets[$label][] = $row;
-                    break;
-                }
-            }
-        }
+        $aznSqmPrices = array_filter(array_map(function ($r) {
+            $azn = $r['extras']['original_price_azn'] ?? null;
+            $area = $r['area'] ?? null;
 
-        $total = count($this->data);
-        $rows = [];
+            return ($azn && $area && $area > 0) ? (float) $azn / (float) $area : null;
+        }, $this->listings));
 
-        foreach ($buckets as $label => $listings) {
-            $count = count($listings);
-            $areas = array_filter(array_column($listings, 'area'));
-            $sqmPrices = array_filter(array_column($listings, 'price_per_sqm'));
-            $medianSqm = count($sqmPrices) ? $this->median($sqmPrices) : null;
+        $totalArea = array_sum($areas);
+        $totalPrice = array_sum($prices);
+        $totalAzn = array_sum($aznPrices);
+
+        $weightedSqmUsd = $totalArea > 0 ? round($totalPrice / $totalArea, 2) : null;
+        $weightedSqmAzn = $totalArea > 0 && $totalAzn > 0 ? round($totalAzn / $totalArea, 2) : null;
+
+        $rows = [
+            // Header row
+            [
+                'Metric / Size Range',
+                'Count',
+                'Min Area (sqm)',
+                'Max Area (sqm)',
+                'Min Area (sotka)',
+                'Max Area (sotka)',
+                'Min Price/sqm (AZN)',
+                'Max Price/sqm (AZN)',
+                'Wtd Avg Price/sqm (AZN)',
+                'Min Price/sqm (USD)',
+                'Max Price/sqm (USD)',
+                'Wtd Avg Price/sqm (USD)',
+            ],
+
+            // Overall summary row
+            [
+                'OVERALL',
+                count($this->listings),
+                count($areas) ? round(min($areas), 1) : 'N/A',
+                count($areas) ? round(max($areas), 1) : 'N/A',
+                count($areas) ? round(min($areas) / 100, 2) : 'N/A',
+                count($areas) ? round(max($areas) / 100, 2) : 'N/A',
+                count($aznSqmPrices) ? round(min($aznSqmPrices), 2) : 'N/A',
+                count($aznSqmPrices) ? round(max($aznSqmPrices), 2) : 'N/A',
+                $weightedSqmAzn ?? 'N/A',
+                count($sqmPrices) ? round(min($sqmPrices), 2) : 'N/A',
+                count($sqmPrices) ? round(max($sqmPrices), 2) : 'N/A',
+                $weightedSqmUsd ?? 'N/A',
+            ],
+
+            ['', '', '', '', '', '', '', '', '', '', '', ''],
+        ];
+
+        // Size range rows
+        $ranges = config('scraper.area_ranges.land', []);
+
+        foreach ($ranges as $range) {
+            $inRange = array_filter(
+                $this->listings,
+                fn ($r) => isset($r['area']) && $r['area'] >= $range['min'] && $r['area'] <= $range['max']
+            );
+
+            $rangeAreas = array_filter(array_column($inRange, 'area'));
+            $rangeSqmPrices = array_filter(array_column($inRange, 'price_per_sqm'));
+            $rangePrices = array_filter(array_column($inRange, 'price'));
+
+            $rangeAzn = array_filter(array_map(
+                fn ($r) => $r['extras']['original_price_azn'] ?? null,
+                $inRange
+            ));
+
+            $rangeAznSqmPrices = array_filter(array_map(function ($r) {
+                $azn = $r['extras']['original_price_azn'] ?? null;
+                $area = $r['area'] ?? null;
+
+                return ($azn && $area && $area > 0) ? (float) $azn / (float) $area : null;
+            }, $inRange));
+
+            $rangeTotalArea = array_sum($rangeAreas);
+            $rangeTotalPrice = array_sum($rangePrices);
+            $rangeTotalAzn = array_sum($rangeAzn);
+
+            $rangeWeightedUsd = $rangeTotalArea > 0 ? round($rangeTotalPrice / $rangeTotalArea, 2) : null;
+            $rangeWeightedAzn = $rangeTotalArea > 0 && $rangeTotalAzn > 0
+                ? round($rangeTotalAzn / $rangeTotalArea, 2)
+                : null;
 
             $rows[] = [
-                $label,
-                $count,
-                $total > 0 ? round($count / $total * 100, 1).'%' : '0%',
-                count($areas) ? round(array_sum($areas) / count($areas), 2) : 'N/A',
-                count($sqmPrices) ? round(array_sum($sqmPrices) / count($sqmPrices), 2) : 'N/A',
-                $medianSqm ?? 'N/A',
+                $range['label'],
+                count($inRange),
+                count($rangeAreas) ? round(min($rangeAreas), 1) : 'N/A',
+                count($rangeAreas) ? round(max($rangeAreas), 1) : 'N/A',
+                count($rangeAreas) ? round(min($rangeAreas) / 100, 2) : 'N/A',
+                count($rangeAreas) ? round(max($rangeAreas) / 100, 2) : 'N/A',
+                count($rangeAznSqmPrices) ? round(min($rangeAznSqmPrices), 2) : 'N/A',
+                count($rangeAznSqmPrices) ? round(max($rangeAznSqmPrices), 2) : 'N/A',
+                $rangeWeightedAzn ?? 'N/A',
+                count($rangeSqmPrices) ? round(min($rangeSqmPrices), 2) : 'N/A',
+                count($rangeSqmPrices) ? round(max($rangeSqmPrices), 2) : 'N/A',
+                $rangeWeightedUsd ?? 'N/A',
             ];
         }
 
         return $rows;
     }
 
-    private function saleBrackets(): array
+    public function styles(Worksheet $sheet): array
     {
         return [
-            'Under $50,000' => [0, 50000],
-            '$50,000 – $100,000' => [50000, 100000],
-            '$100,000 – $150,000' => [100000, 150000],
-            '$150,000 – $200,000' => [150000, 200000],
-            '$200,000 – $300,000' => [200000, 300000],
-            '$300,000 – $500,000' => [300000, 500000],
-            'Above $500,000' => [500000, PHP_INT_MAX],
+            1 => [
+                'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFFFF']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF1F3864']],
+            ],
+            2 => [
+                'font' => ['bold' => true],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFE2EFDA']],
+            ],
         ];
     }
 
-    private function rentBrackets(): array
+    public function columnWidths(): array
     {
         return [
-            'Under $300' => [0, 300],
-            '$300 – $500' => [300, 500],
-            '$500 – $800' => [500, 800],
-            '$800 – $1,200' => [800, 1200],
-            '$1,200 – $2,000' => [1200, 2000],
-            '$2,000 – $3,000' => [2000, 3000],
-            'Above $3,000' => [3000, PHP_INT_MAX],
+            'A' => 30,
+            'B' => 10,
+            'C' => 16,
+            'D' => 16,
+            'E' => 16,
+            'F' => 16,
+            'G' => 20,
+            'H' => 20,
+            'I' => 24,
+            'J' => 20,
+            'K' => 20,
+            'L' => 24,
         ];
     }
 }

@@ -167,3 +167,84 @@ test('has_bill_of_sale false is cast correctly and not confused with null', func
     expect($fresh->has_bill_of_sale)->toBeFalse()
         ->and($fresh->has_bill_of_sale)->not->toBeNull();
 });
+
+// ---------------------------------------------------------------------------
+// calculateListingStats — AZN prices
+// ---------------------------------------------------------------------------
+
+test('getDistrictStats returns AZN prices when extras contain original_price_azn', function () {
+    seedBakuListing([
+        'district' => 'Sabunchu',
+        'price' => 58824,
+        'extras' => ['original_price_azn' => 100000],
+    ]);
+    seedBakuListing([
+        'district' => 'Sabunchu',
+        'price' => 117647,
+        'extras' => ['original_price_azn' => 200000],
+    ]);
+
+    $agent = makeStatsAgent();
+    $result = json_decode($agent->getDistrictStats('Sabunchu'), true);
+
+    expect($result['stats']['min_price_azn'])->toBe(100000)
+        ->and($result['stats']['max_price_azn'])->toBe(200000)
+        ->and($result['stats']['avg_price_azn'])->toBe(150000)
+        ->and($result['stats']['median_price_azn'])->toBe(150000);
+});
+
+test('getDistrictStats returns null AZN prices when extras are empty', function () {
+    seedBakuListing(['district' => 'Surakhani', 'extras' => []]);
+
+    $agent = makeStatsAgent();
+    $result = json_decode($agent->getDistrictStats('Surakhani'), true);
+
+    expect($result['stats']['min_price_azn'])->toBeNull()
+        ->and($result['stats']['max_price_azn'])->toBeNull();
+});
+
+// ---------------------------------------------------------------------------
+// calculateListingStats — area ranges
+// ---------------------------------------------------------------------------
+
+test('getDistrictStats returns area ranges with correct counts', function () {
+    seedBakuListing(['district' => 'Khatai', 'area' => 500,   'price' => 50000,  'price_per_sqm' => 100, 'extras' => ['original_price_azn' => 85000]]);
+    seedBakuListing(['district' => 'Khatai', 'area' => 800,   'price' => 80000,  'price_per_sqm' => 100, 'extras' => ['original_price_azn' => 136000]]);
+    seedBakuListing(['district' => 'Khatai', 'area' => 2000,  'price' => 150000, 'price_per_sqm' => 75,  'extras' => ['original_price_azn' => 255000]]);
+    seedBakuListing(['district' => 'Khatai', 'area' => 15000, 'price' => 500000, 'price_per_sqm' => 33,  'extras' => ['original_price_azn' => 850000]]);
+
+    $agent = makeStatsAgent();
+    $result = json_decode($agent->getDistrictStats('Khatai'), true);
+
+    $ranges = $result['stats']['area_ranges'];
+
+    expect(count($ranges))->toBe(4)
+        ->and($ranges[0]['range'])->toContain('0–1,000')
+        ->and($ranges[0]['count'])->toBe(2)
+        ->and($ranges[1]['count'])->toBe(1)
+        ->and($ranges[2]['count'])->toBe(0)
+        ->and($ranges[3]['count'])->toBe(1);
+});
+
+test('getDistrictStats area ranges have no sotka fields', function () {
+    seedBakuListing(['district' => 'Yasamal', 'area' => 500, 'extras' => ['original_price_azn' => 85000]]);
+
+    $agent = makeStatsAgent();
+    $result = json_decode($agent->getDistrictStats('Yasamal'), true);
+
+    $range = $result['stats']['area_ranges'][0];
+
+    expect($range)->not->toHaveKey('min_area_sotka')
+        ->and($range)->not->toHaveKey('max_area_sotka');
+});
+
+test('getDistrictStats overall stats have no sotka fields', function () {
+    seedBakuListing(['district' => 'Pirallahi', 'area' => 500]);
+
+    $agent = makeStatsAgent();
+    $result = json_decode($agent->getDistrictStats('Pirallahi'), true);
+
+    expect($result['stats'])->not->toHaveKey('min_area_sotka')
+        ->and($result['stats'])->not->toHaveKey('max_area_sotka')
+        ->and($result['stats'])->not->toHaveKey('avg_area_sotka');
+});

@@ -38,6 +38,11 @@ interface UsageStats {
     all_time: { tokens: number; cost_usd: number };
 }
 
+/**
+ * Returns market-specific suggested queries for the AI assistant sidebar.
+ * Each market gets tailored prompts relevant to its available data.
+ * Baku prompts focus on Sea Breeze development analysis per Colliers requirements.
+ */
 function getSuggestedQueries(market: string) {
     if (market === 'global') {
         return [
@@ -75,6 +80,46 @@ function getSuggestedQueries(market: string) {
                 icon: TrendingDown,
                 label: 'Markets with price reductions',
                 query: 'Which markets have had the most price reductions recently?',
+            },
+        ];
+    }
+
+    if (market === 'baku') {
+        return [
+            {
+                icon: BarChart2,
+                label: 'Sea Breeze land stats',
+                query: 'Show me complete Sea Breeze land analysis: total listings, min and max area in sqm and sotka, breakdown by size range, and min max and weighted average price per sqm in AZN and USD.',
+            },
+            {
+                icon: Search,
+                label: 'White City stats',
+                query: 'Show me pricing stats for White City.',
+            },
+            {
+                icon: Zap,
+                label: 'Baku land market overview',
+                query: 'Give me an overview of the Baku land for sale market: total listings, districts covered, and median price per sqm.',
+            },
+            {
+                icon: TrendingDown,
+                label: 'Price reductions this week',
+                query: 'Which districts had the most price reductions for land for sale in the last 7 days?',
+            },
+            {
+                icon: FileSpreadsheet,
+                label: 'Export Sea Breeze to Excel',
+                query: 'Export Sea Breeze land listings to Excel.',
+            },
+            {
+                icon: List,
+                label: 'Sabunchu district stats',
+                query: 'Show me pricing stats for Sabunchu district, land for sale only.',
+            },
+            {
+                icon: PiggyBank,
+                label: 'Most expensive Baku districts',
+                query: 'Which Baku districts have the highest land prices per sqm?',
             },
         ];
     }
