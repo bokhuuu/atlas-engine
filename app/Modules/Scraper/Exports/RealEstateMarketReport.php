@@ -454,7 +454,7 @@ class BuildingTypeAnalysisSheet implements FromArray, WithColumnWidths, WithStyl
  * Sheet 2 (Land) - Size range breakdown with pricing analysis.
  * Directly answers Colliers' four questions for land categories:
  * 1. Total listing count
- * 2. Min/max area (sqm and sotka)
+ * 2. Min/max area (sqm )
  * 3. Count by size range (4 buckets)
  * 4. Min/max/weighted avg price per sqm (AZN and USD)
  */
@@ -501,8 +501,6 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
                 'Count',
                 'Min Area (sqm)',
                 'Max Area (sqm)',
-                'Min Area (sotka)',
-                'Max Area (sotka)',
                 'Min Price/sqm (AZN)',
                 'Max Price/sqm (AZN)',
                 'Wtd Avg Price/sqm (AZN)',

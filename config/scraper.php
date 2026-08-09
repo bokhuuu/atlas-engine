@@ -401,10 +401,10 @@ return [
     */
     'area_ranges' => [
         'land' => [
-            ['label' => '0–1,000 sqm (0–10 sotka)',        'min' => 0,     'max' => 1000],
-            ['label' => '1,001–5,000 sqm (10–50 sotka)',   'min' => 1001,  'max' => 5000],
-            ['label' => '5,001–10,000 sqm (50–100 sotka)', 'min' => 5001,  'max' => 10000],
-            ['label' => 'Over 10,000 sqm (100+ sotka)',    'min' => 10001, 'max' => PHP_INT_MAX],
+            ['label' => '0–1,000 sqm',        'min' => 0,     'max' => 1000],
+            ['label' => '1,001–5,000 sqm',   'min' => 1001,  'max' => 5000],
+            ['label' => '5,001–10,000 sqm', 'min' => 5001,  'max' => 10000],
+            ['label' => 'Over 10,000 sqm',    'min' => 10001, 'max' => PHP_INT_MAX],
         ],
         'apartment' => [
             ['label' => 'Under 50 sqm',      'min' => 0,   'max' => 50],

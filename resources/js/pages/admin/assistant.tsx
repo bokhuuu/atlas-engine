@@ -89,7 +89,7 @@ function getSuggestedQueries(market: string) {
             {
                 icon: BarChart2,
                 label: 'Sea Breeze land stats',
-                query: 'Show me complete Sea Breeze land analysis: total listings, min and max area in sqm and sotka, breakdown by size range, and min max and weighted average price per sqm in AZN and USD.',
+                query: 'Show me complete Sea Breeze land analysis: total listings, min and max area in sqm, breakdown by size range, and min max and weighted average price per sqm in AZN and USD.',
             },
             {
                 icon: Search,

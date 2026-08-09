@@ -198,10 +198,6 @@ class ListingRepository
             $query->where('listing_date', '<=', $filters['listing_date_to'].' 23:59:59');
         }
 
-        if (! isset($filters['exclude_duplicates']) || $filters['exclude_duplicates'] === 'true' || $filters['exclude_duplicates'] === true) {
-            $query->whereNull('duplicate_group_id');
-        }
-
         if (! empty($filters['status'])) {
             $statuses = (array) $filters['status'];
             $query->where(function ($q) use ($statuses, $staleDays) {
