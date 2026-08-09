@@ -383,6 +383,53 @@ return [
         'locations' => [
             'sea_breeze' => env('BINAZ_LOCATION_SEA_BREEZE', '380'),
         ],
+        'location_profiles' => [
+            'Sea Breeze' => 'binaz_land_sale_sea_breeze',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Area Range Brackets
+    |--------------------------------------------------------------------------
+    |
+    | Size range buckets used by calculateListingStats() to group listings
+    | by area. Config-driven per property type so each category gets
+    | appropriate brackets. Values are in sqm.
+    | Sotka conversion (÷100) is applied automatically for land only.
+    |
+    */
+    'area_ranges' => [
+        'land' => [
+            ['label' => '0–1,000 sqm (0–10 sotka)',        'min' => 0,     'max' => 1000],
+            ['label' => '1,001–5,000 sqm (10–50 sotka)',   'min' => 1001,  'max' => 5000],
+            ['label' => '5,001–10,000 sqm (50–100 sotka)', 'min' => 5001,  'max' => 10000],
+            ['label' => 'Over 10,000 sqm (100+ sotka)',    'min' => 10001, 'max' => PHP_INT_MAX],
+        ],
+        'apartment' => [
+            ['label' => 'Under 50 sqm',      'min' => 0,   'max' => 50],
+            ['label' => '51–100 sqm',         'min' => 51,  'max' => 100],
+            ['label' => '101–150 sqm',        'min' => 101, 'max' => 150],
+            ['label' => 'Over 150 sqm',       'min' => 151, 'max' => PHP_INT_MAX],
+        ],
+        'office' => [
+            ['label' => 'Under 100 sqm',      'min' => 0,   'max' => 100],
+            ['label' => '101–500 sqm',        'min' => 101, 'max' => 500],
+            ['label' => '501–1,000 sqm',      'min' => 501, 'max' => 1000],
+            ['label' => 'Over 1,000 sqm',     'min' => 1001, 'max' => PHP_INT_MAX],
+        ],
+        'house' => [
+            ['label' => 'Under 100 sqm',      'min' => 0,   'max' => 100],
+            ['label' => '101–200 sqm',        'min' => 101, 'max' => 200],
+            ['label' => '201–500 sqm',        'min' => 201, 'max' => 500],
+            ['label' => 'Over 500 sqm',       'min' => 501, 'max' => PHP_INT_MAX],
+        ],
+        'commercial' => [
+            ['label' => 'Under 100 sqm',      'min' => 0,   'max' => 100],
+            ['label' => '101–500 sqm',        'min' => 101, 'max' => 500],
+            ['label' => '501–1,000 sqm',      'min' => 501, 'max' => 1000],
+            ['label' => 'Over 1,000 sqm',     'min' => 1001, 'max' => PHP_INT_MAX],
+        ],
     ],
 
     /*

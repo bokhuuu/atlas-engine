@@ -43,7 +43,7 @@ test('getLocationStats returns not found message when no listings mention the lo
     $result = json_decode($agent->getLocationStats('Sea Breeze'), true);
 
     expect($result)->toHaveKey('message')
-        ->and($result['message'])->toContain('No listings explicitly mention');
+        ->and($result['message'])->toContain('scraper profile exists but no data has been collected');
 });
 
 // ---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ test('getDistrictStats returns stats for existing district', function () {
 
     expect($result)->toHaveKey('stats')
         ->and($result['district'])->toBe('Khazar')
-        ->and($result['currency'])->toBe('USD')
+        ->and($result['currency'])->toBe('AZN (USD)')
         ->and($result['stats']['count'])->toBe(2)
         ->and($result['stats']['min_price_usd'])->toBe(50000)
         ->and($result['stats']['max_price_usd'])->toBe(100000)

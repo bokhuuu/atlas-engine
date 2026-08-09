@@ -479,9 +479,43 @@ class PropertyAssistantAgent extends Agent
         ]);
     }
 
-    #[Tool('Get pricing statistics for listings that mention a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". Searches listing descriptions directly for the location name. These are typically properties near or around the development, not necessarily inside it. Always present results as "listings mentioning X" and note which districts they fall in. source parameter is optional — omit to search across all categories. Note: developments like White City are primarily offices/apartments — results will be sparse until those categories are scraped.')]
+    #[Tool('Get pricing statistics for a named location or development — e.g. "Sea Breeze", "White City", "Badamdar". For known developments uses exact scraped data; for others searches listing descriptions. Always presents AZN prices (primary) with USD in parentheses, area in sqm and sotka for land. Includes size range breakdown. source parameter is optional.')]
     public function getLocationStats(string $location_name, ?string $source = null): string
     {
+        // Check if we have an exact profile for this location
+        $exactProfile = config("scraper.binaz.location_profiles.{$location_name}");
+
+        if ($exactProfile !== null) {
+            $listings = Listing::where('source_profile_name', $exactProfile)
+                ->whereNotNull('price')
+                ->get();
+
+            if ($listings->isEmpty()) {
+                return json_encode([
+                    'message' => "No listings found for '{$location_name}'. The scraper profile exists but no data has been collected yet.",
+                ]);
+            }
+
+            $propertyType = $listings->groupBy('property_type')
+                ->sortByDesc(fn ($g) => $g->count())
+                ->keys()
+                ->first() ?? 'land';
+            $districts = $listings->groupBy('district')
+                ->map(fn ($group) => $group->count())
+                ->sortDesc()
+                ->toArray();
+
+            return json_encode([
+                'location' => $location_name,
+                'data_source' => 'exact — scraped directly from bina.az location filter',
+                'source_profile' => $exactProfile,
+                'currency' => 'AZN (USD)',
+                'districts' => $districts,
+                'stats' => $this->calculateListingStats($listings, $propertyType),
+            ]);
+        }
+
+        // Fall back to keyword search in descriptions
         $query = Listing::whereNotNull('price')
             ->where('translated_description', 'ilike', '%'.$location_name.'%');
 
@@ -503,6 +537,10 @@ class PropertyAssistantAgent extends Agent
             ]);
         }
 
+        $propertyType = $listings->groupBy('property_type')
+            ->sortByDesc(fn ($g) => $g->count())
+            ->keys()
+            ->first() ?? 'land';
         $districts = $listings->groupBy('district')
             ->map(fn ($group) => $group->count())
             ->sortDesc()
@@ -510,11 +548,11 @@ class PropertyAssistantAgent extends Agent
 
         return json_encode([
             'location' => $location_name,
-            'note' => "These are listings whose descriptions mention '{$location_name}' — typically nearby properties, not necessarily inside the development.",
+            'data_source' => 'keyword search — listings mentioning this location in description, typically nearby properties',
             'source_filter' => $source,
-            'currency' => 'USD',
+            'currency' => 'AZN (USD)',
             'districts' => $districts,
-            'stats' => $this->calculateListingStats($listings),
+            'stats' => $this->calculateListingStats($listings, $propertyType),
         ]);
     }
 
@@ -533,21 +571,31 @@ class PropertyAssistantAgent extends Agent
             return json_encode(['message' => "No listings found for district '{$district}'."]);
         }
 
+        $propertyType = $source !== null
+            ? ($listings->first()?->property_type ?? 'land')
+            : ($listings->groupBy('property_type')->sortByDesc(fn ($g) => $g->count())->keys()->first() ?? 'land');
+
         return json_encode([
             'district' => $district,
             'source_filter' => $source,
-            'currency' => 'USD',
-            'stats' => $this->calculateListingStats($listings),
+            'currency' => 'AZN (USD)',
+            'stats' => $this->calculateListingStats($listings, $propertyType),
         ]);
     }
 
-    private function calculateListingStats(Collection $listings): array
+    private function calculateListingStats(Collection $listings, string $propertyType = 'land'): array
     {
         $prices = $listings->pluck('price')->filter()->values();
         $sqmPrices = $listings->pluck('price_per_sqm')->filter()->values();
         $areas = $listings->pluck('area')->filter()->values();
         $billOfSale = $listings->whereNotNull('has_bill_of_sale');
 
+        // AZN prices from original scraped value
+        $aznPrices = $listings->map(fn ($l) => $l->extras['original_price_azn'] ?? null)
+            ->filter()
+            ->values();
+
+        // Median price USD
         $sortedPrices = $prices->sort()->values();
         $count = $sortedPrices->count();
         $median = 0;
@@ -558,6 +606,7 @@ class PropertyAssistantAgent extends Agent
                 : $sortedPrices[$mid];
         }
 
+        // Median price/sqm USD
         $sortedSqmPrices = $sqmPrices->sort()->values();
         $sqmCount = $sortedSqmPrices->count();
         $medianSqm = 0;
@@ -568,29 +617,132 @@ class PropertyAssistantAgent extends Agent
                 : $sortedSqmPrices[$sqmMid];
         }
 
+        // Weighted avg price/sqm USD
         $totalPrice = $prices->sum();
         $totalArea = $areas->sum();
         $weightedAvgPriceSqm = ($totalArea > 0) ? round($totalPrice / $totalArea, 2) : null;
 
+        // Weighted avg price/sqm AZN
+        $totalAzn = $aznPrices->sum();
+        $weightedAvgPriceSqmAzn = ($totalArea > 0 && $totalAzn > 0)
+            ? round($totalAzn / $totalArea, 2)
+            : null;
+
+        // Bill of sale
         $billTotal = $billOfSale->count();
         $billWithSale = $billOfSale->where('has_bill_of_sale', true)->count();
         $billOfSalePct = $billTotal > 0 ? round($billWithSale / $billTotal * 100, 1) : null;
 
-        return [
+        // Area ranges from config
+        $ranges = config("scraper.area_ranges.{$propertyType}", []);
+        $isLand = $propertyType === 'land';
+
+        $areaRanges = collect($ranges)->map(function ($range) use ($listings, $isLand) {
+            $inRange = $listings->filter(
+                fn ($l) => $l->area !== null
+                    && $l->area >= $range['min']
+                    && $l->area <= $range['max']
+            );
+
+            $rangePrices = $inRange->pluck('price')->filter()->values();
+            $rangeAzn = $inRange->map(fn ($l) => $l->extras['original_price_azn'] ?? null)->filter()->values();
+            $rangeAreas = $inRange->pluck('area')->filter()->values();
+            $rangeSqmPrices = $inRange->pluck('price_per_sqm')->filter()->values();
+
+            $rangeTotalPrice = $rangePrices->sum();
+            $rangeTotalArea = $rangeAreas->sum();
+            $rangeWeightedSqm = ($rangeTotalArea > 0) ? round($rangeTotalPrice / $rangeTotalArea, 2) : null;
+            $rangeWeightedSqmAzn = ($rangeTotalArea > 0 && $rangeAzn->sum() > 0)
+                ? round($rangeAzn->sum() / $rangeTotalArea, 2)
+                : null;
+
+            $rangeAznSqmPrices = $inRange->map(function ($l) {
+                $azn = $l->extras['original_price_azn'] ?? null;
+                $area = $l->area;
+
+                return ($azn && $area && $area > 0) ? round((float) $azn / (float) $area, 2) : null;
+            })->filter()->values();
+
+            $result = [
+                'range' => $range['label'],
+                'count' => $inRange->count(),
+                'min_price_per_sqm_usd' => $rangeSqmPrices->count() ? round($rangeSqmPrices->min(), 2) : null,
+                'max_price_per_sqm_usd' => $rangeSqmPrices->count() ? round($rangeSqmPrices->max(), 2) : null,
+                'weighted_avg_price_per_sqm_usd' => $rangeWeightedSqm,
+                'min_price_per_sqm_azn' => $rangeAznSqmPrices->count() ? round($rangeAznSqmPrices->min(), 2) : null,
+                'max_price_per_sqm_azn' => $rangeAznSqmPrices->count() ? round($rangeAznSqmPrices->max(), 2) : null,
+                'weighted_avg_price_per_sqm_azn' => $rangeWeightedSqmAzn,
+            ];
+
+            if ($isLand) {
+                $result['min_area_sotka'] = $rangeAreas->count() ? round($rangeAreas->min() / 100, 2) : null;
+                $result['max_area_sotka'] = $rangeAreas->count() ? round($rangeAreas->max() / 100, 2) : null;
+            }
+
+            return $result;
+        })->values()->toArray();
+
+        $aznSqmPrices = $listings->map(function ($l) {
+            $azn = $l->extras['original_price_azn'] ?? null;
+            $area = $l->area;
+
+            return ($azn && $area && $area > 0) ? (float) $azn / (float) $area : null;
+        })->filter()->values();
+
+        // Median price AZN
+        $sortedAznPrices = $aznPrices->sort()->values();
+        $aznCount = $sortedAznPrices->count();
+        $medianAzn = 0;
+        if ($aznCount > 0) {
+            $aznMid = (int) floor($aznCount / 2);
+            $medianAzn = $aznCount % 2 === 0
+                ? ($sortedAznPrices[$aznMid - 1] + $sortedAznPrices[$aznMid]) / 2
+                : $sortedAznPrices[$aznMid];
+        }
+
+        // Median price/sqm AZN
+        $sortedAznSqmPrices = $aznSqmPrices->sort()->values();
+        $aznSqmCount = $sortedAznSqmPrices->count();
+        $medianAznSqm = 0;
+        if ($aznSqmCount > 0) {
+            $aznSqmMid = (int) floor($aznSqmCount / 2);
+            $medianAznSqm = $aznSqmCount % 2 === 0
+                ? ($sortedAznSqmPrices[$aznSqmMid - 1] + $sortedAznSqmPrices[$aznSqmMid]) / 2
+                : $sortedAznSqmPrices[$aznSqmMid];
+        }
+
+        $stats = [
             'count' => $listings->count(),
             'min_price_usd' => $prices->count() ? (int) round($prices->min()) : null,
             'max_price_usd' => $prices->count() ? (int) round($prices->max()) : null,
             'avg_price_usd' => $prices->count() ? (int) round($prices->avg()) : null,
             'median_price_usd' => $count > 0 ? (int) round($median) : null,
+            'min_price_azn' => $aznPrices->count() ? (int) round($aznPrices->min()) : null,
+            'max_price_azn' => $aznPrices->count() ? (int) round($aznPrices->max()) : null,
+            'avg_price_azn' => $aznPrices->count() ? (int) round($aznPrices->avg()) : null,
+            'median_price_azn' => $aznCount > 0 ? (int) round($medianAzn) : null,
             'weighted_avg_price_per_sqm_usd' => $weightedAvgPriceSqm,
+            'weighted_avg_price_per_sqm_azn' => $weightedAvgPriceSqmAzn,
             'min_price_per_sqm_usd' => $sqmCount > 0 ? round($sortedSqmPrices->min(), 2) : null,
             'max_price_per_sqm_usd' => $sqmCount > 0 ? round($sortedSqmPrices->max(), 2) : null,
             'median_price_per_sqm_usd' => $sqmCount > 0 ? round($medianSqm, 2) : null,
+            'min_price_per_sqm_azn' => $aznSqmPrices->count() ? round($aznSqmPrices->min(), 2) : null,
+            'max_price_per_sqm_azn' => $aznSqmPrices->count() ? round($aznSqmPrices->max(), 2) : null,
+            'median_price_per_sqm_azn' => $aznSqmCount > 0 ? round($medianAznSqm, 2) : null,
             'min_area_sqm' => $areas->count() ? round($areas->min(), 1) : null,
             'max_area_sqm' => $areas->count() ? round($areas->max(), 1) : null,
             'avg_area_sqm' => $areas->count() ? round($areas->avg(), 1) : null,
             'bill_of_sale_pct' => $billOfSalePct,
+            'area_ranges' => $areaRanges,
         ];
+
+        if ($isLand) {
+            $stats['min_area_sotka'] = $areas->count() ? round($areas->min() / 100, 2) : null;
+            $stats['max_area_sotka'] = $areas->count() ? round($areas->max() / 100, 2) : null;
+            $stats['avg_area_sotka'] = $areas->count() ? round($areas->avg() / 100, 2) : null;
+        }
+
+        return $stats;
     }
 
     private function defaultSystemPrompt(): string
@@ -620,7 +772,8 @@ Rules you must follow without exception:
 - When the user asks about price reductions or falling prices, call getPriceChanges with the relevant source key.
 - When the user asks about rental yield or return on investment, call getYieldEstimate with pair='residential' for apartments or pair='commercial' for commercial property.
 - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
-- When getLocationStats returns results, always clarify that these are listings mentioning the location name in their description — typically nearby properties, not necessarily inside the development. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
+- When getLocationStats returns results with data_source containing 'exact', present the data as precise development-specific data scraped directly from bina.az. When data_source contains 'keyword search', clarify these are nearby properties whose descriptions mention the location. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
+- Always present prices in AZN as primary with USD in parentheses — e.g. "₼125,000 AZN ($73,500 USD)". Always present land area in sqm with sotka in parentheses — e.g. "1,200 sqm (12 sotka)". Apply this format consistently across all tools when responding about Baku market data.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
