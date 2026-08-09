@@ -394,10 +394,9 @@ export default function Assistant() {
             await fetch(adminUrl('/assistant/history'), {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN':
-                        document.querySelector<HTMLMetaElement>(
-                            'meta[name="csrf-token"]',
-                        )?.content ?? '',
+                    'X-XSRF-TOKEN': decodeURIComponent(
+                        document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] ?? '',
+                    ),
                 },
             });
             setMessages([]);
