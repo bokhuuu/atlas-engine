@@ -618,15 +618,15 @@ class PropertyAssistantAgent extends Agent
         }
 
         // Weighted avg price/sqm USD
-        $totalPrice = $prices->sum();
-        $totalArea = $areas->sum();
+        $withBothUsd = $listings->filter(fn ($l) => $l->price && $l->area);
+        $totalPrice = $withBothUsd->sum('price');
+        $totalArea = $withBothUsd->sum('area');
         $weightedAvgPriceSqm = ($totalArea > 0) ? round($totalPrice / $totalArea, 2) : null;
 
-        // Weighted avg price/sqm AZN
-        $totalAzn = $aznPrices->sum();
-        $weightedAvgPriceSqmAzn = ($totalArea > 0 && $totalAzn > 0)
-            ? round($totalAzn / $totalArea, 2)
-            : null;
+        $withBothAzn = $listings->filter(fn ($l) => ($l->extras['original_price_azn'] ?? null) && $l->area);
+        $totalAzn = $withBothAzn->sum(fn ($l) => $l->extras['original_price_azn']);
+        $totalAreaAzn = $withBothAzn->sum('area');
+        $weightedAvgPriceSqmAzn = ($totalAreaAzn > 0) ? round($totalAzn / $totalAreaAzn, 2) : null;
 
         // Bill of sale
         $billTotal = $billOfSale->count();
@@ -731,6 +731,26 @@ class PropertyAssistantAgent extends Agent
             'area_ranges' => $areaRanges,
         ];
 
+        $notes = [];
+
+        if ($weightedAvgPriceSqmAzn && $aznSqmPrices->count() > 0) {
+            $minAznSqm = $aznSqmPrices->min();
+            if ($minAznSqm < $weightedAvgPriceSqmAzn / 3) {
+                $notes[] = 'Min price/sqm is significantly below weighted average — likely caused by large bulk plots, seller data entry errors (per-unit price instead of total), or listings from adjacent areas included in the location filter. Weighted average is the more reliable benchmark.';
+            }
+        }
+
+        if ($sqmCount > 0 && $weightedAvgPriceSqm) {
+            $minUsdSqm = $sortedSqmPrices->min();
+            if ($minUsdSqm < $weightedAvgPriceSqm / 3) {
+                $notes[] = 'Wide price/sqm spread detected. Min/max figures should be treated with caution — use weighted average as the primary reference point.';
+            }
+        }
+
+        if (count($notes) > 0) {
+            $stats['data_quality_notes'] = $notes;
+        }
+
         return $stats;
     }
 
@@ -764,6 +784,9 @@ Rules you must follow without exception:
 - When getLocationStats returns results with data_source containing 'exact', present the data as precise development-specific data scraped directly from bina.az. When data_source contains 'keyword search', clarify these are nearby properties whose descriptions mention the location. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
 - Always present prices in AZN as primary with USD in parentheses — e.g. "125,000 AZN ($73,500 USD)". Apply this format consistently across all tools when responding about Baku market data.
 - Never calculate or estimate AZN prices by converting from USD. AZN prices must only come from tool calls that read original_price_azn directly from the database. If asked about specific listing prices in AZN, call getLocationStats or findComparables to get fresh data — never derive AZN from USD figures in the conversation context.
+- When presenting price per sqm statistics, always emphasise the weighted average as the most reliable metric. Explicitly warn that min and max prices can be misleading due to outliers — large plots, data entry errors by sellers, or listings from adjacent areas that bina.az includes under the same location filter.
+- When getLocationStats returns data for a named development (Sea Breeze etc), always note that bina.az location filters cover a broader zone — some listings may be nearby but not inside the development. Recommend verifying specific listings directly on bina.az using the listing URL.
+- When the difference between min price/sqm and weighted average price/sqm is more than 3x, flag this as a sign of outliers and explain the likely causes without inventing specifics — use findComparables to investigate suspicious listings if the user wants details.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
