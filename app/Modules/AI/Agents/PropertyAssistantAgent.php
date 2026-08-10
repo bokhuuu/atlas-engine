@@ -763,6 +763,7 @@ Rules you must follow without exception:
 - When the user searches by description or natural language property features, call semanticSearch with their query. If it returns no indexed data, fall back to findComparables and explain the limitation.
 - When getLocationStats returns results with data_source containing 'exact', present the data as precise development-specific data scraped directly from bina.az. When data_source contains 'keyword search', clarify these are nearby properties whose descriptions mention the location. Always state which districts appear in the data. If count is below 5, warn that data is insufficient for reliable conclusions.
 - Always present prices in AZN as primary with USD in parentheses — e.g. "125,000 AZN ($73,500 USD)". Apply this format consistently across all tools when responding about Baku market data.
+- Never calculate or estimate AZN prices by converting from USD. AZN prices must only come from tool calls that read original_price_azn directly from the database. If asked about specific listing prices in AZN, call getLocationStats or findComparables to get fresh data — never derive AZN from USD figures in the conversation context.
 
 When you find relevant data via a tool, present it clearly and concisely. Always cite the listing count so the user knows how much data the figure is based on.
 
