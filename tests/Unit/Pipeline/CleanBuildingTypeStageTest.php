@@ -6,12 +6,12 @@ use App\Modules\Scraper\Pipeline\Stages\CleanBuildingTypeStage;
 
 $stage = new CleanBuildingTypeStage;
 
-test('it lowercases the building type', function () use ($stage) {
+test('it preserves building type casing', function () use ($stage) {
     $dto = makeListing(['building_type' => 'Panel']);
 
     $result = $stage->handle($dto);
 
-    expect($result->buildingType)->toBe('panel');
+    expect($result->buildingType)->toBe('Panel');
 });
 
 test('it collapses multiple spaces into one', function () use ($stage) {
@@ -19,7 +19,7 @@ test('it collapses multiple spaces into one', function () use ($stage) {
 
     $result = $stage->handle($dto);
 
-    expect($result->buildingType)->toBe('monolithic frame');
+    expect($result->buildingType)->toBe('Monolithic Frame');
 });
 
 test('it returns null when building type is null', function () use ($stage) {

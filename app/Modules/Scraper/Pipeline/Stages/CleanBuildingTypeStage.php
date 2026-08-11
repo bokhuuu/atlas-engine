@@ -16,8 +16,8 @@ use App\Modules\Scraper\Pipeline\PipelineStageInterface;
 final class CleanBuildingTypeStage implements PipelineStageInterface
 {
     /**
-     * Lowercases and tidies up the building type so the same type
-     * scraped with different casing or spacing groups together.
+     * Normalizes spacing in building type for consistent grouping.
+     * Casing is preserved - NormalizeToEnglishStage handles translation.
      */
     public function handle(ListingDTO $dto): ListingDTO
     {
@@ -36,8 +36,7 @@ final class CleanBuildingTypeStage implements PipelineStageInterface
             return null;
         }
 
-        $lowercased = strtolower($value);
-        $normalized = preg_replace('/\s+/', ' ', $lowercased);
+        $normalized = preg_replace('/\s+/', ' ', $value);
 
         return trim($normalized);
     }

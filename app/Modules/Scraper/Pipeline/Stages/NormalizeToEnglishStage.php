@@ -42,7 +42,7 @@ final class NormalizeToEnglishStage implements PipelineStageInterface
 
         $dictionary = config("scraper.normalization.baku.{$dictionaryKey}", []);
 
-        $trimmed = trim($value);
+        $trimmed = preg_replace('/\s+/', ' ', trim($value));
 
         foreach ($dictionary as $russian => $english) {
             if (mb_strtolower($trimmed) === mb_strtolower($russian)) {
