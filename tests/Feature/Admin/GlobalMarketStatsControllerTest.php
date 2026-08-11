@@ -59,7 +59,7 @@ test('global market stats includes all categories', function () {
         ->assertInertia(
             fn ($page) => $page
                 ->component('admin/global-market-stats')
-                ->where('allCategories', fn ($cats) => count($cats) === 8)
+                ->where('allCategories', fn ($cats) => count($cats) === 10)
         );
 });
 

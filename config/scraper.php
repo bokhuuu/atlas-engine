@@ -9,6 +9,8 @@ use App\Modules\Scraper\Exports\RealEstateMarketReport;
 use App\Modules\Scraper\Profiles\ApartmentsForSaleProfile;
 use App\Modules\Scraper\Profiles\BinazLandSaleProfile;
 use App\Modules\Scraper\Profiles\BinazLandSaleSeaBreezeProfile;
+use App\Modules\Scraper\Profiles\BinazOfficeRentProfile;
+use App\Modules\Scraper\Profiles\BinazOfficeSaleProfile;
 use App\Modules\Scraper\Profiles\CommercialForRentProfile;
 use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
 use App\Modules\Scraper\Profiles\HousesForSaleProfile;
@@ -183,6 +185,8 @@ return [
 
         'binaz_land_sale' => BinazLandSaleProfile::class,
         'binaz_land_sale_sea_breeze' => BinazLandSaleSeaBreezeProfile::class,
+        'binaz_offices_sale' => BinazOfficeSaleProfile::class,
+        'binaz_offices_rent' => BinazOfficeRentProfile::class,
     ],
 
     /*
@@ -337,6 +341,18 @@ return [
             'max_pages' => env('BINAZ_LAND_SALE_SEA_BREEZE_MAX_PAGES', 5),
             'timeout' => env('BINAZ_LAND_SALE_SEA_BREEZE_TIMEOUT', 1800),
             'concurrency' => env('BINAZ_LAND_SALE_SEA_BREEZE_CONCURRENCY', 10),
+        ],
+        'binaz_offices_sale' => [
+            'request_delay' => env('BINAZ_OFFICES_SALE_REQUEST_DELAY', 2),
+            'max_pages' => env('BINAZ_OFFICES_SALE_MAX_PAGES', 5),
+            'timeout' => env('BINAZ_OFFICES_SALE_TIMEOUT', 1800),
+            'concurrency' => env('BINAZ_OFFICES_SALE_CONCURRENCY', 10),
+        ],
+        'binaz_offices_rent' => [
+            'request_delay' => env('BINAZ_OFFICES_RENT_REQUEST_DELAY', 2),
+            'max_pages' => env('BINAZ_OFFICES_RENT_MAX_PAGES', 10),
+            'timeout' => env('BINAZ_OFFICES_RENT_TIMEOUT', 1800),
+            'concurrency' => env('BINAZ_OFFICES_RENT_CONCURRENCY', 10),
         ],
     ],
 
