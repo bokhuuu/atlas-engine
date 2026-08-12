@@ -7,6 +7,7 @@ namespace App\Modules\Scraper\Browser;
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
 
@@ -86,22 +87,39 @@ class BinazScraper extends BaseScraper
         $urls = [];
         $cursor = null;
 
-        for ($fetch = 1; $fetch <= $maxFetches; $fetch++) {
-            $result = $this->fetchGraphQlPage($cursor);
+        // for ($fetch = 1; $fetch <= $maxFetches; $fetch++) {
+        //     $result = $this->fetchGraphQlPage($cursor);
 
+        //     if (empty($result['urls'])) {
+        //         break;
+        //     }
+
+        //     $urls = array_merge($urls, $result['urls']);
+        //     $cursor = $result['cursor'];
+
+        //     if (! $result['hasNextPage']) {
+        //         break;
+        //     }
+
+        //     $this->pauseForHuman();
+        // }
+
+        for ($fetch = 1; $fetch <= $maxFetches; $fetch++) {
+            Log::info("BinazScraper [{$this->profile->getName()}] fetch {$fetch}/{$maxFetches}");
+            $result = $this->fetchGraphQlPage($cursor);
             if (empty($result['urls'])) {
+                Log::info("BinazScraper [{$this->profile->getName()}] BREAK: empty urls on fetch {$fetch}");
                 break;
             }
-
             $urls = array_merge($urls, $result['urls']);
             $cursor = $result['cursor'];
-
             if (! $result['hasNextPage']) {
+                Log::info("BinazScraper [{$this->profile->getName()}] BREAK: no next page on fetch {$fetch}");
                 break;
             }
-
             $this->pauseForHuman();
         }
+        Log::info("BinazScraper [{$this->profile->getName()}] loop done, total urls: ".count($urls));
 
         return $urls;
     }
