@@ -155,7 +155,7 @@ class BinazScraper extends BaseScraper
             'total_floors' => $this->extractPropertyRow($crawler, 'Этажей в здании'),
             'building_type' => $this->extractPropertyRow($crawler, 'Тип строения'),
             'condition' => $this->extractCondition($crawler),
-            'is_new_building' => null,
+            'is_new_building' => $this->extractIsNewBuilding($crawler),
             'district' => $this->extractDistrict($crawler, $html),
             'address' => $this->extractAddress($jsonLd),
             'description' => $jsonLd['description'] ?? null,
@@ -457,6 +457,22 @@ class BinazScraper extends BaseScraper
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Extract whether the listing is a new building from the "Категория" property row.
+     * Returns true for "Новостройка", false for "Вторичка", null if row absent.
+     * Land and office pages have no "Категория" row — returns null naturally.
+     */
+    private function extractIsNewBuilding(Crawler $crawler): ?bool
+    {
+        $value = $this->extractPropertyRow($crawler, 'Категория');
+
+        if ($value === null) {
+            return null;
+        }
+
+        return str_contains($value, 'Новостройка');
     }
 
     /**
