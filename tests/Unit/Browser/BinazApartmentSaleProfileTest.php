@@ -37,7 +37,7 @@ test('profile pipeline includes NormalizeToEnglishStage', function () use ($prof
     $stages = $profile->getPipelineStages();
 
     $hasNormalizeStage = collect($stages)->contains(
-        fn($stage) => $stage instanceof NormalizeToEnglishStage
+        fn ($stage) => $stage instanceof NormalizeToEnglishStage
     );
 
     expect($hasNormalizeStage)->toBeTrue();
@@ -59,7 +59,7 @@ test('profile pipeline excludes CleanPhoneStage to preserve phone formatting', f
     $stages = $profile->getPipelineStages();
 
     $hasCleanPhone = collect($stages)->contains(
-        fn($stage) => $stage instanceof CleanPhoneStage
+        fn ($stage) => $stage instanceof CleanPhoneStage
     );
 
     expect($hasCleanPhone)->toBeFalse();
