@@ -27,6 +27,8 @@ class CategoryLabels
         'binaz_land_sale_sea_breeze' => 'Land for Sale — Sea Breeze',
         'binaz_offices_sale' => 'Offices for Sale',
         'binaz_offices_rent' => 'Offices for Rent',
+        'binaz_apartments_sale' => 'Apartments for Sale',
+        'binaz_apartments_rent' => 'Apartments for Rent',
     ];
 
     public static function forSource(string $source): string
