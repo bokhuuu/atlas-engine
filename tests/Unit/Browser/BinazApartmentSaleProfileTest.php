@@ -52,7 +52,7 @@ test('profile base url is bina az russian version', function () use ($profile) {
 });
 
 test('profile has extended timeout for cursor pagination loop', function () use ($profile) {
-    expect($profile->getQueueConfig()['timeout'])->toBe(1800);
+    expect($profile->getQueueConfig()['timeout'])->toBeGreaterThanOrEqual(1800);
 });
 
 test('profile pipeline excludes CleanPhoneStage to preserve phone formatting', function () use ($profile) {

@@ -41,3 +41,63 @@ test('extractIsNewBuilding returns null when category row absent', function () {
 
     expect(makeExtractIsNewBuilding(new Crawler($html)))->toBeNull();
 });
+
+test('extractFloor returns floor number from apartment format', function () {
+    $html = '<div class="product-properties__i">
+        <label>Этаж</label>
+        <span class="product-properties__i-value">16 / 17</span>
+    </div>';
+
+    $method = new ReflectionMethod(BinazScraper::class, 'extractFloor');
+    $scraper = new BinazScraper(new BinazOfficeSaleProfile, app(ProxyResolver::class));
+
+    expect($method->invoke($scraper, new Crawler($html)))->toBe('16');
+});
+
+test('extractFloor returns value as-is for office format', function () {
+    $html = '<div class="product-properties__i">
+        <label>Этаж</label>
+        <span class="product-properties__i-value">5</span>
+    </div>';
+
+    $method = new ReflectionMethod(BinazScraper::class, 'extractFloor');
+    $scraper = new BinazScraper(new BinazOfficeSaleProfile, app(ProxyResolver::class));
+
+    expect($method->invoke($scraper, new Crawler($html)))->toBe('5');
+});
+
+test('extractTotalFloors returns total from apartment slash format', function () {
+    $html = '<div class="product-properties__i">
+        <label>Этаж</label>
+        <span class="product-properties__i-value">16 / 17</span>
+    </div>';
+
+    $method = new ReflectionMethod(BinazScraper::class, 'extractTotalFloors');
+    $scraper = new BinazScraper(new BinazOfficeSaleProfile, app(ProxyResolver::class));
+
+    expect($method->invoke($scraper, new Crawler($html)))->toBe('17');
+});
+
+test('extractTotalFloors falls back to separate row for offices', function () {
+    $html = '<div class="product-properties__i">
+        <label>Этажей в здании</label>
+        <span class="product-properties__i-value">12</span>
+    </div>';
+
+    $method = new ReflectionMethod(BinazScraper::class, 'extractTotalFloors');
+    $scraper = new BinazScraper(new BinazOfficeSaleProfile, app(ProxyResolver::class));
+
+    expect($method->invoke($scraper, new Crawler($html)))->toBe('12');
+});
+
+test('extractTotalFloors returns null when no floor data present', function () {
+    $html = '<div class="product-properties__i">
+        <label>Площадь</label>
+        <span class="product-properties__i-value">85 м²</span>
+    </div>';
+
+    $method = new ReflectionMethod(BinazScraper::class, 'extractTotalFloors');
+    $scraper = new BinazScraper(new BinazOfficeSaleProfile, app(ProxyResolver::class));
+
+    expect($method->invoke($scraper, new Crawler($html)))->toBeNull();
+});

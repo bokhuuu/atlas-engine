@@ -151,8 +151,8 @@ class BinazScraper extends BaseScraper
             'price_per_sqm' => null,
             'area' => $areaSqm,
             'rooms' => $this->extractPropertyRow($crawler, 'Количество комнат'),
-            'floor' => $this->extractPropertyRow($crawler, 'Этаж'),
-            'total_floors' => $this->extractPropertyRow($crawler, 'Этажей в здании'),
+            'floor' => $this->extractFloor($crawler),
+            'total_floors' => $this->extractTotalFloors($crawler),
             'building_type' => $this->extractPropertyRow($crawler, 'Тип строения'),
             'condition' => $this->extractCondition($crawler),
             'is_new_building' => $this->extractIsNewBuilding($crawler),
@@ -311,6 +311,44 @@ class BinazScraper extends BaseScraper
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Extract floor number from "Этаж" property row.
+     * Apartments: "16 / 17" → 16
+     * Offices/commercial: "5" → 5
+     * Land: row absent → null
+     */
+    private function extractFloor(Crawler $crawler): ?string
+    {
+        $value = $this->extractPropertyRow($crawler, 'Этаж');
+
+        if ($value === null) {
+            return null;
+        }
+
+        if (str_contains($value, '/')) {
+            return trim(explode('/', $value)[0]);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Extract total floors from either:
+     * - "Этаж" row "16 / 17" → 17 (apartments)
+     * - "Этажей в здании" row "17" → 17 (offices/commercial)
+     * - Land: both absent → null
+     */
+    private function extractTotalFloors(Crawler $crawler): ?string
+    {
+        $etazh = $this->extractPropertyRow($crawler, 'Этаж');
+
+        if ($etazh !== null && str_contains($etazh, '/')) {
+            return trim(explode('/', $etazh)[1]);
+        }
+
+        return $this->extractPropertyRow($crawler, 'Этажей в здании');
     }
 
     /**
