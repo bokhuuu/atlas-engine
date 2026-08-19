@@ -219,7 +219,7 @@ return [
             'supervisor-1' => [
                 'maxProcesses' => 2,
                 'memory' => 512,
-                'timeout' => 600,
+                'timeout' => 3600,
                 'tries' => 1,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
