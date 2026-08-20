@@ -120,6 +120,7 @@ export default function DataHub({ categories, districts }: Props) {
         'idle' | 'pending' | 'processing' | 'completed' | 'failed'
     >('idle');
     const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const lastJobIdRef = useRef<number | null>(null);
     const [prevTotal, setPrevTotal] = useState<number | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
@@ -340,6 +341,17 @@ export default function DataHub({ categories, districts }: Props) {
             return;
         }
 
+        if (exportStatus === 'completed' && lastJobIdRef.current) {
+            const link = document.createElement('a');
+            link.href = `/api/v1/exports/filtered/download/${lastJobIdRef.current}`;
+            link.download = '';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            return;
+        }
+
         setExportStatus('pending');
 
         const qs = buildQueryString(filters);
@@ -361,6 +373,7 @@ export default function DataHub({ categories, districts }: Props) {
         );
 
         const data = (await response.json()) as { job_id: number };
+        lastJobIdRef.current = data.job_id;
 
         pollRef.current = setInterval(async () => {
             const statusRes = await fetch(
@@ -389,10 +402,12 @@ export default function DataHub({ categories, districts }: Props) {
             }
 
             if (statusData.status === 'completed') {
-                window.open(
-                    `/api/v1/exports/filtered/download/${data.job_id}`,
-                    '_blank',
-                );
+                const link = document.createElement('a');
+                link.href = `/api/v1/exports/filtered/download/${data.job_id}`;
+                link.download = '';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
                 setTimeout(() => setExportStatus('idle'), 3000);
             }
         }, 2000);
