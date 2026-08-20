@@ -29,6 +29,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/listings/filter', [ListingController::class, 'filter']);
         Route::get('/exports/filtered', [ExportController::class, 'downloadFiltered']);
+        Route::post('/exports/filtered/request', [ExportController::class, 'requestFiltered']);
+        Route::get('/exports/filtered/status/{id}', [ExportController::class, 'filteredStatus']);
+        Route::get('/exports/filtered/download/{id}', [ExportController::class, 'filteredDownload']);
     });
 
     Route::middleware(['auth:sanctum', 'throttle:api.per_token'])->group(function () {

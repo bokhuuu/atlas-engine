@@ -6,7 +6,10 @@ namespace App\Modules\Scraper\Api;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Scraper\Exports\ExportManager;
+use App\Modules\Scraper\Jobs\GenerateFilteredExportJob;
+use App\Modules\Scraper\Models\ExportJob;
 use App\Services\MarketRegistry;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -148,5 +151,78 @@ class ExportController extends Controller
         }
 
         return response()->download($paths[0]);
+    }
+
+    /**
+     * Request a background filtered export job.
+     * Returns job_id immediately - frontend polls status endpoint.
+     */
+    public function requestFiltered(Request $request): JsonResponse
+    {
+        $source = $request->query('source', '');
+
+        if (! array_key_exists($source, config('scraper.profiles', []))) {
+            abort(404, 'Unknown category.');
+        }
+
+        $filters = $request->only([
+            'source',
+            'district',
+            'rooms',
+            'min_price',
+            'max_price',
+            'min_area',
+            'max_area',
+            'agency',
+            'has_bill_of_sale',
+            'has_mortgage',
+            'exclude_duplicates',
+            'scraped_from',
+            'scraped_to',
+            'status',
+            'listing_date_from',
+            'listing_date_to',
+        ]);
+
+        $job = ExportJob::create([
+            'status' => 'pending',
+            'source' => $source,
+            'filters' => $filters,
+        ]);
+
+        GenerateFilteredExportJob::dispatch($job->id);
+
+        return response()->json(['job_id' => $job->id]);
+    }
+
+    /**
+     * Poll the status of a background export job.
+     */
+    public function filteredStatus(int $id): JsonResponse
+    {
+        $job = ExportJob::findOrFail($id);
+
+        return response()->json([
+            'status' => $job->status,
+            'error' => $job->error,
+        ]);
+    }
+
+    /**
+     * Download the completed export file.
+     */
+    public function filteredDownload(int $id): BinaryFileResponse|JsonResponse
+    {
+        $job = ExportJob::findOrFail($id);
+
+        if ($job->status !== 'completed' || ! $job->file_path) {
+            return response()->json(['error' => 'Export not ready.'], 400);
+        }
+
+        if (! file_exists($job->file_path)) {
+            return response()->json(['error' => 'Export file not found.'], 404);
+        }
+
+        return response()->download($job->file_path);
     }
 }

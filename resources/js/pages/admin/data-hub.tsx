@@ -116,9 +116,19 @@ export default function DataHub({ categories, districts }: Props) {
     const [loading, setLoading] = useState(false);
     const [activeFilterCount, setActiveFilterCount] = useState(0);
     const [errors, setErrors] = useState<ValidationErrors>({});
+    const [exportStatus, setExportStatus] = useState<
+        'idle' | 'pending' | 'processing' | 'completed' | 'failed'
+    >('idle');
+    const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const [prevTotal, setPrevTotal] = useState<number | null>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const abortRef = useRef<AbortController | null>(null);
+    const stopPolling = useCallback(() => {
+        if (pollRef.current) {
+            clearInterval(pollRef.current);
+            pollRef.current = null;
+        }
+    }, []);
 
     const buildQueryString = useCallback(
         (f: FilterState) => {
@@ -255,8 +265,10 @@ export default function DataHub({ categories, districts }: Props) {
             if (abortRef.current) {
                 abortRef.current.abort();
             }
+
+            stopPolling();
         };
-    }, [filters, fetchCount]);
+    }, [filters, fetchCount, stopPolling]);
 
     useEffect(() => {
         let count = 0;
@@ -323,17 +335,67 @@ export default function DataHub({ categories, districts }: Props) {
 
     const hasErrors = Object.keys(errors).length > 0;
 
-    const downloadExcel = () => {
+    const downloadExcel = async () => {
         if (hasErrors || !result || result.total === 0) {
             return;
         }
 
+        setExportStatus('pending');
+
         const qs = buildQueryString(filters);
 
-        window.open(
-            `/api/v1/exports/filtered?${qs}&market=${market}`,
-            '_blank',
+        const response = await fetch(
+            `/api/v1/exports/filtered/request?${qs}&market=${market}`,
+            {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-XSRF-TOKEN': decodeURIComponent(
+                        document.cookie
+                            .split('; ')
+                            .find((r) => r.startsWith('XSRF-TOKEN='))
+                            ?.split('=')[1] ?? '',
+                    ),
+                },
+            },
         );
+
+        const data = (await response.json()) as { job_id: number };
+
+        pollRef.current = setInterval(async () => {
+            const statusRes = await fetch(
+                `/api/v1/exports/filtered/status/${data.job_id}`,
+                { headers: { Accept: 'application/json' } },
+            );
+            const statusData = (await statusRes.json()) as {
+                status: string;
+                error?: string;
+            };
+
+            setExportStatus(
+                statusData.status as
+                    | 'idle'
+                    | 'pending'
+                    | 'processing'
+                    | 'completed'
+                    | 'failed',
+            );
+
+            if (
+                statusData.status === 'completed' ||
+                statusData.status === 'failed'
+            ) {
+                stopPolling();
+            }
+
+            if (statusData.status === 'completed') {
+                window.open(
+                    `/api/v1/exports/filtered/download/${data.job_id}`,
+                    '_blank',
+                );
+                setTimeout(() => setExportStatus('idle'), 3000);
+            }
+        }, 2000);
     };
 
     const chipCls = (active: boolean, hasError = false) =>
@@ -782,15 +844,41 @@ export default function DataHub({ categories, districts }: Props) {
 
                     <button
                         onClick={downloadExcel}
-                        disabled={hasErrors || !result || result.total === 0}
+                        disabled={
+                            hasErrors ||
+                            !result ||
+                            result.total === 0 ||
+                            exportStatus === 'pending' ||
+                            exportStatus === 'processing'
+                        }
                         className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                        <Download className="h-4 w-4" />
-                        Download Excel
-                        {result && result.total > 0 && !hasErrors && (
-                            <span className="rounded-full bg-primary-foreground/20 px-2 py-0.5 text-xs font-normal">
-                                {result.total.toLocaleString()}
-                            </span>
+                        {exportStatus === 'pending' ||
+                        exportStatus === 'processing' ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Preparing...
+                            </>
+                        ) : exportStatus === 'completed' ? (
+                            <>
+                                <Download className="h-4 w-4" />
+                                Download Ready
+                            </>
+                        ) : exportStatus === 'failed' ? (
+                            <>
+                                <AlertCircle className="h-4 w-4" />
+                                Export Failed
+                            </>
+                        ) : (
+                            <>
+                                <Download className="h-4 w-4" />
+                                Download Excel
+                                {result && result.total > 0 && !hasErrors && (
+                                    <span className="rounded-full bg-primary-foreground/20 px-2 py-0.5 text-xs font-normal">
+                                        {result.total.toLocaleString()}
+                                    </span>
+                                )}
+                            </>
                         )}
                     </button>
 
