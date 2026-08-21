@@ -241,6 +241,7 @@ class BinazScraper extends BaseScraper
     /**
      * Parse the JSON-LD script tag from the page HTML.
      * Returns the Product object from the @graph array, or empty array.
+     * For houses, returns the root object directly (no @graph wrapper).
      */
     private function extractJsonLd(string $html): array
     {
@@ -254,6 +255,10 @@ class BinazScraper extends BaseScraper
             $data = json_decode($matches[1], true);
 
             if (! isset($data['@graph'])) {
+                if (isset($data['offers']['price'])) {
+                    return $data;
+                }
+
                 return [];
             }
 
