@@ -402,13 +402,24 @@ export default function DataHub({ categories, districts }: Props) {
             }
 
             if (statusData.status === 'completed') {
-                const link = document.createElement('a');
-                link.href = `/api/v1/exports/filtered/download/${data.job_id}`;
-                link.download = '';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                setTimeout(() => setExportStatus('idle'), 3000);
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(
+                    navigator.userAgent,
+                );
+
+                if (!isMobile) {
+                    const link = document.createElement('a');
+                    link.href = `/api/v1/exports/filtered/download/${data.job_id}`;
+                    link.download = '';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+                setTimeout(() => {
+                    if (!isMobile) {
+                        setExportStatus('idle');
+                    }
+                }, 3000);
             }
         }, 2000);
     };
