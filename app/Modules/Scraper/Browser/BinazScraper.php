@@ -246,7 +246,7 @@ class BinazScraper extends BaseScraper
     private function extractJsonLd(string $html): array
     {
         try {
-            preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches);
+            preg_match('/<script[^>]*type=["\']application\/ld\+json["\'][^>]*>(.*?)<\/script>/s', $html, $matches);
 
             if (empty($matches[1])) {
                 return [];
