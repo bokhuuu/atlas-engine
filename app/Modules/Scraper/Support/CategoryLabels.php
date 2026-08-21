@@ -29,6 +29,8 @@ class CategoryLabels
         'binaz_offices_rent' => 'Offices for Rent',
         'binaz_apartments_sale' => 'Apartments for Sale',
         'binaz_apartments_rent' => 'Apartments for Rent',
+        'binaz_houses_sale' => 'Houses for Sale',
+        'binaz_houses_rent' => 'Houses for Rent',
     ];
 
     public static function forSource(string $source): string
