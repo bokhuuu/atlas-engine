@@ -128,6 +128,7 @@ class BinazScraper extends BaseScraper
 
         $crawler = new Crawler($html);
         $jsonLd = $this->extractJsonLd($html);
+        $itemOffered = $jsonLd['offers']['itemOffered'] ?? [];
 
         $price = $jsonLd['offers']['price'] ?? null;
         $currency = $jsonLd['offers']['priceCurrency'] ?? 'AZN';
@@ -137,6 +138,8 @@ class BinazScraper extends BaseScraper
         $areaSqm = ($areaUnit === 'сот' && $area !== null)
             ? $area * 100
             : $area;
+
+        $areaSqm = $areaSqm ?? ($itemOffered['floorSize']['value'] ?? null);
 
         $this->pauseForHuman();
 
@@ -150,7 +153,8 @@ class BinazScraper extends BaseScraper
             'currency' => $currency,
             'price_per_sqm' => null,
             'area' => $areaSqm,
-            'rooms' => $this->extractPropertyRow($crawler, 'Количество комнат'),
+            'rooms' => $this->extractPropertyRow($crawler, 'Количество комнат')
+                ?? (isset($itemOffered['numberOfRooms']) ? (string) $itemOffered['numberOfRooms'] : null),
             'floor' => $this->extractFloor($crawler),
             'total_floors' => $this->extractTotalFloors($crawler),
             'building_type' => $this->extractPropertyRow($crawler, 'Тип строения'),
