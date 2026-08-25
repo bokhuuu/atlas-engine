@@ -182,6 +182,10 @@ class ListingRepository
             $query->where('has_mortgage', $filters['has_mortgage'] === 'true');
         }
 
+        if (isset($filters['is_new_building']) && $filters['is_new_building'] !== '') {
+            $query->where('is_new_building', $filters['is_new_building'] === 'true');
+        }
+
         if (! empty($filters['scraped_from'])) {
             $query->where('scraped_at', '>=', $filters['scraped_from']);
         }

@@ -174,6 +174,7 @@ class ListingController extends Controller
             'agency',
             'has_bill_of_sale',
             'has_mortgage',
+            'is_new_building',
             'exclude_duplicates',
             'scraped_from',
             'scraped_to',
