@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Atlas API - Multi-Market Real Estate Intelligence",
-        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or https://45-32-154-101.nip.io (production)\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.\n\nThread 14 additions: /api/v1/trends/volume and /api/v1/trends/price for time-series trend charts.\nThread 16 additions: getLocationStats and getDistrictStats AI tools (11 tools total), DELETE assistant/history endpoint to clear chat history.",
+        "description": "REST API for Atlas, a multi-market real estate intelligence platform covering Yerevan, Baku and Tbilisi.\n\nSetup:\n1. Set base_url to http://localhost:8080 (local) or https://45-32-154-101.nip.io (production)\n2. Set market to yerevan, baku or tbilisi (default: yerevan)\n3. Create an API token at /yerevan/admin/tokens\n4. Paste the token into the token variable\n\nAll authenticated endpoints require: Authorization: Bearer {{token}}\n\nMarket-aware endpoints: pass ?market={{market}} to scope results to the selected market.\n\nThread 14 additions: /api/v1/trends/volume and /api/v1/trends/price for time-series trend charts.\nThread 16 additions: getLocationStats and getDistrictStats AI tools (11 tools total), DELETE assistant/history endpoint to clear chat history.\nThread 17 additions: background Excel export (POST /exports/filtered/request + GET /exports/filtered/status/{id} + GET /exports/filtered/download/{id}), is_new_building filter param on /listings/filter and /exports/filtered/request.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "variable": [
@@ -18,7 +18,7 @@
         {
             "key": "source",
             "value": "listam_apartments_sale",
-            "description": "Scraper source key. Yerevan: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale. Baku: binaz_land_sale, binaz_land_sale_sea_breeze"
+            "description": "Scraper source key. Yerevan: listam_apartments_sale, listam_apartments_rent, listam_houses_sale, listam_commercial_sale, listam_commercial_rent, listam_land_sale, listam_new_developments_sale. Baku: binaz_land_sale, binaz_land_sale_sea_breeze, binaz_offices_sale, binaz_offices_rent, binaz_apartments_sale, binaz_apartments_rent, binaz_houses_sale, binaz_houses_rent, binaz_commercial_sale, binaz_commercial_rent"
         },
         {
             "key": "market",
@@ -629,6 +629,12 @@
                                     "disabled": true
                                 },
                                 {
+                                    "key": "is_new_building",
+                                    "value": "",
+                                    "description": "Filter by new build vs secondary: true or false (optional, bina.az apartments only)",
+                                    "disabled": true
+                                },
+                                {
                                     "key": "listing_date_from",
                                     "value": "",
                                     "description": "Filter by listing date from YYYY-MM-DD (optional)",
@@ -642,7 +648,7 @@
                                 }
                             ]
                         },
-                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited — safe for UI polling. All listings returned including probable duplicates — no deduplication applied. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to, has_bill_of_sale, has_mortgage, listing_date_from/to."
+                        "description": "Filter listings by multiple criteria for the Data Hub page. Not rate-limited — safe for UI polling. All listings returned including probable duplicates — no deduplication applied. Supports: source, district, status[], min/max price, min/max area, rooms[], agency, scraped_from/to, has_bill_of_sale, has_mortgage, is_new_building, listing_date_from/to."
                     },
                     "response": [
                         {
