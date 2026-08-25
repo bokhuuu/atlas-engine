@@ -12,6 +12,8 @@ Artisan::command('inspire', function () {
 
 Schedule::command('atlas:capture-screenshots')->dailyAt('00:00');
 
+Schedule::command('scraper:clean-zombies --hours=8')->dailyAt('03:00');
+
 Schedule::command('atlas:fetch-exchange-rates')->dailyAt('04:00');
 
 // Yerevan
