@@ -33,6 +33,7 @@ interface FilterState {
     agency: string;
     has_bill_of_sale: string;
     has_mortgage: string;
+    is_new_building: string;
     scraped_from: string;
     scraped_to: string;
     listing_date_from: string;
@@ -63,6 +64,7 @@ const makeDefault = (categories: Category[]): FilterState => ({
     agency: '',
     has_bill_of_sale: '',
     has_mortgage: '',
+    is_new_building: '',
     scraped_from: '',
     scraped_to: '',
     listing_date_from: '',
@@ -174,6 +176,10 @@ export default function DataHub({ categories, districts }: Props) {
 
             if (f.has_mortgage) {
                 params.set('has_mortgage', f.has_mortgage);
+            }
+
+            if (f.is_new_building) {
+                params.set('is_new_building', f.is_new_building);
             }
 
             if (f.scraped_from) {
@@ -311,6 +317,10 @@ export default function DataHub({ categories, districts }: Props) {
         }
 
         if (filters.has_mortgage) {
+            count++;
+        }
+
+        if (filters.is_new_building) {
             count++;
         }
 
@@ -625,6 +635,32 @@ export default function DataHub({ categories, districts }: Props) {
                                         }
                                         className={chipCls(
                                             filters.has_mortgage === o.value,
+                                        )}
+                                    >
+                                        {o.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            {sectionLabel('New Building')}
+                            <div className="flex flex-wrap gap-2">
+                                {[
+                                    { value: '', label: 'All' },
+                                    { value: 'true', label: '✓ New Build' },
+                                    { value: 'false', label: '✗ Secondary' },
+                                ].map((o) => (
+                                    <button
+                                        key={o.value}
+                                        onClick={() =>
+                                            setFilters((p) => ({
+                                                ...p,
+                                                is_new_building: o.value,
+                                            }))
+                                        }
+                                        className={chipCls(
+                                            filters.is_new_building === o.value,
                                         )}
                                     >
                                         {o.label}
