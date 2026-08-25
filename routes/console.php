@@ -32,8 +32,8 @@ Schedule::command('scraper:run binaz_offices_rent --pages=1')->dailyAt('12:30');
 // Schedule::command('scraper:run binaz_apartments_rent --pages=1')->dailyAt('12:50');
 // Schedule::command('scraper:run binaz_houses_sale --pages=1')->dailyAt('13:00');
 // Schedule::command('scraper:run binaz_houses_rent --pages=1')->dailyAt('13:10');
-// Schedule::command('scraper:run binaz_commercial_sale --pages=1')->dailyAt('13:20');
-// Schedule::command('scraper:run binaz_commercial_rent --pages=1')->dailyAt('13:30');
+Schedule::command('scraper:run binaz_commercial_sale --pages=1')->dailyAt('13:20');
+Schedule::command('scraper:run binaz_commercial_rent --pages=1')->dailyAt('13:30');
 Schedule::command('atlas:embed-listings --source=binaz_land_sale')->dailyAt('14:00');
 Schedule::command('atlas:embed-listings --source=binaz_land_sale_sea_breeze')->dailyAt('14:10');
 Schedule::command('atlas:embed-listings --source=binaz_offices_sale')->dailyAt('14:20');
@@ -43,8 +43,8 @@ Schedule::command('atlas:embed-listings --source=binaz_offices_rent')->dailyAt('
 // Schedule::command('atlas:embed-listings --source=binaz_houses_sale')->dailyAt('15:00');
 // Schedule::command('atlas:embed-listings --source=binaz_houses_rent')->dailyAt('15:10');
 
-// Schedule::command('atlas:embed-listings --source=binaz_commercial_sale')->dailyAt('15:20');
-// Schedule::command('atlas:embed-listings --source=binaz_commercial_rent')->dailyAt('15:30');
+Schedule::command('atlas:embed-listings --source=binaz_commercial_sale')->dailyAt('15:20');
+Schedule::command('atlas:embed-listings --source=binaz_commercial_rent')->dailyAt('15:30');
 // Schedule::command('atlas:capture-screenshots --market=baku')->dailyAt('15:00');
 
 // Requires residential proxies to bypass list.am server IP block on non-browser requests
