@@ -317,7 +317,7 @@ class MyhomeScraper extends BaseScraper
                 const imgs = document.querySelectorAll('.statement-photos img, .gallery img, .swiper-slide img');
                 return Array.from(imgs)
                     .map(img => img.src || img.getAttribute('data-src'))
-                    .filter(src => src && src.includes('tnet.ge'))
+                    .filter(src => src && src.includes('tnet.ge') && !src.includes('_thumb'))
                     .filter((v, i, a) => a.indexOf(v) === i);
             ");
 
