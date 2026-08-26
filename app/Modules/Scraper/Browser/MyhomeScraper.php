@@ -126,7 +126,7 @@ class MyhomeScraper extends BaseScraper
             'total_floors' => isset($statement['total_floors']) ? (string) $statement['total_floors'] : null,
             'district' => $statement['district_name'] ?? null,
             'address' => $statement['address'] ?? null,
-            'description' => $statement['comment'] ?? null,
+            'description' => isset($statement['comment']) ? strip_tags($statement['comment']) : null,
             'building_type' => null,
             'condition' => null,
             'agency_name' => $this->extractAgencyName($statement),
