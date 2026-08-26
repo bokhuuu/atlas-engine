@@ -24,6 +24,7 @@ use App\Modules\Scraper\Profiles\LandForSaleProfile;
 use App\Modules\Scraper\Profiles\LongTermApartmentRentalsProfile;
 use App\Modules\Scraper\Profiles\MyhomeApartmentRentProfile;
 use App\Modules\Scraper\Profiles\MyhomeApartmentSaleProfile;
+use App\Modules\Scraper\Profiles\MyhomeHouseSaleProfile;
 use App\Modules\Scraper\Profiles\NewDevelopmentApartmentsProfile;
 
 return [
@@ -204,6 +205,7 @@ return [
 
         'myhome_apartments_sale' => MyhomeApartmentSaleProfile::class,
         'myhome_apartments_rent' => MyhomeApartmentRentProfile::class,
+        'myhome_houses_sale' => MyhomeHouseSaleProfile::class,
     ],
 
     /*
@@ -417,6 +419,11 @@ return [
             'request_delay' => env('MYHOME_APARTMENTS_RENT_REQUEST_DELAY', 3),
             'max_pages' => env('MYHOME_APARTMENTS_RENT_MAX_PAGES', 1),
             'concurrency' => env('MYHOME_APARTMENTS_SALE_CONCURRENCY', 1),
+        ],
+        'myhome_houses_sale' => [
+            'request_delay' => env('MYHOME_HOUSES_SALE_REQUEST_DELAY', 3),
+            'max_pages' => env('MYHOME_HOUSES_SALE_MAX_PAGES', 1),
+            'concurrency' => env('MYHOME_HOUSES_SALE_CONCURRENCY', 1),
         ],
     ],
 
