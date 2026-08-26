@@ -22,6 +22,7 @@ use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
 use App\Modules\Scraper\Profiles\HousesForSaleProfile;
 use App\Modules\Scraper\Profiles\LandForSaleProfile;
 use App\Modules\Scraper\Profiles\LongTermApartmentRentalsProfile;
+use App\Modules\Scraper\Profiles\MyhomeApartmentRentProfile;
 use App\Modules\Scraper\Profiles\MyhomeApartmentSaleProfile;
 use App\Modules\Scraper\Profiles\NewDevelopmentApartmentsProfile;
 
@@ -202,6 +203,7 @@ return [
         'binaz_commercial_rent' => BinazCommercialRentProfile::class,
 
         'myhome_apartments_sale' => MyhomeApartmentSaleProfile::class,
+        'myhome_apartments_rent' => MyhomeApartmentRentProfile::class,
     ],
 
     /*
@@ -409,6 +411,10 @@ return [
         'myhome_apartments_sale' => [
             'request_delay' => env('MYHOME_APARTMENTS_SALE_REQUEST_DELAY', 3),
             'max_pages' => env('MYHOME_APARTMENTS_SALE_MAX_PAGES', 1),
+        ],
+        'myhome_apartments_rent' => [
+            'request_delay' => env('MYHOME_APARTMENTS_RENT_REQUEST_DELAY', 3),
+            'max_pages' => env('MYHOME_APARTMENTS_RENT_MAX_PAGES', 1),
         ],
     ],
 
