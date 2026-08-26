@@ -22,6 +22,7 @@ use App\Modules\Scraper\Profiles\CommercialForSaleProfile;
 use App\Modules\Scraper\Profiles\HousesForSaleProfile;
 use App\Modules\Scraper\Profiles\LandForSaleProfile;
 use App\Modules\Scraper\Profiles\LongTermApartmentRentalsProfile;
+use App\Modules\Scraper\Profiles\MyhomeApartmentSaleProfile;
 use App\Modules\Scraper\Profiles\NewDevelopmentApartmentsProfile;
 
 return [
@@ -199,6 +200,8 @@ return [
         'binaz_houses_rent' => BinazHouseRentProfile::class,
         'binaz_commercial_sale' => BinazCommercialSaleProfile::class,
         'binaz_commercial_rent' => BinazCommercialRentProfile::class,
+
+        'myhome_apartments_sale' => MyhomeApartmentSaleProfile::class,
     ],
 
     /*
@@ -402,6 +405,11 @@ return [
             'timeout' => env('BINAZ_COMMERCIAL_RENT_TIMEOUT', 1800),
             'concurrency' => env('BINAZ_COMMERCIAL_RENT_CONCURRENCY', 10),
         ],
+
+        'myhome_apartments_sale' => [
+            'request_delay' => env('MYHOME_APARTMENTS_SALE_REQUEST_DELAY', 3),
+            'max_pages' => env('MYHOME_APARTMENTS_SALE_MAX_PAGES', 1),
+        ],
     ],
 
     /*
@@ -418,6 +426,21 @@ return [
     'listam_auth' => [
         'email' => env('LISTAM_EMAIL'),
         'password' => env('LISTAM_PASSWORD'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | myhome.ge Login Credentials
+    |--------------------------------------------------------------------------
+    |
+    | Shared across all myhome.ge category profiles — one login, one account.
+    | Used by AbstractMyhomeProfile::getAuthStrategy() for CookieAuthStrategy.
+    | Never hardcoded — always read from .env.
+    |
+    */
+    'myhome_auth' => [
+        'email' => env('MYHOME_EMAIL'),
+        'password' => env('MYHOME_PASSWORD'),
     ],
 
     /*
@@ -963,6 +986,110 @@ return [
                 'Хорошее' => 'Good',
                 'Среднее' => 'Average',
                 'Требует ремонта' => 'Needs renovation',
+            ],
+        ],
+
+        'tbilisi' => [
+            // Parent district aliases — maps parent name variations to canonical form
+            'parent_districts' => [
+                'Vake-Saburtalo' => 'Vake-Saburtalo',
+                'Isani-Samgori' => 'Isani-Samgori',
+                'Gldani-Nadzaladevi' => 'Gldani-Nadzaladevi',
+                'Didube-Chugureti' => 'Didube-Chugureti',
+                'Suburbs of Tbilisi' => 'Suburbs of Tbilisi',
+                'Old Tbilisi' => 'Old Tbilisi',
+            ],
+
+            // Sub-district → parent district mapping
+            // Source: myhome.ge location picker (English interface)
+            'districts' => [
+                // Vake-Saburtalo
+                'Vake' => 'Vake-Saburtalo',
+                'Vashlijvari' => 'Vake-Saburtalo',
+                'Vedzisi' => 'Vake-Saburtalo',
+                'Tkhinvali' => 'Vake-Saburtalo',
+                'Turtle lake' => 'Vake-Saburtalo',
+                'Lisi lake' => 'Vake-Saburtalo',
+                'Mukhatgverdi' => 'Vake-Saburtalo',
+                'Mukhattskaro' => 'Vake-Saburtalo',
+                'Saburtalo' => 'Vake-Saburtalo',
+                'Bagebi' => 'Vake-Saburtalo',
+                'Sop. Dighomi' => 'Vake-Saburtalo',
+                'Koshigora' => 'Vake-Saburtalo',
+                'Digomi 1-9' => 'Vake-Saburtalo',
+                'Nusubidze plateau' => 'Vake-Saburtalo',
+                'Nutsibidze plateau' => 'Vake-Saburtalo',
+                'Didgori' => 'Vake-Saburtalo',
+                'Didi digomi' => 'Vake-Saburtalo',
+                'Dighomi Tchala' => 'Vake-Saburtalo',
+
+                // Isani-Samgori
+                'Varketili' => 'Isani-Samgori',
+                'Isani' => 'Isani-Samgori',
+                'Lilo' => 'Isani-Samgori',
+                'Mesame masivi' => 'Isani-Samgori',
+                'Moscow Ave' => 'Isani-Samgori',
+                'Africa' => 'Isani-Samgori',
+                'Airport Dasakhleba' => 'Isani-Samgori',
+                'Dampalo Dasakhleba' => 'Isani-Samgori',
+                'Vazisubani' => 'Isani-Samgori',
+                'Navtlugi' => 'Isani-Samgori',
+                'Orkhevi' => 'Isani-Samgori',
+                'Samgori' => 'Isani-Samgori',
+                'Ponichala' => 'Isani-Samgori',
+
+                // Gldani-Nadzaladevi
+                'Gldani' => 'Gldani-Nadzaladevi',
+                'Gldanula' => 'Gldani-Nadzaladevi',
+                'Tbilisi sea' => 'Gldani-Nadzaladevi',
+                'Temqa' => 'Gldani-Nadzaladevi',
+                'Koniaki Dasakhleba' => 'Gldani-Nadzaladevi',
+                'Lotkini' => 'Gldani-Nadzaladevi',
+                'Mukhiani' => 'Gldani-Nadzaladevi',
+                'Nadzaladevi' => 'Gldani-Nadzaladevi',
+                'Sanzona' => 'Gldani-Nadzaladevi',
+                'Avshniani' => 'Gldani-Nadzaladevi',
+                'Avchala' => 'Gldani-Nadzaladevi',
+                'Zahesi' => 'Gldani-Nadzaladevi',
+                'Gldani village' => 'Gldani-Nadzaladevi',
+                'Giorgitsminda' => 'Gldani-Nadzaladevi',
+
+                // Didube-Chugureti
+                'Didube' => 'Didube-Chugureti',
+                'Digomi' => 'Didube-Chugureti',
+                'Kukia' => 'Didube-Chugureti',
+                'Chugureti' => 'Didube-Chugureti',
+                'Ivertuban' => 'Didube-Chugureti',
+                'Svanetis ubani' => 'Didube-Chugureti',
+                'Elia' => 'Didube-Chugureti',
+                'Vera' => 'Didube-Chugureti',
+                'Krtsanisi' => 'Didube-Chugureti',
+                'Mtatsminda' => 'Didube-Chugureti',
+                'Sololaki' => 'Didube-Chugureti',
+                'Tsavkis Valley' => 'Didube-Chugureti',
+                'Abanotubani' => 'Didube-Chugureti',
+                'Avlabari' => 'Didube-Chugureti',
+                'Ortachala' => 'Didube-Chugureti',
+
+                // Suburbs of Tbilisi
+                'Tsveri' => 'Suburbs of Tbilisi',
+                'Akhaldaba' => 'Suburbs of Tbilisi',
+                'Betania' => 'Suburbs of Tbilisi',
+                'Kakebi' => 'Suburbs of Tbilisi',
+                'Kiketi' => 'Suburbs of Tbilisi',
+                'Kojori' => 'Suburbs of Tbilisi',
+                'Oqrokana' => 'Suburbs of Tbilisi',
+                'Tabakhmela' => 'Suburbs of Tbilisi',
+                'Shindisi' => 'Suburbs of Tbilisi',
+                'Tsavkisi' => 'Suburbs of Tbilisi',
+                'Tsakneti' => 'Suburbs of Tbilisi',
+                'Mskhaldidi' => 'Suburbs of Tbilisi',
+                'Tsodoreti' => 'Suburbs of Tbilisi',
+                'Upper Lisi' => 'Suburbs of Tbilisi',
+                'Kveseti' => 'Suburbs of Tbilisi',
+
+                // Old Tbilisi
+                'Old Tbilisi' => 'Old Tbilisi',
             ],
         ],
     ],
