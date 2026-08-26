@@ -15,9 +15,10 @@ use Throwable;
  *   - Cloudflare protection requires a real browser session
  *   - Phone number reveals require authenticated session + JS interaction
  *
- * Phone extraction is written but dormant - extractPhone() exists but is
- * not called from crawlDetailPage(). Enable by adding CleanPhoneStage to
- * the pipeline when Colliers requests phone data.
+ * Data extraction strategy:
+ *   myhome.ge (Next.js SSR) embeds all listing data as structured JSON in
+ *   <script id="__NEXT_DATA__"> on every detail page. We extract this once
+ *   and map fields directly — no fragile DOM selectors needed.
  *
  * Auth: CookieAuthStrategy + FormLoginStrategy (identical to list.am).
  * Cookies stored at storage/app/scraper/cookies/{profileName}.json.
@@ -26,7 +27,7 @@ use Throwable;
  *
  * Index page selector strategy:
  *   All <a href="/en/real-estate/..."> links are collected, then filtered
- *   in PHP to keep only listing detail URLs (those ending with a numeric ID).
+ *   in PHP to keep only genuine listing URLs (those ending with a numeric ID).
  *   Nav and footer links match the href pattern but lack the numeric ID suffix.
  */
 class MyhomeScraper extends BaseScraper
@@ -94,6 +95,12 @@ class MyhomeScraper extends BaseScraper
     /**
      * Visit one listing detail page and extract all available fields.
      *
+     * myhome.ge (Next.js SSR) embeds all listing data as structured JSON
+     * in a <script id="__NEXT_DATA__"> tag on every detail page.
+     * We extract this JSON once and map fields directly — no DOM selectors needed.
+     *
+     * JSON path: pageProps.dehydratedState.queries[n].state.data.statement
+     *
      * Returns a raw key-value array - pipeline stages clean and normalize.
      * All fields are nullable - missing data never crashes the scrape.
      */
@@ -102,29 +109,31 @@ class MyhomeScraper extends BaseScraper
         $this->navigate($url);
         $this->browser->script(StealthConfig::javascriptPatches());
 
+        $statement = $this->extractNextData();
+
         return [
             'external_id' => $this->extractId($url),
             'url' => strtok($url, '?'),
             'source_profile_name' => $this->profile->getName(),
             'listing_type' => $this->profile->getListingType(),
             'property_type' => $this->profile->getPropertyType(),
-            'price' => $this->extractPrice(),
+            'price' => $this->extractPrice($statement),
             'currency' => 'GEL',
             'price_per_sqm' => null,
-            'area' => $this->extractArea(),
-            'rooms' => $this->extractRooms(),
-            'floor' => $this->extractFloor(),
-            'total_floors' => $this->extractTotalFloors(),
-            'district' => $this->extractDistrict(),
-            'address' => $this->extractAddress(),
-            'description' => $this->extractDescription(),
+            'area' => isset($statement['area']) ? (string) $statement['area'] : null,
+            'rooms' => isset($statement['room_type_id']) ? (string) $statement['room_type_id'] : null,
+            'floor' => isset($statement['floor']) ? (string) $statement['floor'] : null,
+            'total_floors' => isset($statement['total_floors']) ? (string) $statement['total_floors'] : null,
+            'district' => $statement['district_name'] ?? null,
+            'address' => $statement['address'] ?? null,
+            'description' => $statement['comment'] ?? null,
             'building_type' => null,
-            'condition' => $this->extractCondition(),
-            'agency_name' => $this->extractAgencyName(),
+            'condition' => null,
+            'agency_name' => $this->extractAgencyName($statement),
             'phone' => $this->extractPhone(),
             'image_urls' => $this->extractImageUrls(),
-            'listing_date' => $this->extractListingDate(),
-            'extras' => $this->extractExtras(),
+            'listing_date' => $statement['last_updated'] ?? $statement['created_at'] ?? null,
+            'extras' => $this->extractExtras($statement),
             'scraped_at' => $this->scrapedAt(),
         ];
     }
@@ -144,8 +153,54 @@ class MyhomeScraper extends BaseScraper
      */
     protected function isListingUrl(string $href): bool
     {
-        // Must match /en/real-estate/{anything}-{digits}/ or end with digits
         return (bool) preg_match('#/en/real-estate/[^/]+-\d+/?$#', $href);
+    }
+
+    // -------------------------------------------------------------------------
+    // __NEXT_DATA__ extraction
+    // -------------------------------------------------------------------------
+
+    /**
+     * Extract the statement object from Next.js __NEXT_DATA__ JSON.
+     *
+     * myhome.ge embeds all page data in a <script id="__NEXT_DATA__"> tag.
+     * The statement data lives at:
+     *   pageProps.dehydratedState.queries[n].state.data.statement
+     *
+     * We find the query whose data contains a "statement" key with an "id" field.
+     * Returns empty array if extraction fails — all fields will be null.
+     */
+    protected function extractNextData(): array
+    {
+        try {
+            $result = $this->browser->script("
+                const el = document.querySelector('#__NEXT_DATA__');
+                if (!el) return null;
+                const data = JSON.parse(el.textContent);
+                const queries = data?.props?.pageProps?.dehydratedState?.queries ?? [];
+                for (const query of queries) {
+                    const statement = query?.state?.data?.statement;
+                    if (statement && statement.id) {
+                        return JSON.stringify(statement);
+                    }
+                    const data2 = query?.state?.data?.data?.statement;
+                    if (data2 && data2.id) {
+                        return JSON.stringify(data2);
+                    }
+                }
+                return null;
+            ");
+
+            $json = $result[0] ?? null;
+
+            if ($json === null) {
+                return [];
+            }
+
+            return json_decode($json, true) ?? [];
+        } catch (Throwable) {
+            return [];
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -171,274 +226,44 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Extract the GEL price from the listing detail page.
+     * Extract GEL price from statement JSON.
      *
-     * myhome.ge renders the price as text with the ₾ symbol.
-     * We extract the numeric value via JavaScript to avoid locale parsing issues.
+     * myhome.ge price object: {"1": {"price_total": 1072273, ...}, "2": {...}}
+     * Currency IDs: 1 = GEL, 2 = USD, 3 = EUR.
+     * We always store GEL (currency_id=1) — pipeline converts to USD.
      */
-    private function extractPrice(): ?string
+    private function extractPrice(array $statement): ?string
     {
-        try {
-            $result = $this->browser->script("
-                const el = document.querySelector('.statement-price .price-value');
-                if (el) return el.textContent.replace(/[^0-9.]/g, '').trim();
+        // price_total in GEL (currency_id=1)
+        $gelPrice = $statement['price']['1']['price_total'] ?? null;
 
-                // Fallback: look for price in the meta tag
-                const meta = document.querySelector('meta[property=\"product:price:amount\"]');
-                if (meta) return meta.getAttribute('content');
-
-                return null;
-            ");
-
-            $value = $result[0] ?? null;
-
-            return ($value !== null && $value !== '') ? (string) $value : null;
-        } catch (Throwable) {
-            return null;
+        if ($gelPrice !== null) {
+            return (string) $gelPrice;
         }
+
+        // Fallback: total_price field (also GEL)
+        $totalPrice = $statement['total_price'] ?? null;
+
+        return $totalPrice !== null ? (string) $totalPrice : null;
     }
 
     /**
-     * Extract area in square metres.
+     * Extract agency name from statement JSON.
      *
-     * myhome.ge shows area in the stats row: "Area\n55 m²"
-     * We find the Area label and read the adjacent value.
+     * myhome.ge shows is_owner boolean — if true, listing is by owner → return null.
+     * If false, return owner_name as agency name.
      */
-    private function extractArea(): ?string
+    private function extractAgencyName(array $statement): ?string
     {
-        try {
-            $result = $this->browser->script("
-                const labels = document.querySelectorAll('.statement-parameters .parameter-item');
-                for (const item of labels) {
-                    const label = item.querySelector('.parameter-label');
-                    const value = item.querySelector('.parameter-value');
-                    if (label && value && label.textContent.trim() === 'Area') {
-                        return value.textContent.replace(/[^0-9.]/g, '').trim();
-                    }
-                }
+        $isOwner = $statement['is_owner'] ?? true;
 
-                // Fallback: find the Area stat block
-                const statBlocks = document.querySelectorAll('.d-flex.align-items-center');
-                for (const block of statBlocks) {
-                    if (block.textContent.includes('Area')) {
-                        const match = block.textContent.match(/(\d+\.?\d*)\s*m²/);
-                        if (match) return match[1];
-                    }
-                }
-
-                return null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract number of rooms from the stats row.
-     */
-    private function extractRooms(): ?string
-    {
-        return $this->extractStatValue('Rooms');
-    }
-
-    /**
-     * Extract floor number from "Floor" stat (format "4 / 18" → "4").
-     */
-    private function extractFloor(): ?string
-    {
-        $value = $this->extractStatValue('Floor');
-
-        if ($value === null) {
+        if ($isOwner) {
             return null;
         }
 
-        if (str_contains($value, '/')) {
-            return trim(explode('/', $value)[0]);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Extract total floors from "Floor" stat (format "4 / 18" → "18").
-     */
-    private function extractTotalFloors(): ?string
-    {
-        $value = $this->extractStatValue('Floor');
-
-        if ($value === null || ! str_contains($value, '/')) {
-            return null;
-        }
-
-        return trim(explode('/', $value)[1]);
-    }
-
-    /**
-     * Extract a value from the listing stats row by label name.
-     *
-     * myhome.ge detail page shows stats as icon + label + value blocks.
-     * This covers Area, Rooms, Bedroom, Floor.
-     */
-    private function extractStatValue(string $label): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const labelEl = label => {
-                    const labels = document.querySelectorAll('.statement-parameters .parameter-label, .d-flex .text-secondary');
-                    for (const el of labels) {
-                        if (el.textContent.trim() === '{$label}') {
-                            const parent = el.closest('.d-flex, .parameter-item');
-                            if (parent) {
-                                const value = parent.querySelector('.parameter-value, .fw-medium, .text-dark');
-                                if (value) return value.textContent.trim();
-                            }
-                        }
-                    }
-                    return null;
-                };
-                return labelEl();
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract district from the breadcrumb navigation.
-     *
-     * Breadcrumb: Sale → Apartment → Tbilisi → Vake-Saburtalo → Saburtalo
-     * We take the second-to-last breadcrumb item (parent district level).
-     * This is "Vake-Saburtalo" in the example above.
-     *
-     * NormalizeToEnglishMyhomeStage will map it to a canonical district name.
-     */
-    private function extractDistrict(): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const items = document.querySelectorAll('.breadcrumb-item, nav[aria-label=\"breadcrumb\"] a, .breadcrumb a');
-                const breadcrumbs = Array.from(items).map(el => el.textContent.trim()).filter(t => t.length > 0);
-
-                // Breadcrumb: Sale > Apartment > Tbilisi > Vake-Saburtalo > Saburtalo
-                // We want the second-to-last item (parent district), index -2
-                if (breadcrumbs.length >= 2) {
-                    return breadcrumbs[breadcrumbs.length - 2];
-                }
-
-                return null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract full address string from the listing page.
-     *
-     * myhome.ge shows address below the title: "Vazha-Pshavela Avenue 71"
-     */
-    private function extractAddress(): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const el = document.querySelector('.statement-address, .address-text, a[href*=\"maps\"]');
-                return el ? el.textContent.trim() : null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract the listing description text.
-     *
-     * myhome.ge shows a "Short description" section with Georgian text.
-     * Full text may be behind a "See more" button - we grab what is visible.
-     * TranslationService translates Georgian → English at pipeline time.
-     */
-    private function extractDescription(): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const el = document.querySelector('.statement-description, .short-description p, .description-text');
-                return el ? el.textContent.trim() : null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract condition from "Addition parameters" section.
-     *
-     * myhome.ge shows: Status, Condition, Type of project as labeled pairs.
-     * Example: Condition → "Newly renovated"
-     */
-    private function extractCondition(): ?string
-    {
-        return $this->extractAdditionParameter('Condition');
-    }
-
-    /**
-     * Extract a value from the "Addition parameters" section by label.
-     *
-     * Used for: Condition, Status, Type of project, Bathrooms, etc.
-     */
-    private function extractAdditionParameter(string $label): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const items = document.querySelectorAll('.addition-parameters .parameter-item, .additional-params .item');
-                for (const item of items) {
-                    const labelEl = item.querySelector('.param-label, .label, p:first-child');
-                    const valueEl = item.querySelector('.param-value, .value, p:last-child');
-                    if (labelEl && valueEl && labelEl.textContent.trim() === '{$label}') {
-                        return valueEl.textContent.trim();
-                    }
-                }
-                return null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
-     * Extract agency or owner name from the contact block.
-     *
-     * myhome.ge shows either "Owner" or the agent/agency name.
-     * Returns null for owner listings — consistent with other markets.
-     */
-    private function extractAgencyName(): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const typeEl = document.querySelector('.contact-type, .user-type, .badge-owner');
-                if (typeEl) {
-                    const type = typeEl.textContent.trim().toLowerCase();
-                    if (type === 'owner') return null;
-                }
-
-                const nameEl = document.querySelector('.contact-name, .agent-name, .company-name');
-                return nameEl ? nameEl.textContent.trim() : null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
+        return isset($statement['owner_name']) && $statement['owner_name'] !== ''
+            ? $statement['owner_name']
+            : null;
     }
 
     /**
@@ -462,7 +287,6 @@ class MyhomeScraper extends BaseScraper
             $this->ensureAuthenticated();
             $this->click($showButton);
 
-            // Wait for the phone number to appear after the button click
             $this->waitFor('.phone-number, .revealed-phone, a[href^="tel:"]', 5);
 
             $result = $this->browser->script("
@@ -481,6 +305,10 @@ class MyhomeScraper extends BaseScraper
 
     /**
      * Extract listing image URLs from the photo gallery.
+     *
+     * Images are still read from the DOM — they are not in __NEXT_DATA__.
+     * Filters to only TNet CDN URLs to exclude tracking pixels.
+     * Deduplicates to exclude thumbnail variants.
      */
     private function extractImageUrls(): array
     {
@@ -500,62 +328,56 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Extract listing date from the page.
-     *
-     * myhome.ge shows date as "Today at 3:45 PM" or "24 Aug. 12:54".
-     * We store the raw string - pipeline normalizes if needed.
-     */
-    private function extractListingDate(): ?string
-    {
-        try {
-            $result = $this->browser->script("
-                const el = document.querySelector('.statement-date, .listing-date, time');
-                if (el) {
-                    const datetime = el.getAttribute('datetime');
-                    if (datetime) return datetime;
-                    return el.textContent.trim();
-                }
-                return null;
-            ");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
-    }
-
-    /**
      * Extract myhome.ge-specific fields into the extras JSONB column.
      *
-     * Stores building status and original GEL price for reference.
-     * Pipeline converts GEL → USD — original preserved here.
+     * Stores sub-district, building status, USD price, coordinates,
+     * and original GEL price for reference after USD conversion.
      */
-    private function extractExtras(): array
+    private function extractExtras(array $statement): array
     {
         $extras = [];
 
-        // Building status: New building / Old building / Under construction
-        $status = $this->extractAdditionParameter('Status');
-        if ($status !== null) {
-            $extras['building_status'] = $status;
+        // Sub-district (more granular than district_name)
+        if (isset($statement['urban_name']) && $statement['urban_name'] !== '') {
+            $extras['sub_district'] = $statement['urban_name'];
         }
 
-        // Type of project: Non-standard, Standard, etc.
-        $projectType = $this->extractAdditionParameter('Type of project');
-        if ($projectType !== null) {
-            $extras['project_type'] = $projectType;
+        // Original GEL price for reference
+        $gelPrice = $statement['price']['1']['price_total'] ?? $statement['total_price'] ?? null;
+        if ($gelPrice !== null) {
+            $extras['original_price_gel'] = (string) $gelPrice;
         }
 
-        // Bathrooms count
-        $bathrooms = $this->extractAdditionParameter('Bathrooms');
-        if ($bathrooms !== null) {
-            $extras['bathrooms'] = $bathrooms;
+        // USD price from myhome.ge (their own conversion)
+        $usdPrice = $statement['price']['2']['price_total'] ?? null;
+        if ($usdPrice !== null) {
+            $extras['myhome_price_usd'] = (string) $usdPrice;
         }
 
-        // Original GEL price stored for reference after USD conversion
-        $price = $this->extractPrice();
-        if ($price !== null) {
-            $extras['original_price_gel'] = $price;
+        // Building status id (1=old, 2=new, 3=under construction)
+        if (isset($statement['status_id'])) {
+            $extras['status_id'] = $statement['status_id'];
+        }
+
+        // Coordinates
+        if (isset($statement['lat'], $statement['lng'])) {
+            $extras['lat'] = $statement['lat'];
+            $extras['lng'] = $statement['lng'];
+        }
+
+        // Bedroom count
+        if (isset($statement['bedroom_type_id'])) {
+            $extras['bedrooms'] = $statement['bedroom_type_id'];
+        }
+
+        // Bathroom count
+        if (isset($statement['bathroom_type_id'])) {
+            $extras['bathrooms'] = $statement['bathroom_type_id'];
+        }
+
+        // Ceiling height in cm
+        if (isset($statement['height']) && $statement['height'] > 0) {
+            $extras['ceiling_height'] = $statement['height'];
         }
 
         return $extras;
