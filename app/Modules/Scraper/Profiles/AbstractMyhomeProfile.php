@@ -191,6 +191,28 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
     }
 
     /**
+     * Queue config for myhome.ge profiles.
+     *
+     * Concurrency must be 1 — each job opens a Chrome browser session.
+     * Running multiple sessions simultaneously saturates the Selenium Grid
+     * and causes Chrome to hang without failing cleanly.
+     */
+    public function getQueueConfig(): array
+    {
+        return [
+            'concurrency' => (int) config(
+                "scraper.profile_config.{$this->getName()}.concurrency",
+                1
+            ),
+            'retry_times' => (int) config('scraper.default_retry_times'),
+            'timeout' => (int) config(
+                "scraper.profile_config.{$this->getName()}.timeout",
+                config('scraper.default_timeout_s')
+            ),
+        ];
+    }
+
+    /**
      * Auth strategy — CookieAuthStrategy with FormLoginStrategy fallback.
      *
      * Identical pattern to list.am. Cookie file scoped per profile name.
