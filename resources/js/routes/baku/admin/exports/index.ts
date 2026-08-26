@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 export const download = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ download.definition = {
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 download.url = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ download.url = (args: { source: string | number } | [source: string | number ] |
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 download.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ download.get = (args: { source: string | number } | [source: string | number ] |
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 download.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ download.head = (args: { source: string | number } | [source: string | number ] 
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 const downloadForm = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -73,7 +73,7 @@ const downloadForm = (args: { source: string | number } | [source: string | numb
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 downloadForm.get = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -83,7 +83,7 @@ downloadForm.get = (args: { source: string | number } | [source: string | number
 
 /**
 * @see \App\Modules\Scraper\Api\ExportController::download
-* @see app/Modules/Scraper/Api/ExportController.php:56
+* @see app/Modules/Scraper/Api/ExportController.php:59
 * @route '/baku/admin/exports/{source}'
 */
 downloadForm.head = (args: { source: string | number } | [source: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
