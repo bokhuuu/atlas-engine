@@ -418,7 +418,7 @@ return [
         'myhome_apartments_rent' => [
             'request_delay' => env('MYHOME_APARTMENTS_RENT_REQUEST_DELAY', 3),
             'max_pages' => env('MYHOME_APARTMENTS_RENT_MAX_PAGES', 1),
-            'concurrency' => env('MYHOME_APARTMENTS_SALE_CONCURRENCY', 1),
+            'concurrency' => env('MYHOME_APARTMENTS_RENT_CONCURRENCY', 1),
         ],
         'myhome_houses_sale' => [
             'request_delay' => env('MYHOME_HOUSES_SALE_REQUEST_DELAY', 3),
