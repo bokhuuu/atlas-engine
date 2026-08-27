@@ -24,6 +24,7 @@ use App\Modules\Scraper\Profiles\LandForSaleProfile;
 use App\Modules\Scraper\Profiles\LongTermApartmentRentalsProfile;
 use App\Modules\Scraper\Profiles\MyhomeApartmentRentProfile;
 use App\Modules\Scraper\Profiles\MyhomeApartmentSaleProfile;
+use App\Modules\Scraper\Profiles\MyhomeCountryHouseSaleProfile;
 use App\Modules\Scraper\Profiles\MyhomeHouseRentProfile;
 use App\Modules\Scraper\Profiles\MyhomeHouseSaleProfile;
 use App\Modules\Scraper\Profiles\NewDevelopmentApartmentsProfile;
@@ -208,6 +209,7 @@ return [
         'myhome_apartments_rent' => MyhomeApartmentRentProfile::class,
         'myhome_houses_sale' => MyhomeHouseSaleProfile::class,
         'myhome_houses_rent' => MyhomeHouseRentProfile::class,
+        'myhome_country_houses_sale' => MyhomeCountryHouseSaleProfile::class,
     ],
 
     /*
@@ -431,6 +433,11 @@ return [
             'request_delay' => env('MYHOME_HOUSES_RENT_REQUEST_DELAY', 3),
             'max_pages' => env('MYHOME_HOUSES_RENT_MAX_PAGES', 1),
             'concurrency' => env('MYHOME_HOUSES_RENT_CONCURRENCY', 1),
+        ],
+        'myhome_country_houses_sale' => [
+            'request_delay' => env('MYHOME_COUNTRY_HOUSES_SALE_REQUEST_DELAY', 3),
+            'max_pages' => env('MYHOME_COUNTRY_HOUSES_SALE_MAX_PAGES', 1),
+            'concurrency' => env('MYHOME_COUNTRY_HOUSES_SALE_CONCURRENCY', 1),
         ],
     ],
 
