@@ -42,6 +42,7 @@ class CategoryLabels
         'myhome_country_houses_rent' => 'Country Houses for Rent',
         'myhome_land_sale' => 'Land for Sale',
         'myhome_commercial_sale' => 'Commercial for Sale',
+        'myhome_commercial_rent' => 'Commercial for Rent',
     ];
 
     public static function forSource(string $source): string
