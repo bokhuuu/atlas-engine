@@ -327,6 +327,274 @@ export const index = {
     '/global/admin/assistant': index7808950a53064d68031fe5cf427f74ec,
 }
 
-const AssistantController = { index }
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/yerevan/admin/assistant/history'
+*/
+const clearHistory82dec07432eee2055753e7b9a4d50fc5 = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory82dec07432eee2055753e7b9a4d50fc5.url(options),
+    method: 'delete',
+})
+
+clearHistory82dec07432eee2055753e7b9a4d50fc5.definition = {
+    methods: ["delete"],
+    url: '/yerevan/admin/assistant/history',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/yerevan/admin/assistant/history'
+*/
+clearHistory82dec07432eee2055753e7b9a4d50fc5.url = (options?: RouteQueryOptions) => {
+    return clearHistory82dec07432eee2055753e7b9a4d50fc5.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/yerevan/admin/assistant/history'
+*/
+clearHistory82dec07432eee2055753e7b9a4d50fc5.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory82dec07432eee2055753e7b9a4d50fc5.url(options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/yerevan/admin/assistant/history'
+*/
+const clearHistory82dec07432eee2055753e7b9a4d50fc5Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory82dec07432eee2055753e7b9a4d50fc5.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/yerevan/admin/assistant/history'
+*/
+clearHistory82dec07432eee2055753e7b9a4d50fc5Form.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory82dec07432eee2055753e7b9a4d50fc5.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+clearHistory82dec07432eee2055753e7b9a4d50fc5.form = clearHistory82dec07432eee2055753e7b9a4d50fc5Form
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/baku/admin/assistant/history'
+*/
+const clearHistoryc43b66c94a974919f6dc127040955e96 = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistoryc43b66c94a974919f6dc127040955e96.url(options),
+    method: 'delete',
+})
+
+clearHistoryc43b66c94a974919f6dc127040955e96.definition = {
+    methods: ["delete"],
+    url: '/baku/admin/assistant/history',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/baku/admin/assistant/history'
+*/
+clearHistoryc43b66c94a974919f6dc127040955e96.url = (options?: RouteQueryOptions) => {
+    return clearHistoryc43b66c94a974919f6dc127040955e96.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/baku/admin/assistant/history'
+*/
+clearHistoryc43b66c94a974919f6dc127040955e96.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistoryc43b66c94a974919f6dc127040955e96.url(options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/baku/admin/assistant/history'
+*/
+const clearHistoryc43b66c94a974919f6dc127040955e96Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistoryc43b66c94a974919f6dc127040955e96.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/baku/admin/assistant/history'
+*/
+clearHistoryc43b66c94a974919f6dc127040955e96Form.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistoryc43b66c94a974919f6dc127040955e96.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+clearHistoryc43b66c94a974919f6dc127040955e96.form = clearHistoryc43b66c94a974919f6dc127040955e96Form
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/tbilisi/admin/assistant/history'
+*/
+const clearHistory63a31d4f284399f1239e35d7442efc68 = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory63a31d4f284399f1239e35d7442efc68.url(options),
+    method: 'delete',
+})
+
+clearHistory63a31d4f284399f1239e35d7442efc68.definition = {
+    methods: ["delete"],
+    url: '/tbilisi/admin/assistant/history',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/tbilisi/admin/assistant/history'
+*/
+clearHistory63a31d4f284399f1239e35d7442efc68.url = (options?: RouteQueryOptions) => {
+    return clearHistory63a31d4f284399f1239e35d7442efc68.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/tbilisi/admin/assistant/history'
+*/
+clearHistory63a31d4f284399f1239e35d7442efc68.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory63a31d4f284399f1239e35d7442efc68.url(options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/tbilisi/admin/assistant/history'
+*/
+const clearHistory63a31d4f284399f1239e35d7442efc68Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory63a31d4f284399f1239e35d7442efc68.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/tbilisi/admin/assistant/history'
+*/
+clearHistory63a31d4f284399f1239e35d7442efc68Form.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory63a31d4f284399f1239e35d7442efc68.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+clearHistory63a31d4f284399f1239e35d7442efc68.form = clearHistory63a31d4f284399f1239e35d7442efc68Form
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/global/admin/assistant/history'
+*/
+const clearHistory6aaee98d8d43c51f2879f4e35b77357b = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory6aaee98d8d43c51f2879f4e35b77357b.url(options),
+    method: 'delete',
+})
+
+clearHistory6aaee98d8d43c51f2879f4e35b77357b.definition = {
+    methods: ["delete"],
+    url: '/global/admin/assistant/history',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/global/admin/assistant/history'
+*/
+clearHistory6aaee98d8d43c51f2879f4e35b77357b.url = (options?: RouteQueryOptions) => {
+    return clearHistory6aaee98d8d43c51f2879f4e35b77357b.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/global/admin/assistant/history'
+*/
+clearHistory6aaee98d8d43c51f2879f4e35b77357b.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: clearHistory6aaee98d8d43c51f2879f4e35b77357b.url(options),
+    method: 'delete',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/global/admin/assistant/history'
+*/
+const clearHistory6aaee98d8d43c51f2879f4e35b77357bForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory6aaee98d8d43c51f2879f4e35b77357b.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Admin\AssistantController::clearHistory
+* @see app/Http/Controllers/Admin/AssistantController.php:32
+* @route '/global/admin/assistant/history'
+*/
+clearHistory6aaee98d8d43c51f2879f4e35b77357bForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: clearHistory6aaee98d8d43c51f2879f4e35b77357b.url({
+        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+            _method: 'DELETE',
+            ...(options?.query ?? options?.mergeQuery ?? {}),
+        }
+    }),
+    method: 'post',
+})
+
+clearHistory6aaee98d8d43c51f2879f4e35b77357b.form = clearHistory6aaee98d8d43c51f2879f4e35b77357bForm
+
+export const clearHistory = {
+    '/yerevan/admin/assistant/history': clearHistory82dec07432eee2055753e7b9a4d50fc5,
+    '/baku/admin/assistant/history': clearHistoryc43b66c94a974919f6dc127040955e96,
+    '/tbilisi/admin/assistant/history': clearHistory63a31d4f284399f1239e35d7442efc68,
+    '/global/admin/assistant/history': clearHistory6aaee98d8d43c51f2879f4e35b77357b,
+}
+
+const AssistantController = { index, clearHistory }
 
 export default AssistantController

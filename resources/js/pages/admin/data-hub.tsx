@@ -19,6 +19,9 @@ interface Category {
 interface Props {
     categories: Category[];
     districts: string[];
+    show_bill_of_sale: boolean;
+    show_mortgage: boolean;
+    show_new_building: boolean;
 }
 
 interface FilterState {
@@ -109,7 +112,13 @@ function validate(f: FilterState): ValidationErrors {
     return errors;
 }
 
-export default function DataHub({ categories, districts }: Props) {
+export default function DataHub({
+    categories,
+    districts,
+    show_bill_of_sale,
+    show_mortgage,
+    show_new_building,
+}: Props) {
     const { adminUrl, market } = useMarket();
     const [filters, setFilters] = useState<FilterState>(
         makeDefault(categories),
@@ -584,90 +593,107 @@ export default function DataHub({ categories, districts }: Props) {
                             </div>
                         </div>
 
-                        <div>
-                            {sectionLabel('Bill of Sale (Купчая)')}
-                            <div className="flex flex-wrap gap-2">
-                                {[
-                                    { value: '', label: 'All' },
-                                    {
-                                        value: 'true',
-                                        label: '✓ Has Bill of Sale',
-                                    },
-                                    {
-                                        value: 'false',
-                                        label: '✗ No Bill of Sale',
-                                    },
-                                ].map((o) => (
-                                    <button
-                                        key={o.value}
-                                        onClick={() =>
-                                            setFilters((p) => ({
-                                                ...p,
-                                                has_bill_of_sale: o.value,
-                                            }))
-                                        }
-                                        className={chipCls(
-                                            filters.has_bill_of_sale ===
-                                                o.value,
-                                        )}
-                                    >
-                                        {o.label}
-                                    </button>
-                                ))}
+                        {show_bill_of_sale && (
+                            <div>
+                                {sectionLabel('Bill of Sale (Купчая)')}
+                                <div className="flex flex-wrap gap-2">
+                                    {[
+                                        { value: '', label: 'All' },
+                                        {
+                                            value: 'true',
+                                            label: '✓ Has Bill of Sale',
+                                        },
+                                        {
+                                            value: 'false',
+                                            label: '✗ No Bill of Sale',
+                                        },
+                                    ].map((o) => (
+                                        <button
+                                            key={o.value}
+                                            onClick={() =>
+                                                setFilters((p) => ({
+                                                    ...p,
+                                                    has_bill_of_sale: o.value,
+                                                }))
+                                            }
+                                            className={chipCls(
+                                                filters.has_bill_of_sale ===
+                                                    o.value,
+                                            )}
+                                        >
+                                            {o.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        <div>
-                            {sectionLabel('Mortgage (Ипотека)')}
-                            <div className="flex flex-wrap gap-2">
-                                {[
-                                    { value: '', label: 'All' },
-                                    { value: 'true', label: '✓ Has Mortgage' },
-                                    { value: 'false', label: '✗ No Mortgage' },
-                                ].map((o) => (
-                                    <button
-                                        key={o.value}
-                                        onClick={() =>
-                                            setFilters((p) => ({
-                                                ...p,
-                                                has_mortgage: o.value,
-                                            }))
-                                        }
-                                        className={chipCls(
-                                            filters.has_mortgage === o.value,
-                                        )}
-                                    >
-                                        {o.label}
-                                    </button>
-                                ))}
+                        {show_mortgage && (
+                            <div>
+                                {sectionLabel('Mortgage (Ипотека)')}
+                                <div className="flex flex-wrap gap-2">
+                                    {[
+                                        { value: '', label: 'All' },
+                                        {
+                                            value: 'true',
+                                            label: '✓ Has Mortgage',
+                                        },
+                                        {
+                                            value: 'false',
+                                            label: '✗ No Mortgage',
+                                        },
+                                    ].map((o) => (
+                                        <button
+                                            key={o.value}
+                                            onClick={() =>
+                                                setFilters((p) => ({
+                                                    ...p,
+                                                    has_mortgage: o.value,
+                                                }))
+                                            }
+                                            className={chipCls(
+                                                filters.has_mortgage ===
+                                                    o.value,
+                                            )}
+                                        >
+                                            {o.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        <div>
-                            {sectionLabel('New Building')}
-                            <div className="flex flex-wrap gap-2">
-                                {[
-                                    { value: '', label: 'All' },
-                                    { value: 'true', label: '✓ New Build' },
-                                    { value: 'false', label: '✗ Secondary' },
-                                ].map((o) => (
-                                    <button
-                                        key={o.value}
-                                        onClick={() =>
-                                            setFilters((p) => ({
-                                                ...p,
-                                                is_new_building: o.value,
-                                            }))
-                                        }
-                                        className={chipCls(
-                                            filters.is_new_building === o.value,
-                                        )}
-                                    >
-                                        {o.label}
-                                    </button>
-                                ))}
+                        {show_new_building && (
+                            <div>
+                                {sectionLabel('New Building')}
+                                <div className="flex flex-wrap gap-2">
+                                    {[
+                                        { value: '', label: 'All' },
+                                        { value: 'true', label: '✓ New Build' },
+                                        {
+                                            value: 'false',
+                                            label: '✗ Secondary',
+                                        },
+                                    ].map((o) => (
+                                        <button
+                                            key={o.value}
+                                            onClick={() =>
+                                                setFilters((p) => ({
+                                                    ...p,
+                                                    is_new_building: o.value,
+                                                }))
+                                            }
+                                            className={chipCls(
+                                                filters.is_new_building ===
+                                                    o.value,
+                                            )}
+                                        >
+                                            {o.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="sm:col-span-2">
                             {sectionLabel('Status')}

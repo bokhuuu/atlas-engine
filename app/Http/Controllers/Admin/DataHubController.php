@@ -58,6 +58,9 @@ class DataHubController extends Controller
             'categories' => $categories,
             'districts' => $districts,
             'stale_days' => (int) config('scraper.stale_listing_days', 90),
+            'show_bill_of_sale' => in_array('binaz', $sourcePrefixes),
+            'show_mortgage' => in_array('binaz', $sourcePrefixes),
+            'show_new_building' => in_array('binaz', $sourcePrefixes),
         ]);
     }
 }

@@ -33,6 +33,16 @@ class CategoryLabels
         'binaz_houses_rent' => 'Houses for Rent',
         'binaz_commercial_sale' => 'Commercial for Sale',
         'binaz_commercial_rent' => 'Commercial for Rent',
+
+        'myhome_apartments_sale' => 'Apartments for Sale',
+        'myhome_apartments_rent' => 'Apartments for Rent',
+        'myhome_houses_sale' => 'Houses for Sale',
+        'myhome_houses_rent' => 'Houses for Rent',
+        'myhome_country_houses_sale' => 'Country Houses for Sale',
+        'myhome_country_houses_rent' => 'Country Houses for Rent',
+        'myhome_land_sale' => 'Land for Sale',
+        'myhome_commercial_sale' => 'Commercial for Sale',
+        'myhome_commercial_rent' => 'Commercial for Rent',
     ];
 
     public static function forSource(string $source): string

@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import assistant4160f0 from './assistant'
 /**
 * @see \App\Http\Controllers\Admin\GlobalDashboardController::dashboard
 * @see app/Http/Controllers/Admin/GlobalDashboardController.php:35
@@ -244,7 +245,7 @@ marketStats.form = marketStatsForm
 
 const admin = {
     dashboard: Object.assign(dashboard, dashboard),
-    assistant: Object.assign(assistant, assistant),
+    assistant: Object.assign(assistant, assistant4160f0),
     marketStats: Object.assign(marketStats, marketStats),
 }
 

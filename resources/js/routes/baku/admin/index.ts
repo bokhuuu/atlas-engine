@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
+import assistant4160f0 from './assistant'
 import exports from './exports'
 import users from './users'
 import settings from './settings'
@@ -255,7 +256,7 @@ assistant.form = assistantForm
 const admin = {
     dashboard: Object.assign(dashboard, dashboard),
     marketStats: Object.assign(marketStats, marketStats),
-    assistant: Object.assign(assistant, assistant),
+    assistant: Object.assign(assistant, assistant4160f0),
     exports: Object.assign(exports, exports),
     users: Object.assign(users, users),
     settings: Object.assign(settings, settings),
