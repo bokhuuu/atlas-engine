@@ -81,7 +81,8 @@ class CrawlIndexPageJob implements ShouldQueue
 
             $jobs = [];
             foreach ($urls as $url) {
-                $jobs[] = new CrawlDetailPageJob(profile: $this->profile, url: $url, scraperRunId: $this->scraperRunId);
+                $jobs[] = (new CrawlDetailPageJob(profile: $this->profile, url: $url, scraperRunId: $this->scraperRunId))
+                    ->onQueue($this->profile->getQueue());
             }
 
             if (! empty($jobs) && $this->batch()) {
