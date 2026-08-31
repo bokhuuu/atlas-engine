@@ -87,6 +87,7 @@ class ScraperManager
                 ]);
             })
             ->name($this->buildBatchName($profile->getName(), $run->id))
+            ->onQueue($profile->getQueue())
             ->dispatch();
     }
 

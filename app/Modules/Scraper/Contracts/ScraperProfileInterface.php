@@ -66,6 +66,12 @@ interface ScraperProfileInterface
     public function getQueueConfig(): array;
 
     /**
+     * The queue this profile's jobs should be dispatched to.
+     * Chrome-based profiles return 'chrome', HTTP-based return 'default'.
+     */
+    public function getQueue(): string;
+
+    /**
      * Auth strategy for this site. Returns null if no login required.
      * Browser is passed at runtime - profiles must not instantiate the browser themselves.
      */

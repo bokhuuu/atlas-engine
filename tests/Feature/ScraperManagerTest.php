@@ -19,6 +19,7 @@ function makeProfile(int $pages = 2): ScraperProfileInterface
     $profile->shouldReceive('getName')->andReturn('listam');
     $profile->shouldReceive('getMaxPages')->andReturn($pages);
     $profile->shouldReceive('getQueueConfig')->andReturn([]);
+    $profile->shouldReceive('getQueue')->andReturn('default');
     $profile->shouldReceive('buildIndexUrl')->andReturnUsing(
         fn (int $page) => "https://list.am/en/category/60/{$page}"
     );

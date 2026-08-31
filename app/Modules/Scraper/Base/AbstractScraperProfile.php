@@ -73,6 +73,15 @@ abstract class AbstractScraperProfile implements ScraperProfileInterface
     }
 
     /**
+     * The queue this profile's jobs should be dispatched to.
+     * Chrome-based profiles override this to return 'chrome'.
+     */
+    public function getQueue(): string
+    {
+        return 'default';
+    }
+
+    /**
      * Maximum pages to scrape per run.
      * Set SCRAPER_MAX_PAGES=2 locally for fast testing.
      */

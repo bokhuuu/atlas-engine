@@ -224,11 +224,29 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-2' => [
+                'connection' => 'redis',
+                'queue' => ['chrome'],
+                'balance' => 'simple',
+                'maxProcesses' => 1,
+                'memory' => 512,
+                'timeout' => 3600,
+                'tries' => 1,
+            ],
         ],
 
         'local' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,
+            ],
+            'supervisor-2' => [
+                'connection' => 'redis',
+                'queue' => ['chrome'],
+                'balance' => 'simple',
+                'maxProcesses' => 1,
+                'memory' => 512,
+                'timeout' => 3600,
+                'tries' => 1,
             ],
         ],
     ],

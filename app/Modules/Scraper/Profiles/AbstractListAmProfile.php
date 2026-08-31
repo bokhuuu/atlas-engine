@@ -190,6 +190,11 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
         );
     }
 
+    public function getQueue(): string
+    {
+        return 'chrome';
+    }
+
     /**
      * Same list.am login flow for every category - cookie restore first,
      * form login fallback. profileName scopes the cookie file per category

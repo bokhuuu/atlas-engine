@@ -190,6 +190,11 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
         );
     }
 
+    public function getQueue(): string
+    {
+        return 'chrome';
+    }
+
     /**
      * Queue config for myhome.ge profiles.
      *
