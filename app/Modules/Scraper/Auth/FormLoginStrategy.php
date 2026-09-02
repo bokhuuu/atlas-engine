@@ -43,6 +43,11 @@ class FormLoginStrategy
     {
         $this->browser->visit($this->loginUrl);
 
+        $this->browser->waitFor(
+            $this->emailSelector,
+            $this->waitSeconds ?? (int) config('scraper.element_wait_timeout_s'),
+        );
+
         $this->browser->type($this->emailSelector, $this->email);
         $this->browser->type($this->passwordSelector, $this->password);
         $this->browser->click($this->submitSelector);
