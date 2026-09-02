@@ -159,7 +159,7 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
 
         // Pricing
         'price',
-        'original_price_azn',
+        'original_price',
         'price_per_sqm',
         'area_sotka',
         'price_per_sotka_usd',
@@ -256,8 +256,8 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
                     return round((float) $value, 2);
                 }
 
-                if ($col === 'original_price_azn') {
-                    $azn = $row['extras']['original_price_azn'] ?? null;
+                if ($col === 'original_price') {
+                    $azn = $row['extras']['original_price_gel'] ?? $row['extras']['original_price_azn'] ?? null;
 
                     return $azn !== null ? (int) round((float) $azn) : null;
                 }
@@ -476,12 +476,12 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
         $sqmPrices = array_filter(array_column($this->listings, 'price_per_sqm'));
 
         $aznPrices = array_filter(array_map(
-            fn ($r) => $r['extras']['original_price_azn'] ?? null,
+            fn ($r) => $r['extras']['original_price_gel'] ?? $r['extras']['original_price_azn'] ?? null,
             $this->listings
         ));
 
         $aznSqmPrices = array_filter(array_map(function ($r) {
-            $azn = $r['extras']['original_price_azn'] ?? null;
+            $azn = $r['extras']['original_price_gel'] ?? $r['extras']['original_price_azn'] ?? null;
             $area = $r['area'] ?? null;
 
             return ($azn && $area && $area > 0) ? (float) $azn / (float) $area : null;
@@ -540,12 +540,12 @@ class LandSizeRangeSheet implements FromArray, WithColumnWidths, WithStyles, Wit
             $rangePrices = array_filter(array_column($inRange, 'price'));
 
             $rangeAzn = array_filter(array_map(
-                fn ($r) => $r['extras']['original_price_azn'] ?? null,
+                fn ($r) => $r['extras']['original_price_gel'] ?? $r['extras']['original_price_azn'] ?? null,
                 $inRange
             ));
 
             $rangeAznSqmPrices = array_filter(array_map(function ($r) {
-                $azn = $r['extras']['original_price_azn'] ?? null;
+                $azn = $r['extras']['original_price_gel'] ?? $r['extras']['original_price_azn'] ?? null;
                 $area = $r['area'] ?? null;
 
                 return ($azn && $area && $area > 0) ? (float) $azn / (float) $area : null;
