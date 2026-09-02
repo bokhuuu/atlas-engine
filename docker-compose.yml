@@ -74,6 +74,7 @@ services:
     environment:
       - SE_NODE_MAX_SESSIONS=3
       - SE_NODE_OVERRIDE_MAX_SESSIONS=false
+      - SE_NODE_SESSION_TIMEOUT=60
     networks:
       - atlas
 
