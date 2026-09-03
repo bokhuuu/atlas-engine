@@ -293,11 +293,16 @@ class MyhomeScraper extends BaseScraper
             sleep(2);
 
             $result = $this->browser->script("
-            const el = document.querySelector('a[href^=\"tel:\"]');
-            if (el) return el.textContent.trim();
-            const phoneEl = document.querySelector('.phone-number, .revealed-phone');
-            return phoneEl ? phoneEl.textContent.trim() : null;
-        ");
+                const buttons = Array.from(document.querySelectorAll('button'));
+                const phoneBtn = buttons.find(b => {
+                    const span = b.querySelector('span.text-sm');
+                    return span && span.textContent.trim().startsWith('+');
+                });
+                if (phoneBtn) {
+                    return phoneBtn.querySelector('span.text-sm').textContent.trim();
+                }
+                return null;
+            ");
 
             return $result[0] ?? null;
         } catch (Throwable) {
