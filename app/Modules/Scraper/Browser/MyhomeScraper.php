@@ -270,32 +270,34 @@ class MyhomeScraper extends BaseScraper
      * Reveal and extract the phone number from the listing.
      *
      * Requires authenticated session — CookieAuthStrategy handles this.
-     * myhome.ge shows a "Show number" button that reveals the phone on click.
-     * Same TNet pattern as myauto.ge. Rate limiting (~5 reveals per IP per day)
-     * handled by Webshare rotating residential proxies.
+     * myhome.ge shows a "Show number" button identified by text content.
+     * Uses JavaScript click — same approach as TNet login button.
      * Returns null if button not present or reveal fails.
      */
     private function extractPhone(): ?string
     {
         try {
-            $showButton = 'button.show-phone-btn, button[class*="show-number"], .phone-reveal-btn';
+            $js = "return Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Show number') ? 'found' : 'not found'";
+            $check = $this->browser->script($js);
 
-            if (! $this->isPresent($showButton)) {
+            if (($check[0] ?? 'not found') === 'not found') {
                 return null;
             }
 
             $this->ensureAuthenticated();
-            $this->click($showButton);
 
-            $this->waitFor('.phone-number, .revealed-phone, a[href^="tel:"]', 5);
+            $this->browser->script(
+                "Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Show number')?.click()"
+            );
+
+            sleep(2);
 
             $result = $this->browser->script("
-                const el = document.querySelector('a[href^=\"tel:\"]');
-                if (el) return el.textContent.trim();
-
-                const phoneEl = document.querySelector('.phone-number, .revealed-phone');
-                return phoneEl ? phoneEl.textContent.trim() : null;
-            ");
+            const el = document.querySelector('a[href^=\"tel:\"]');
+            if (el) return el.textContent.trim();
+            const phoneEl = document.querySelector('.phone-number, .revealed-phone');
+            return phoneEl ? phoneEl.textContent.trim() : null;
+        ");
 
             return $result[0] ?? null;
         } catch (Throwable) {
