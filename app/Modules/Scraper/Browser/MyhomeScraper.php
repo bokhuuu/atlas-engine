@@ -277,7 +277,7 @@ class MyhomeScraper extends BaseScraper
     private function extractPhone(): ?string
     {
         try {
-            $js = "return Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Show number') ? 'found' : 'not found'";
+            $js = "return Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim().includes('Show number')) ? 'found' : 'not found'";
             $check = $this->browser->script($js);
 
             if (($check[0] ?? 'not found') === 'not found') {
@@ -287,7 +287,7 @@ class MyhomeScraper extends BaseScraper
             $this->ensureAuthenticated();
 
             $this->browser->script(
-                "Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Show number')?.click()"
+                "Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim().includes('Show number'))?.click()"
             );
 
             sleep(2);
