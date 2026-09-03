@@ -236,10 +236,11 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
             'loginUrl' => 'https://auth.tnet.ge/en/user/login/?Continue=https://www.myhome.ge/en/',
             'emailSelector' => 'input[name="Email"]',
             'passwordSelector' => 'input[name="Password"]',
-            'submitSelector' => 'form button[type="submit"]',
+            'submitSelector' => 'button[type="submit"]',
             'successSelector' => '.user-avatar, .user-menu, span.truncate',
             'email' => config('scraper.myhome_auth.email'),
             'password' => config('scraper.myhome_auth.password'),
+            'submitText' => 'Sign in',
         ]);
 
         return app(CookieAuthStrategy::class, [

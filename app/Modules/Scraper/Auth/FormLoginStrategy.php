@@ -31,6 +31,7 @@ class FormLoginStrategy
         private readonly string $email,
         private readonly string $password,
         private readonly ?int $waitSeconds = null,
+        private readonly ?string $submitText = null,
     ) {}
 
     /**
@@ -59,10 +60,12 @@ class FormLoginStrategy
             );
             $this->browser->click($this->submitSelector);
         } catch (\Throwable) {
-            // Fallback: JavaScript click for React-rendered buttons
-            $this->browser->script(
-                "document.querySelector('{$this->submitSelector}').click()"
-            );
+            // Fallback: find button by text content for React-rendered pages
+            if ($this->submitText !== null) {
+                $this->browser->script(
+                    "Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === '{$this->submitText}')?.click()"
+                );
+            }
         }
 
         try {
