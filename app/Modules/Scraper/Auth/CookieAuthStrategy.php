@@ -127,7 +127,7 @@ class CookieAuthStrategy implements AuthStrategyInterface
         }
 
         $cookies = $this->browser->driver->manage()->getCookies();
-
+        $cookieData = array_map(fn ($cookie) => $cookie->toArray(), $cookies);
         file_put_contents(
             $path,
             json_encode($cookies, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
