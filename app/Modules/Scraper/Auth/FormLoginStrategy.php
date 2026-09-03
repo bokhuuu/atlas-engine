@@ -50,7 +50,20 @@ class FormLoginStrategy
 
         $this->browser->type($this->emailSelector, $this->email);
         $this->browser->type($this->passwordSelector, $this->password);
-        $this->browser->click($this->submitSelector);
+
+        // Wait for submit button then click — fallback to JS click for React pages
+        try {
+            $this->browser->waitFor(
+                $this->submitSelector,
+                $this->waitSeconds ?? (int) config('scraper.element_wait_timeout_s'),
+            );
+            $this->browser->click($this->submitSelector);
+        } catch (\Throwable) {
+            // Fallback: JavaScript click for React-rendered buttons
+            $this->browser->script(
+                "document.querySelector('{$this->submitSelector}').click()"
+            );
+        }
 
         try {
             $this->browser->waitFor(
