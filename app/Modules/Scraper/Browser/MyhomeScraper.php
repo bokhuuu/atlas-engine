@@ -284,8 +284,6 @@ class MyhomeScraper extends BaseScraper
                 return null;
             }
 
-            $this->ensureAuthenticated();
-
             $this->browser->script(
                 "Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim().includes('Show number'))?.click()"
             );

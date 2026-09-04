@@ -69,6 +69,7 @@ class CrawlDetailPageJob implements ShouldQueue
         $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
         if ($authStrategy !== null) {
             $scraper->setAuthStrategy($authStrategy);
+            $authStrategy->authenticate();
         }
 
         try {
