@@ -62,6 +62,40 @@ class CookieAuthStrategy implements AuthStrategyInterface
     }
 
     /**
+     * Inject saved cookies into the browser session without any navigation or auth check.
+     *
+     * Use this in CrawlDetailPageJob — cookies were already refreshed by CrawlIndexPageJob.
+     * Navigates to base URL once to set the correct domain context, then injects all cookies.
+     * Returns false if no cookie file exists — caller should handle gracefully.
+     */
+    public function restoreCookiesOnly(): bool
+    {
+        $path = $this->cookiePath();
+
+        if (! file_exists($path)) {
+            return false;
+        }
+
+        $cookies = json_decode(file_get_contents($path), true);
+
+        if (empty($cookies)) {
+            return false;
+        }
+
+        $this->browser->visit($this->baseUrl);
+
+        foreach ($cookies as $cookie) {
+            try {
+                $this->browser->driver->manage()->addCookie($cookie);
+            } catch (\Throwable) {
+                // Skip malformed cookies silently
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Refresh an expired session.
      *
      * Delegates to authenticate() - the same cookie-first logic applies.

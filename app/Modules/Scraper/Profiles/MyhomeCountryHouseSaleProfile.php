@@ -44,6 +44,6 @@ class MyhomeCountryHouseSaleProfile extends AbstractMyhomeProfile
 
     public function getPropertyType(): string
     {
-        return 'house';
+        return 'country_house';
     }
 }

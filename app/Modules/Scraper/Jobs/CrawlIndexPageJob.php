@@ -74,6 +74,12 @@ class CrawlIndexPageJob implements ShouldQueue
     {
         $scraper = app($this->profile->getScraperClass(), ['profile' => $this->profile]);
 
+        $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
+        if ($authStrategy !== null) {
+            $scraper->setAuthStrategy($authStrategy);
+            $authStrategy->authenticate();
+        }
+
         try {
             $urls = $scraper->crawlIndexPage($this->page);
 

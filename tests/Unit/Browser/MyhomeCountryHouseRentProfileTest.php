@@ -15,7 +15,7 @@ test('country house rent profile returns correct listing type', function () use 
 });
 
 test('country house rent profile returns correct property type', function () use ($profile) {
-    expect($profile->getPropertyType())->toBe('house');
+    expect($profile->getPropertyType())->toBe('country_house');
 });
 
 test('country house rent profile returns correct deal type id', function () use ($profile) {

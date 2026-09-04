@@ -20,6 +20,12 @@ interface AuthStrategyInterface
     public function authenticate(): void;
 
     /**
+     * Inject saved cookies into the browser without navigation or auth check.
+     * Returns false if no cookies exist.
+     */
+    public function restoreCookiesOnly(): bool;
+
+    /**
      * Refresh an expired session. Lighter than full re-authentication.
      */
     public function refresh(): void;
