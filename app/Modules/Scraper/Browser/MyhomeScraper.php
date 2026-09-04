@@ -86,7 +86,7 @@ class MyhomeScraper extends BaseScraper
 
             $urls[] = str_starts_with($href, 'http')
                 ? $href
-                : 'https://www.myhome.ge'.$href;
+                : 'https://www.myhome.ge' . $href;
         }
 
         return array_unique($urls);
