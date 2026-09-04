@@ -209,10 +209,10 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
         $formLogin = app(FormLoginStrategy::class, [
             'browser' => $browser,
             'loginUrl' => 'https://www.list.am/en/user/login',
-            'emailSelector' => 'input[name="username"]',
+            'emailSelector' => 'input[name="phone_number_or_email"]',
             'passwordSelector' => 'input[name="password"]',
-            'submitSelector' => 'button[type="submit"]',
-            'successSelector' => 'a.logout',
+            'submitSelector' => 'input[type="submit"]',
+            'successSelector' => 'a[href="/my"], a.logout',
             'email' => config('scraper.listam_auth.email'),
             'password' => config('scraper.listam_auth.password'),
         ]);
