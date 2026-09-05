@@ -305,7 +305,12 @@ class MyhomeScraper extends BaseScraper
             ");
 
             return $result[0] ?? null;
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            Log::warning('Phone extraction failed', [
+                'error' => $e->getMessage(),
+                'class' => get_class($e),
+            ]);
+
             return null;
         }
     }
