@@ -280,6 +280,8 @@ class MyhomeScraper extends BaseScraper
             $js = "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); return btns.length > 0 ? 'found' : 'not found'";
             $check = $this->browser->script($js);
 
+            Log::info('Phone extraction check', ['result' => $check[0] ?? 'null', 'url' => $this->browser->driver->getCurrentURL()]);
+
             if (($check[0] ?? 'not found') === 'not found') {
                 return null;
             }
