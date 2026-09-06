@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Browser;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
+use Illuminate\Support\Facades\Http;
 use Laravel\Dusk\Browser;
 use Throwable;
 
@@ -267,50 +268,98 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Reveal and extract the phone number from the listing.
+     * Reveal and extract the phone number via TNet phone reveal API.
      *
-     * Requires authenticated session — CookieAuthStrategy handles this.
-     * myhome.ge shows a "Show number" button identified by text content.
-     * Uses JavaScript click — same approach as TNet login button.
-     * Returns null if button not present or reveal fails.
+     * Flow:
+     *   1. Get statement_uuid from extras (extracted from __NEXT_DATA__)
+     *   2. Generate reCAPTCHA v3 token via Chrome JS execution
+     *   3. POST to api-statements.tnet.ge with uuid + token + auth cookies
+     *   4. Extract phone from JSON response
+     *
+     * Rate limited ~5 reveals per IP per day — use rotating proxies.
+     * Returns null if uuid missing, reCAPTCHA fails, or API returns no phone.
      */
     private function extractPhone(): ?string
     {
         try {
-            $js = "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); return btns.length > 0 ? 'found' : 'not found'";
-            $check = $this->browser->script($js);
+            // Get reCAPTCHA site key from page
+            $siteKey = $this->browser->script("
+            const el = document.querySelector('[data-sitekey], .g-recaptcha');
+            if (el) return el.getAttribute('data-sitekey');
+            // Try to find it in page scripts
+            const scripts = Array.from(document.querySelectorAll('script'));
+            for (const s of scripts) {
+                const match = s.textContent.match(/['\"]([0-9A-Za-z_-]{40})['\"].*recaptcha/i) ||
+                              s.textContent.match(/recaptcha.*['\"]([0-9A-Za-z_-]{40})['\"]/i);
+                if (match) return match[1];
+            }
+            return null;
+        ");
 
-            Log::info('Phone extraction check', ['result' => $check[0] ?? 'null', 'url' => $this->browser->driver->getCurrentURL()]);
+            // Get statement uuid from page __NEXT_DATA__
+            $uuidResult = $this->browser->script("
+            try {
+                const d = JSON.parse(document.querySelector('#__NEXT_DATA__').textContent);
+                const queries = d.props.pageProps.dehydratedState.queries;
+                for (const q of queries) {
+                    const s = q?.state?.data?.statement;
+                    if (s?.uuid) return s.uuid;
+                    const s2 = q?.state?.data?.data?.statement;
+                    if (s2?.uuid) return s2.uuid;
+                }
+            } catch(e) {}
+            return null;
+        ");
 
-            if (($check[0] ?? 'not found') === 'not found') {
+            $uuid = $uuidResult[0] ?? null;
+
+            if ($uuid === null) {
                 return null;
             }
 
-            $this->browser->script(
-                "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); btns[btns.length - 1]?.click()"
+            // Generate reCAPTCHA v3 token
+            $tokenResult = $this->browser->script("
+            return new Promise((resolve) => {
+                if (typeof grecaptcha === 'undefined') {
+                    resolve(null);
+                    return;
+                }
+                grecaptcha.ready(() => {
+                    grecaptcha.execute('6LeziPEpAAAAAHuR9vWBVCrfklSbWt8zixM4jAbM', {action: 'show_phone'})
+                        .then(token => resolve(token))
+                        .catch(() => resolve(null));
+                });
+            });
+        ");
+
+            $token = $tokenResult[0] ?? null;
+
+            if ($token === null) {
+                return null;
+            }
+
+            // Call phone reveal API
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Origin' => 'https://www.myhome.ge',
+                'Referer' => $this->browser->driver->getCurrentURL(),
+            ])->post(
+                "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$uuid}",
+                [
+                    'recaptcha_version' => 'v3',
+                    'response_token' => $token,
+                ]
             );
 
-            sleep(2);
-
-            $result = $this->browser->script("
-                const buttons = Array.from(document.querySelectorAll('button'));
-                const phoneBtn = buttons.find(b => {
-                    const span = b.querySelector('span.text-sm');
-                    return span && span.textContent.trim().startsWith('+');
-                });
-                if (phoneBtn) {
-                    return phoneBtn.querySelector('span.text-sm').textContent.trim();
-                }
+            if (! $response->successful()) {
                 return null;
-            ");
+            }
 
-            return $result[0] ?? null;
-        } catch (Throwable $e) {
-            Log::warning('Phone extraction failed', [
-                'error' => $e->getMessage(),
-                'class' => get_class($e),
-            ]);
+            $data = $response->json();
 
+            return $data['data']['phone'] ?? $data['phone'] ?? null;
+        } catch (Throwable) {
             return null;
         }
     }
@@ -390,6 +439,11 @@ class MyhomeScraper extends BaseScraper
         // Ceiling height in cm
         if (isset($statement['height']) && $statement['height'] > 0) {
             $extras['ceiling_height'] = $statement['height'];
+        }
+
+        // Statement UUID — needed for phone reveal API
+        if (isset($statement['uuid']) && $statement['uuid'] !== '') {
+            $extras['statement_uuid'] = $statement['uuid'];
         }
 
         return $extras;
