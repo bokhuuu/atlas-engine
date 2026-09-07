@@ -267,40 +267,13 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Reveal and extract the phone number from the listing.
-     *
-     * Uses the same approach as CarScraper (myauto.ge):
-     * Click the "Show number" button in Chrome and wait for the page
-     * to handle reCAPTCHA and API call internally. Read phone from DOM.
-     *
-     * Requires authenticated session — cookies loaded via restoreCookiesOnly().
-     * Returns null if button not found or phone not revealed after 10 seconds.
+     * Phone extraction deferred — requires non-headless Chrome or residential proxy
+     * for reliable reCAPTCHA score. statement_uuid stored in extras for future use.
+     * See Thread 19 for full implementation plan.
      */
     private function extractPhone(): ?string
     {
-        try {
-            $js = "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); return btns.length > 0 ? 'found' : 'not found'";
-            $check = $this->browser->script($js);
-
-            if (($check[0] ?? 'not found') === 'not found') {
-                return null;
-            }
-
-            $this->browser->script(
-                "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); btns[btns.length - 1]?.click()"
-            );
-
-            sleep(10);
-
-            $result = $this->browser->script("
-    const tel = document.querySelector('a[href^=\"tel:+\"]');
-    return tel ? tel.href.replace('tel:', '') : null;
-");
-
-            return $result[0] ?? null;
-        } catch (Throwable) {
-            return null;
-        }
+        return null;
     }
 
     /**
