@@ -338,12 +338,16 @@ class MyhomeScraper extends BaseScraper
                 return null;
             }
 
-            // Call phone reveal API
+            $cookies = json_decode(file_get_contents(storage_path('app/scraper/cookies/'.$this->profile->getName().'.json')), true) ?? [];
+            $cookieString = collect($cookies)->map(fn ($c) => $c['name'].'='.$c['value'])->implode('; ');
+
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Origin' => 'https://www.myhome.ge',
                 'Referer' => $this->browser->driver->getCurrentURL(),
+                'X-Website-Key' => 'myhome',
+                'Cookie' => $cookieString,
             ])->post(
                 "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$uuid}",
                 [
