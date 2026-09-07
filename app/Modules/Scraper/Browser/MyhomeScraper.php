@@ -341,14 +341,23 @@ class MyhomeScraper extends BaseScraper
             $cookies = json_decode(file_get_contents(storage_path('app/scraper/cookies/'.$this->profile->getName().'.json')), true) ?? [];
             $cookieString = collect($cookies)->map(fn ($c) => $c['name'].'='.$c['value'])->implode('; ');
 
-            $response = Http::withHeaders([
+            $proxyUrl = $this->proxyResolver->resolve();
+            $httpClient = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Origin' => 'https://www.myhome.ge',
                 'Referer' => $this->browser->driver->getCurrentURL(),
                 'X-Website-Key' => 'myhome',
                 'Cookie' => $cookieString,
-            ])->post(
+            ]);
+
+            if ($proxyUrl !== null) {
+                $httpClient = $httpClient->withOptions([
+                    'proxy' => $this->proxyResolver->withCredentials($proxyUrl),
+                ]);
+            }
+
+            $response = $httpClient->post(
                 "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$uuid}",
                 [
                     'recaptcha_version' => 'v3',
