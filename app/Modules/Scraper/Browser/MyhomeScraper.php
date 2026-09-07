@@ -290,19 +290,12 @@ class MyhomeScraper extends BaseScraper
                 "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); btns[btns.length - 1]?.click()"
             );
 
-            sleep(10); // Wait for reCAPTCHA + API response — same as CarScraper
+            sleep(10);
 
             $result = $this->browser->script("
-            const buttons = Array.from(document.querySelectorAll('button'));
-            const phoneBtn = buttons.find(b => {
-                const span = b.querySelector('span.text-sm');
-                return span && span.textContent.trim().match(/^\+/);
-            });
-            if (phoneBtn) {
-                return phoneBtn.querySelector('span.text-sm').textContent.trim();
-            }
-            return null;
-        ");
+    const tel = document.querySelector('a[href^=\"tel:+\"]');
+    return tel ? tel.href.replace('tel:', '') : null;
+");
 
             return $result[0] ?? null;
         } catch (Throwable) {
