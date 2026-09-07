@@ -91,7 +91,7 @@ abstract class BaseScraper
     protected function chromeArguments(): array
     {
         $args = [
-            '--headless',
+            '--headless=new',
             '--no-sandbox',
             '--disable-gpu',
             '--disable-dev-shm-usage',
