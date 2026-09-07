@@ -663,6 +663,8 @@ return [
 
     'proxy_password' => env('SCRAPER_PROXY_PASSWORD'),
 
+    'phone_reveal_proxy' => env('PHONE_REVEAL_PROXY'),
+
     /*
     |--------------------------------------------------------------------------
     | API Rate Limiting

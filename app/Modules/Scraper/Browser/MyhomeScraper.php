@@ -341,7 +341,6 @@ class MyhomeScraper extends BaseScraper
             $cookies = json_decode(file_get_contents(storage_path('app/scraper/cookies/'.$this->profile->getName().'.json')), true) ?? [];
             $cookieString = collect($cookies)->map(fn ($c) => $c['name'].'='.$c['value'])->implode('; ');
 
-            $proxyUrl = $this->proxyResolver->resolve();
             $httpClient = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -351,10 +350,9 @@ class MyhomeScraper extends BaseScraper
                 'Cookie' => $cookieString,
             ]);
 
-            if ($proxyUrl !== null) {
-                $httpClient = $httpClient->withOptions([
-                    'proxy' => $this->proxyResolver->withCredentials($proxyUrl),
-                ]);
+            $phoneProxy = config('scraper.phone_reveal_proxy');
+            if ($phoneProxy) {
+                $httpClient = $httpClient->withOptions(['proxy' => $phoneProxy]);
             }
 
             $response = $httpClient->post(
