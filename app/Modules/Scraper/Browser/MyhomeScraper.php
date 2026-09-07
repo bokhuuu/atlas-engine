@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Browser;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
-use Illuminate\Support\Facades\Http;
 use Laravel\Dusk\Browser;
 use Throwable;
 
@@ -268,108 +267,44 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Reveal and extract the phone number via TNet phone reveal API.
+     * Reveal and extract the phone number from the listing.
      *
-     * Flow:
-     *   1. Get statement_uuid from extras (extracted from __NEXT_DATA__)
-     *   2. Generate reCAPTCHA v3 token via Chrome JS execution
-     *   3. POST to api-statements.tnet.ge with uuid + token + auth cookies
-     *   4. Extract phone from JSON response
+     * Uses the same approach as CarScraper (myauto.ge):
+     * Click the "Show number" button in Chrome and wait for the page
+     * to handle reCAPTCHA and API call internally. Read phone from DOM.
      *
-     * Rate limited ~5 reveals per IP per day — use rotating proxies.
-     * Returns null if uuid missing, reCAPTCHA fails, or API returns no phone.
+     * Requires authenticated session — cookies loaded via restoreCookiesOnly().
+     * Returns null if button not found or phone not revealed after 10 seconds.
      */
     private function extractPhone(): ?string
     {
         try {
-            // Get reCAPTCHA site key from page
-            $siteKey = $this->browser->script("
-            const el = document.querySelector('[data-sitekey], .g-recaptcha');
-            if (el) return el.getAttribute('data-sitekey');
-            // Try to find it in page scripts
-            const scripts = Array.from(document.querySelectorAll('script'));
-            for (const s of scripts) {
-                const match = s.textContent.match(/['\"]([0-9A-Za-z_-]{40})['\"].*recaptcha/i) ||
-                              s.textContent.match(/recaptcha.*['\"]([0-9A-Za-z_-]{40})['\"]/i);
-                if (match) return match[1];
-            }
-            return null;
-        ");
+            $js = "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); return btns.length > 0 ? 'found' : 'not found'";
+            $check = $this->browser->script($js);
 
-            // Get statement uuid from page __NEXT_DATA__
-            $uuidResult = $this->browser->script("
-            try {
-                const d = JSON.parse(document.querySelector('#__NEXT_DATA__').textContent);
-                const queries = d.props.pageProps.dehydratedState.queries;
-                for (const q of queries) {
-                    const s = q?.state?.data?.statement;
-                    if (s?.uuid) return s.uuid;
-                    const s2 = q?.state?.data?.data?.statement;
-                    if (s2?.uuid) return s2.uuid;
-                }
-            } catch(e) {}
-            return null;
-        ");
-
-            $uuid = $uuidResult[0] ?? null;
-
-            if ($uuid === null) {
+            if (($check[0] ?? 'not found') === 'not found') {
                 return null;
             }
 
-            // Generate reCAPTCHA v3 token
-            $tokenResult = $this->browser->script("
-            return new Promise((resolve) => {
-                if (typeof grecaptcha === 'undefined') {
-                    resolve(null);
-                    return;
-                }
-                grecaptcha.ready(() => {
-                    grecaptcha.execute('6LeziPEpAAAAAHuR9vWBVCrfklSbWt8zixM4jAbM', {action: 'show_phone'})
-                        .then(token => resolve(token))
-                        .catch(() => resolve(null));
-                });
-            });
-        ");
-
-            $token = $tokenResult[0] ?? null;
-
-            if ($token === null) {
-                return null;
-            }
-
-            $cookies = json_decode(file_get_contents(storage_path('app/scraper/cookies/'.$this->profile->getName().'.json')), true) ?? [];
-            $cookieString = collect($cookies)->map(fn ($c) => $c['name'].'='.$c['value'])->implode('; ');
-
-            $httpClient = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Origin' => 'https://www.myhome.ge',
-                'Referer' => $this->browser->driver->getCurrentURL(),
-                'X-Website-Key' => 'myhome',
-                'Cookie' => $cookieString,
-            ]);
-
-            $phoneProxy = config('scraper.phone_reveal_proxy');
-            if ($phoneProxy) {
-                $httpClient = $httpClient->withOptions(['proxy' => $phoneProxy]);
-            }
-
-            $response = $httpClient->post(
-                "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$uuid}",
-                [
-                    'recaptcha_version' => 'v3',
-                    'response_token' => $token,
-                ]
+            $this->browser->script(
+                "const btns = Array.from(document.querySelectorAll('button')).filter(b => b.textContent.trim().includes('Show number')); btns[btns.length - 1]?.click()"
             );
 
-            if (! $response->successful()) {
-                return null;
+            sleep(10); // Wait for reCAPTCHA + API response — same as CarScraper
+
+            $result = $this->browser->script("
+            const buttons = Array.from(document.querySelectorAll('button'));
+            const phoneBtn = buttons.find(b => {
+                const span = b.querySelector('span.text-sm');
+                return span && span.textContent.trim().match(/^\+/);
+            });
+            if (phoneBtn) {
+                return phoneBtn.querySelector('span.text-sm').textContent.trim();
             }
+            return null;
+        ");
 
-            $data = $response->json();
-
-            return $data['data']['phone'] ?? $data['phone'] ?? null;
+            return $result[0] ?? null;
         } catch (Throwable) {
             return null;
         }
