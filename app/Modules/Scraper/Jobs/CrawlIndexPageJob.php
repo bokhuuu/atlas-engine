@@ -14,6 +14,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Throwable;
 
 /**
@@ -67,8 +68,9 @@ class CrawlIndexPageJob implements ShouldQueue
 
     /**
      * Crawls the index page for listing URLs, queues one detail job
-     * per URL into the same batch, then always closes the browser
-     * whether or not the crawl succeeded.
+     * per URL into the same batch. For profiles that support session reuse,
+     * saves the Chrome session ID to Redis so detail jobs can reconnect.
+     * Closes the browser only for profiles that do not support session reuse.
      */
     public function handle(ScraperRunRepository $runRepository): void
     {
@@ -94,8 +96,21 @@ class CrawlIndexPageJob implements ShouldQueue
             if (! empty($jobs) && $this->batch()) {
                 $this->batch()->add($jobs);
             }
+
+            if ($this->profile->supportsSessionReuse()) {
+                $sessionId = $scraper->getSessionId();
+                if ($sessionId !== null) {
+                    Redis::setex(
+                        'scraper:session:'.$this->profile->getName(),
+                        300,
+                        $sessionId,
+                    );
+                }
+            }
         } finally {
-            $scraper->closeBrowser();
+            if (! $this->profile->supportsSessionReuse()) {
+                $scraper->closeBrowser();
+            }
         }
     }
 
