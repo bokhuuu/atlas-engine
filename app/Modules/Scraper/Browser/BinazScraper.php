@@ -218,12 +218,12 @@ class BinazScraper extends BaseScraper
 
             $data = json_decode((string) $response->getBody(), true);
 
-            if (! isset($data['data']['itemsConnection']['edges'])) {
+            if (! isset($data['data']['categorySearch']['edges'])) {
                 return ['urls' => [], 'cursor' => null, 'hasNextPage' => false];
             }
 
-            $edges = $data['data']['itemsConnection']['edges'];
-            $pageInfo = $data['data']['itemsConnection']['pageInfo'];
+            $edges = $data['data']['categorySearch']['edges'];
+            $pageInfo = $data['data']['categorySearch']['pageInfo'];
             $endCursor = $pageInfo['endCursor'] ?? null;
             $hasNextPage = $pageInfo['hasNextPage'] ?? false;
 
