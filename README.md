@@ -2,7 +2,7 @@
 
 Atlas is a multi-market real estate intelligence platform built for Colliers International. It scrapes listings across Caucasus markets (Yerevan, Baku, Tbilisi), cleans and deduplicates the data and delivers: a combined public market overview, per-market snapshots, an internal dashboard, an AI assistant with 11 tools, AI-generated summaries, a filterable Data Hub, on-demand Excel exports and property screenshots.
 
-One platform, multiple markets. Switching between Yerevan and Baku changes which data you see - the platform, AI and exports all scope automatically. A Global view shows all markets combined.
+One platform, multiple markets. Switching between Yerevan, Baku and Tbilisi changes which data you see - the platform, AI and exports all scope automatically. A Global view shows all markets combined.
 
 **Production:** `https://45-32-154-101.nip.io`
 
@@ -24,7 +24,7 @@ One platform, multiple markets. Switching between Yerevan and Baku changes which
 
 Old `/admin/*` URLs redirect automatically to `/yerevan/admin/*`.
 
-**430 tests passing** across unit, feature and integration layers (PostgreSQL 16 backend, Pest framework).
+**521 tests passing** across unit, feature and integration layers (PostgreSQL 16 backend, Pest framework).
 
 ---
 
@@ -37,11 +37,12 @@ Old `/admin/*` URLs redirect automatically to `/yerevan/admin/*`.
 | Auth           | Fortify + Sanctum, Spatie roles/permissions                                                                     |
 | AI             | Prism → OpenRouter, LarAgent, `anthropic/claude-sonnet-4-6` (agent), `anthropic/claude-haiku-4-5` (translation) |
 | Database       | PostgreSQL 16 + pgvector                                                                                        |
-| Scraping       | Laravel Dusk + ChromeDriver (list.am is JS-rendered); Guzzle + DomCrawler (bina.az is server-rendered)          |
-| Queue          | Redis + Laravel Horizon                                                                                         |
+| Scraping       | Laravel Dusk + ChromeDriver (list.am, myhome.ge — JS-rendered); Guzzle + DomCrawler (bina.az — server-rendered) |
+| Queue          | Redis + Laravel Horizon (dual supervisor: default queue for HTTP scrapers, chrome queue for browser scrapers)   |
 | Storage        | Backblaze B2 (screenshots + DB backups), rclone                                                                 |
 | Screenshots    | Screenshotone API (headless browser as a service) → Backblaze B2                                                |
 | Exchange Rates | open.er-api.com (free, no auth, daily)                                                                          |
+| Proxy          | Webshare Rotating Residential Georgia — active for myhome.ge Chrome sessions                                    |
 | Monitoring     | Sentry, UptimeRobot, Telegram alerts                                                                            |
 | DevOps         | Docker, Caddy (HTTPS), Vultr VPS, GitHub Actions CI/CD                                                          |
 
@@ -88,11 +89,11 @@ No manual steps needed for code or frontend changes.
 
 ## Markets
 
-| Market  | Slug    | Flag | Data Source | Status                                                                  |
-| ------- | ------- | ---- | ----------- | ----------------------------------------------------------------------- |
-| Yerevan | yerevan | 🇦🇲   | list.am     | ✅ Live — 7 categories                                                  |
-| Baku    | baku    | 🇦🇿   | bina.az     | ✅ Live — 10 categories (land, offices, apartments, houses, commercial) |
-| Tbilisi | tbilisi | 🇬🇪   | myhome.ge   | ⬜ Thread 18                                                            |
+| Market  | Slug    | Flag | Data Source | Status                                                                                      |
+| ------- | ------- | ---- | ----------- | ------------------------------------------------------------------------------------------- |
+| Yerevan | yerevan | 🇦🇲   | list.am     | ✅ Live — 7 categories                                                                      |
+| Baku    | baku    | 🇦🇿   | bina.az     | ✅ Live — 10 categories (land, offices, apartments, houses, commercial)                     |
+| Tbilisi | tbilisi | 🇬🇪   | myhome.ge   | ✅ **Thread 18** Live — 9 categories (apartments, houses, country houses, land, commercial) |
 
 Adding a new market: add entry to `config/scraper.php` markets array + create scraper profiles. No other code changes needed.
 
@@ -143,30 +144,53 @@ All Baku data is scraped from [bina.az](https://ru.bina.az) via GraphQL API (no 
 
 - `has_bill_of_sale` (купчая) — significantly affects land pricing, filterable in Data Hub
 - `has_mortgage` — mortgage availability, filterable in Data Hub
-- `is_new_building` — boolean, apartments only. Extracted from "Категория" property row (Новостройка=true, Вторичка=false). Filterable in Data Hub.
+- `is_new_building` — boolean, apartments only. Extracted from "Категория" property row. Filterable in Data Hub.
 - `original_price_azn` — original AZN price preserved in extras
-- `area_sotka` — area in sotka (computed in Excel: area_m² ÷ 100)
-- `price_per_sotka_usd` — price per sotka in USD (computed in Excel)
+- `area_sotka` — area in sotka (computed in Excel: area_m² ÷ 100, land only)
+- `price_per_sotka_usd` — price per sotka in USD (computed in Excel, land only)
 
-**JSON-LD structure:** bina.az uses two structures. Apartments/offices/land use `@graph` array with `@type: Product`. Houses use root-level `@type: House`, commercial use root-level `@type: Place` — no `@graph` wrapper. Houses and commercial have no `.product-properties__i` property rows — area and rooms extracted from JSON-LD `itemOffered`.
+---
 
-**Sea Breeze profile:** uses bina.az locationId 380 via `locationIds` GraphQL filter. Returns exactly what bina.az shows for Sea Breeze location. Note: locationId 380 covers a broad zone — some nearby listings not strictly inside the development. Use weighted average as primary metric.
+## Data Sources (Tbilisi) — Thread 18
 
-**District normalization:** Russian settlement names normalized to parent administrative districts via `NormalizeToEnglishStage`. Multiple spaces collapsed before lookup (bina.az sometimes returns "Насиминский р." with double space).
+All Tbilisi data is scraped from [myhome.ge](https://www.myhome.ge) via Laravel Dusk (Chrome browser):
 
-**Building type normalization:** `NormalizeToEnglishStage` translates Russian → English, then `CleanBuildingTypeStage` normalizes spacing (preserves casing — do NOT lowercase after translation).
+| Profile                      | Category                | Deal Type | Status  |
+| ---------------------------- | ----------------------- | --------- | ------- |
+| `myhome_apartments_sale`     | Apartments for Sale     | Sale      | ✅ Live |
+| `myhome_apartments_rent`     | Apartments for Rent     | Rent      | ✅ Live |
+| `myhome_houses_sale`         | Houses for Sale         | Sale      | ✅ Live |
+| `myhome_houses_rent`         | Houses for Rent         | Rent      | ✅ Live |
+| `myhome_country_houses_sale` | Country Houses for Sale | Sale      | ✅ Live |
+| `myhome_country_houses_rent` | Country Houses for Rent | Rent      | ✅ Live |
+| `myhome_land_sale`           | Land for Sale           | Sale      | ✅ Live |
+| `myhome_commercial_sale`     | Commercial for Sale     | Sale      | ✅ Live |
+| `myhome_commercial_rent`     | Commercial for Rent     | Rent      | ✅ Live |
 
-**Duplicate detection:** `FlagBinazDuplicatesStage` — price ±3% + area ±2% + same district. Office rent shows ~34% duplicate rate (normal — same office posted by multiple agencies). All listings shown in Data Hub — `duplicate_group_id` column in Excel identifies groups.
+**Scraping approach:** myhome.ge is Next.js SSR. All listing data is extracted from `__NEXT_DATA__` JSON embedded in the page — no DOM scraping required. Chrome browser (Dusk) is used because the site requires JavaScript execution and has Cloudflare protection.
 
-**Persisted query hash:** stored in `.env` as `BINAZ_PERSISTED_QUERY_HASH`. Rotates on bina.az frontend deploy — update from DevTools: Network → SearchItems → Payload → extensions.
+**Tbilisi-specific fields:**
 
-**Pagination:** `BINAZ_*_MAX_PAGES` in `.env` controls cursor fetch count. Always cache config on BOTH `app` AND `horizon` containers after `.env` changes.
+- `original_price_gel` — original GEL price preserved in extras
+- `statement_uuid` — TNet listing UUID stored in extras (for future phone extraction)
+- `sub_district` — granular neighborhood stored in extras (e.g. Saburtalo within Vake-Saburtalo)
 
-**Backfill pattern:**
+**Phone extraction:** deferred to Thread 19. Requires persistent Chrome session across all detail jobs (session reuse architecture).
 
-- Set `BINAZ_{PROFILE}_MAX_PAGES=300` for initial backfill
-- After confirmed complete → reduce to 10 for daily runs
-- Set `BINAZ_{PROFILE}_TIMEOUT=7200` for backfill
+**Proxy:** Webshare Rotating Residential Georgia — active (`SCRAPER_PROXY_ENABLED=true` on production). Georgian residential IPs give ~54s/listing and better reCAPTCHA scores.
+
+---
+
+## Queue Architecture (Thread 18)
+
+Two queues, two Horizon supervisors:
+
+| Queue     | Supervisor   | maxProcesses | Used by                      |
+| --------- | ------------ | ------------ | ---------------------------- |
+| `default` | supervisor-1 | 2            | bina.az (Guzzle HTTP)        |
+| `chrome`  | supervisor-2 | 1            | list.am + myhome.ge (Chrome) |
+
+The `chrome` queue with `maxProcesses=1` ensures only one Chrome session runs at a time, preventing session flooding.
 
 ---
 
@@ -184,17 +208,11 @@ Every listing is tracked through its full lifecycle:
 | `description`            | Raw listing description (native language)                  |
 | `translated_description` | English translation via Claude API                         |
 | `screenshot_url`         | B2 path of detail page screenshot                          |
-| `has_bill_of_sale`       | Bill of sale status (bina.az only, affects Baku pricing)   |
+| `has_bill_of_sale`       | Bill of sale status (bina.az only)                         |
 | `has_mortgage`           | Mortgage availability (bina.az only)                       |
 | `is_new_building`        | New build vs secondary (apartments only, bina.az)          |
 | `days_on_market`         | Computed at export time from listing_date → disappeared_at |
 | `status`                 | Active / Stale (90+ days) / Disappeared                    |
-
-Stale detection uses `COALESCE(listing_date, scraped_at)` consistently across Data Hub, Market Stats and Excel exports.
-
-**Note on bina.az listing_date:** bina.az only exposes `updatedAt` (last bumped date), not original posting date.
-
-The `atlas:check-listings` command checks 5% of active listings per run. Currently disabled for list.am - requires residential proxies. Can be enabled for bina.az (server-rendered, no proxy needed).
 
 ---
 
@@ -208,38 +226,29 @@ All exports show raw listings (no deduplication) — counts match source site ex
 | Apartments / Houses / New Dev | All Listings + Room Type Analysis     |
 | Offices / Commercial          | All Listings + Building Type Analysis |
 
-**Land Size Analysis sheet** — answers Colliers' four questions:
+**All Listings sheet** includes: `original_price` (GEL for Tbilisi, AZN for Baku), `area_sotka`/`price_per_sotka_usd` (land only), `translated_description`, `phone`, `agency_name` and more.
 
-1. Total listing count
-2. Min/max area (sqm)
-3. Count by size range (0–1,000 / 1,001–5,000 / 5,001–10,000 / 10,000+ sqm)
-4. Min/max/weighted avg price per sqm (AZN + USD) — overall and per range
-
-Weighted avg = sum of prices ÷ sum of areas (more accurate than averaging per-sqm prices).
-
-**All Listings sheet** includes 36 columns: `area_sotka`, `price_per_sotka_usd`, `has_bill_of_sale` (Yes/No), `has_mortgage` (Yes/No), `is_new_building` (Yes/No), `original_price_azn`, `translated_description`, `phone`, `agency_name`, `duplicate_group_id`, `screenshot_url` and more.
-
-**Background export:** Data Hub "Download Excel" dispatches a background job (`GenerateFilteredExportJob`) to avoid nginx timeouts on large datasets. Frontend polls for completion and auto-downloads on desktop, shows "Download Ready" button on mobile.
+**Background export:** Data Hub "Download Excel" dispatches a background job to avoid nginx timeouts on large datasets.
 
 ---
 
 ## Scheduled Jobs
 
-| Command                                  | Schedule                    | Description                                                  |
-| ---------------------------------------- | --------------------------- | ------------------------------------------------------------ |
-| `atlas:capture-screenshots`              | Daily 00:00                 | Screenshot new listings via Screenshotone API → B2 (200/day) |
-| `scraper:clean-zombies --hours=8`        | Daily 03:00                 | Auto-mark stale scraper runs as failed (Thread 17)           |
-| `atlas:fetch-exchange-rates`             | Daily 04:00                 | Fetch AMD/AZN/GEL/EUR rates from open.er-api.com             |
-| `scraper:run listam_*`                   | Mon/Wed/Fri 05:00–06:00     | Scrape all 7 Yerevan categories from list.am (10 min apart)  |
-| `scraper:run binaz_land_sale`            | Daily 12:00                 | Scrape Baku land listings                                    |
-| `scraper:run binaz_land_sale_sea_breeze` | Daily 12:10                 | Scrape Sea Breeze land (exact locationId filter)             |
-| `scraper:run binaz_offices_sale`         | Daily 12:20                 | Scrape Baku office sale listings                             |
-| `scraper:run binaz_offices_rent`         | Daily 12:30                 | Scrape Baku office rent listings                             |
-| `scraper:run binaz_commercial_sale`      | Daily 13:20                 | Scrape Baku commercial sale listings                         |
-| `scraper:run binaz_commercial_rent`      | Daily 13:30                 | Scrape Baku commercial rent listings                         |
-| `atlas:embed-listings --source=binaz_*`  | Daily 14:00–15:30           | Embed all active Baku categories for semantic search         |
-| `atlas:check-listings`                   | Commented out               | Requires residential proxies for list.am                     |
-| `scripts/backup-db.sh`                   | Daily 03:00 UTC (host cron) | pg_dump → B2 via rclone                                      |
+| Command                                  | Schedule                    | Description                                          |
+| ---------------------------------------- | --------------------------- | ---------------------------------------------------- |
+| `atlas:capture-screenshots`              | Daily 00:00                 | Screenshot new listings via Screenshotone API → B2   |
+| `scraper:clean-zombies --hours=8`        | Daily 03:00                 | Auto-mark stale scraper runs as failed               |
+| `atlas:fetch-exchange-rates`             | Daily 04:00                 | Fetch AMD/AZN/GEL/EUR rates from open.er-api.com     |
+| `scraper:run listam_*`                   | Mon/Wed/Fri 05:00–06:00     | Scrape all 7 Yerevan categories from list.am         |
+| `scraper:run binaz_land_sale`            | Daily 12:00                 | Scrape Baku land listings                            |
+| `scraper:run binaz_land_sale_sea_breeze` | Daily 12:10                 | Scrape Sea Breeze land                               |
+| `scraper:run binaz_offices_sale`         | Daily 12:20                 | Scrape Baku office sale listings                     |
+| `scraper:run binaz_offices_rent`         | Daily 12:30                 | Scrape Baku office rent listings                     |
+| `scraper:run binaz_commercial_sale`      | Daily 13:20                 | Scrape Baku commercial sale listings                 |
+| `scraper:run binaz_commercial_rent`      | Daily 13:30                 | Scrape Baku commercial rent listings                 |
+| `atlas:embed-listings --source=binaz_*`  | Daily 14:00–15:30           | Embed all active Baku categories for semantic search |
+| myhome.ge schedules                      | ⬜ Thread 19                | 9 categories, 16:00–23:55, after test data wipe      |
+| `scripts/backup-db.sh`                   | Daily 03:00 UTC (host cron) | pg_dump → B2 via rclone                              |
 
 ---
 
@@ -265,33 +274,7 @@ Weighted avg = sum of prices ÷ sum of areas (more accurate than averaging per-s
 
 All authenticated endpoints require a Sanctum Bearer token. Create one at `/yerevan/admin/tokens`.
 
-A full Postman collection is available at [`postman/atlas.postman_collection.json`](postman/atlas.postman_collection.json). Import it, set `base_url`, `market` and `token` variables and every endpoint is ready to use.
-
-**Market-aware endpoints** - pass `?market=yerevan` (or `baku`/`tbilisi`) to scope results:
-
-```
-GET    /api/v1/public/snapshot?market=yerevan          - public market snapshot (no auth)
-GET    /api/v1/trends/volume?market=yerevan&groupBy=month   - monthly/quarterly listing volume
-GET    /api/v1/trends/price?market=yerevan&groupBy=month    - monthly/quarterly median price/sqm
-GET    /api/v1/scrape/status-all?market=yerevan        - live status for market categories
-POST   /api/v1/scrape/start-all?market=yerevan         - start scraping market categories
-GET    /api/v1/scrape/trend?source=...                 - scraper run volume over time
-GET    /api/v1/listings?source=...                     - paginated listings with filters
-GET    /api/v1/listings/stats?source=...               - district price breakdown
-GET    /api/v1/listings/filter?market=yerevan          - Data Hub filter (all listings, no dedup)
-GET    /api/v1/listings/summary?source=...             - AI market summary
-GET    /api/v1/listings/yield?pair=...&market=yerevan  - rental yield per district
-GET    /api/v1/exports/{source}                        - Excel export, one category
-GET    /api/v1/exports?market=yerevan                  - Excel exports, all market categories
-POST   /api/v1/exports/filtered/request               - request background filtered Excel export
-GET    /api/v1/exports/filtered/status/{id}           - poll export job status
-GET    /api/v1/exports/filtered/download/{id}         - download completed export
-POST   /api/v1/ai/chat                                 - AI assistant chat (market passed in body)
-GET    /api/v1/ai/history?market=yerevan               - AI chat history for current user + market
-DELETE /{market}/admin/assistant/history               - clear AI chat history (web route, XSRF-TOKEN)
-GET    /api/v1/ai/usage                                - current user token usage and cost
-GET    /api/v1/ai/usage/system                         - system-wide usage, admin only
-```
+A full Postman collection is available at [`postman/atlas.postman_collection.json`](postman/atlas.postman_collection.json). Import it, set `base_url`, `market` (yerevan/baku/tbilisi) and `token` variables and every endpoint is ready to use.
 
 ---
 
