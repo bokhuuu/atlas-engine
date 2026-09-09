@@ -196,6 +196,15 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
     }
 
     /**
+     * myhome.ge uses session cookies (RefreshToken, S) destroyed on Chrome close.
+     * Session reuse keeps the authenticated Chrome alive across detail jobs.
+     */
+    public function supportsSessionReuse(): bool
+    {
+        return true;
+    }
+
+    /**
      * Queue config for myhome.ge profiles.
      *
      * Concurrency must be 1 — each job opens a Chrome browser session.

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\Scraper\Base\AbstractScraperProfile;
 use App\Modules\Scraper\Pipeline\Stages\CalculatePricePerSqmStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanAreaStage;
 use App\Modules\Scraper\Pipeline\Stages\CleanPhoneStage;
@@ -128,4 +129,74 @@ test('required fields include sourceProfileName, externalId, url and price', fun
         ->toContain('externalId')
         ->toContain('url')
         ->toContain('price');
+});
+
+// -------------------------------------------------------------------------
+// Session reuse
+// -------------------------------------------------------------------------
+
+test('myhome profile supports session reuse', function () use ($profile) {
+    expect($profile->supportsSessionReuse())->toBeTrue();
+});
+
+test('default profile does not support session reuse', function () {
+    $defaultProfile = new class extends AbstractScraperProfile
+    {
+        public function getName(): string
+        {
+            return 'test';
+        }
+
+        public function getBaseUrl(): string
+        {
+            return 'https://test.com';
+        }
+
+        public function getIndexUrlPattern(): string
+        {
+            return 'https://test.com?page={page}';
+        }
+
+        public function getIndexSelectors(): array
+        {
+            return [];
+        }
+
+        public function getDetailSelectors(): array
+        {
+            return [];
+        }
+
+        public function getRequiredFields(): array
+        {
+            return [];
+        }
+
+        public function getScraperClass(): string
+        {
+            return '';
+        }
+
+        public function getDistricts(): array
+        {
+            return [];
+        }
+
+        public function getDistrictAliases(): array
+        {
+            return [];
+        }
+
+        public function getListingType(): string
+        {
+            return 'sale';
+        }
+
+        public function getPropertyType(): string
+        {
+            return 'apartment';
+        }
+    };
+
+    expect($defaultProfile->supportsSessionReuse())->toBeFalse();
 });

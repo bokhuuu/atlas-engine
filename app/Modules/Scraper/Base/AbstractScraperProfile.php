@@ -82,6 +82,14 @@ abstract class AbstractScraperProfile implements ScraperProfileInterface
     }
 
     /**
+     * HTTP-based profiles never reuse sessions — no browser involved.
+     */
+    public function supportsSessionReuse(): bool
+    {
+        return false;
+    }
+
+    /**
      * Maximum pages to scrape per run.
      * Set SCRAPER_MAX_PAGES=2 locally for fast testing.
      */

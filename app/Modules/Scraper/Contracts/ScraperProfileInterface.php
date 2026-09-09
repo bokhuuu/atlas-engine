@@ -130,4 +130,12 @@ interface ScraperProfileInterface
      * Replaces the value the scraper used to hardcode directly.
      */
     public function getPropertyType(): string;
+
+    /**
+     * Whether this profile supports Chrome session reuse across jobs.
+     * When true, CrawlIndexPageJob saves the session ID to Redis instead
+     * of closing the browser — detail jobs reconnect to the same session.
+     * Required for sites where auth uses session cookies (e.g. myhome.ge).
+     */
+    public function supportsSessionReuse(): bool;
 }
