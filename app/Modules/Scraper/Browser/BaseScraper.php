@@ -337,6 +337,43 @@ abstract class BaseScraper
     }
 
     /**
+     * Return the current Chrome session ID from the Grid.
+     * Used by CrawlIndexPageJob to save the session to Redis
+     * so detail jobs can reconnect to the same authenticated session.
+     * Returns null if browser is not yet initialized.
+     */
+    public function getSessionId(): ?string
+    {
+        if (! isset($this->browser)) {
+            return null;
+        }
+
+        return $this->browser->driver->getSessionID();
+    }
+
+    /**
+     * Reconnect to an existing Chrome session on the Grid by session ID.
+     * Called by CrawlDetailPageJob — skips creating a new browser,
+     * reuses the authenticated session from the index job instead.
+     * Returns true on success, false if reconnect fails (caller falls back).
+     */
+    public function connectToSession(string $sessionId): bool
+    {
+        try {
+            $driver = RemoteWebDriver::createBySessionID(
+                $sessionId,
+                config('scraper.chromedriver_url'),
+            );
+
+            $this->browser = new Browser($driver);
+
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    /**
      * Checks Redis before opening a browser. On cache hit - returns stored
      * result instantly with no browser interaction. On miss - delegates to
      * crawlDetailPage(), caches the result for 24 hours, then returns it.
