@@ -267,13 +267,40 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Phone extraction deferred — requires non-headless Chrome or residential proxy
-     * for reliable reCAPTCHA score. statement_uuid stored in extras for future use.
-     * See Thread 19 for full implementation plan.
+     * Reveal and extract the phone number via the "Show number" button.
+     *
+     * Requires an authenticated Chrome session — called only when the detail
+     * job has reconnected to the session saved by CrawlIndexPageJob.
+     * Clicks the last "Show number" button (owner contact, not agent),
+     * waits for the reveal, then reads the tel: link.
+     * Returns null silently on any failure — phone is optional.
      */
     private function extractPhone(): ?string
     {
-        return null;
+        try {
+            $clicked = $this->browser->script("
+            const btns = Array.from(document.querySelectorAll('button'))
+                .filter(b => b.textContent.includes('Show number'));
+            if (!btns.length) return false;
+            btns[btns.length - 1].click();
+            return true;
+        ");
+
+            if (! ($clicked[0] ?? false)) {
+                return null;
+            }
+
+            sleep(10);
+
+            $result = $this->browser->script("
+            const el = document.querySelector('a[href^=\"tel:+\"]');
+            return el ? el.href.replace('tel:', '') : null;
+        ");
+
+            return isset($result[0]) && $result[0] !== '' ? (string) $result[0] : null;
+        } catch (Throwable) {
+            return null;
+        }
     }
 
     /**
