@@ -16,6 +16,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Throwable;
 
 /**
@@ -60,16 +61,38 @@ class CrawlDetailPageJob implements ShouldQueue
         ];
     }
 
+    /**
+     * For session-reuse profiles (myhome.ge): reconnects to the existing
+     * Chrome session saved by CrawlIndexPageJob — session cookies intact,
+     * phone reveal works. Falls back to cookie injection if session expired.
+     * For all other profiles: current behavior unchanged.
+     */
     public function handle(ListingRepository $repository): void
     {
         $scraper = app($this->profile->getScraperClass(), [
             'profile' => $this->profile,
         ]);
 
-        $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
-        if ($authStrategy !== null) {
-            $scraper->setAuthStrategy($authStrategy);
-            $authStrategy->restoreCookiesOnly();
+        if ($this->profile->supportsSessionReuse()) {
+            $sessionId = Redis::get(
+                'scraper:session:'.$this->profile->getName()
+            );
+
+            if ($sessionId !== null) {
+                $scraper->connectToSession($sessionId);
+            } else {
+                $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
+                if ($authStrategy !== null) {
+                    $scraper->setAuthStrategy($authStrategy);
+                    $authStrategy->restoreCookiesOnly();
+                }
+            }
+        } else {
+            $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
+            if ($authStrategy !== null) {
+                $scraper->setAuthStrategy($authStrategy);
+                $authStrategy->restoreCookiesOnly();
+            }
         }
 
         try {
