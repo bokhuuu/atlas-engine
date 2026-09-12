@@ -41,7 +41,7 @@ class BinazScraper extends BaseScraper
     ) {
         parent::__construct($profile, $proxyResolver);
 
-        $proxy = config('scraper.binaz_proxy');
+        $proxy = config('scraper.binaz.proxy');
 
         $this->client = new Client([
             'timeout' => 30,
