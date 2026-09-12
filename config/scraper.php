@@ -548,6 +548,7 @@ return [
         'location_profiles' => [
             'Sea Breeze' => 'binaz_land_sale_sea_breeze',
         ],
+        'proxy' => env('BINAZ_PROXY'),
     ],
 
     /*

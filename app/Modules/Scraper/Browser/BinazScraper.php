@@ -41,6 +41,8 @@ class BinazScraper extends BaseScraper
     ) {
         parent::__construct($profile, $proxyResolver);
 
+        $proxy = config('scraper.binaz_proxy');
+
         $this->client = new Client([
             'timeout' => 30,
             'headers' => [
@@ -48,6 +50,7 @@ class BinazScraper extends BaseScraper
                 'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Language' => 'ru-RU,ru;q=0.9',
             ],
+            'proxy' => $proxy ?: null,
         ]);
     }
 

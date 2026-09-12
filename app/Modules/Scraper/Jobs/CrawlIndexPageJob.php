@@ -79,7 +79,11 @@ class CrawlIndexPageJob implements ShouldQueue
         $authStrategy = $this->profile->getAuthStrategy($scraper->getBrowser());
         if ($authStrategy !== null) {
             $scraper->setAuthStrategy($authStrategy);
-            $authStrategy->restoreCookiesOnly();
+            if ($this->profile->supportsSessionReuse()) {
+                $authStrategy->authenticate();
+            } else {
+                $authStrategy->restoreCookiesOnly();
+            }
         }
 
         try {
