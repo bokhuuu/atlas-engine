@@ -101,7 +101,7 @@ abstract class BaseScraper
         $proxy = $this->proxyResolver->resolve();
 
         if ($proxy !== null) {
-            $args[] = '--proxy-server='.$this->proxyResolver->withCredentials($proxy);
+            $args[] = '--proxy-server='.$proxy;
         }
 
         return $args;
