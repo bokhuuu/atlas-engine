@@ -54,7 +54,7 @@ class ScrapeController extends Controller
     public function start(StartScrapeRequest $request): JsonResponse
     {
         $source = $request->validated('source');
-        $pages = $request->validated('pages');
+        $pages = $request->validated('pages') !== null ? (int) $request->validated('pages') : null;
 
         $profileClass = config("scraper.profiles.{$source}");
         $profile = app($profileClass);
@@ -82,7 +82,7 @@ class ScrapeController extends Controller
      */
     public function startAll(StartAllScrapeRequest $request): JsonResponse
     {
-        $pages = $request->validated('pages');
+        $pages = $request->validated('pages') !== null ? (int) $request->validated('pages') : null;
         $sources = $this->currentMarketSources();
         $started = [];
         $skipped = [];
