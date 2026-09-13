@@ -100,6 +100,10 @@ class ListingRepository
             $query->where('district', $filters['district']);
         }
 
+        if (! empty($filters['sub_district'])) {
+            $query->whereRaw("extras->>'sub_district' = ?", [$filters['sub_district']]);
+        }
+
         if (! empty($filters['min_price'])) {
             $query->where('price', '>=', $filters['min_price']);
         }

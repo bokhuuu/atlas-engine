@@ -54,9 +54,32 @@ class DataHubController extends Controller
             ->pluck('district')
             ->toArray();
 
+        $subDistricts = [];
+
+        if (in_array('myhome', $sourcePrefixes)) {
+            $rows = Listing::query()
+                ->where(function ($query) use ($sourcePrefixes) {
+                    foreach ($sourcePrefixes as $prefix) {
+                        $query->orWhere('source_profile_name', 'like', $prefix.'_%');
+                    }
+                })
+                ->whereNotNull('district')
+                ->whereRaw("extras->>'sub_district' IS NOT NULL")
+                ->selectRaw("district, extras->>'sub_district' as sub_district")
+                ->distinct()
+                ->orderBy('district')
+                ->orderByRaw("extras->>'sub_district'")
+                ->get();
+
+            foreach ($rows as $row) {
+                $subDistricts[$row->district][] = $row->sub_district;
+            }
+        }
+
         return Inertia::render('admin/data-hub', [
             'categories' => $categories,
             'districts' => $districts,
+            'sub_districts' => $subDistricts,
             'stale_days' => (int) config('scraper.stale_listing_days', 90),
             'show_bill_of_sale' => in_array('binaz', $sourcePrefixes),
             'show_mortgage' => in_array('binaz', $sourcePrefixes),

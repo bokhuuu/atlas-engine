@@ -166,6 +166,7 @@ class ListingController extends Controller
         $filters = $request->only([
             'source',
             'district',
+            'sub_district',
             'rooms',
             'min_price',
             'max_price',

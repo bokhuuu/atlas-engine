@@ -19,6 +19,7 @@ interface Category {
 interface Props {
     categories: Category[];
     districts: string[];
+    sub_districts: Record<string, string[]>;
     show_bill_of_sale: boolean;
     show_mortgage: boolean;
     show_new_building: boolean;
@@ -27,6 +28,7 @@ interface Props {
 interface FilterState {
     source: string;
     district: string;
+    sub_district: string;
     status: string[];
     min_price: string;
     max_price: string;
@@ -58,6 +60,7 @@ interface ValidationErrors {
 const makeDefault = (categories: Category[]): FilterState => ({
     source: categories[0]?.source ?? '',
     district: '',
+    sub_district: '',
     status: ['active', 'stale', 'disappeared'],
     min_price: '',
     max_price: '',
@@ -115,6 +118,7 @@ function validate(f: FilterState): ValidationErrors {
 export default function DataHub({
     categories,
     districts,
+    sub_districts,
     show_bill_of_sale,
     show_mortgage,
     show_new_building,
@@ -153,6 +157,10 @@ export default function DataHub({
 
             if (f.district) {
                 params.set('district', f.district);
+            }
+
+            if (f.sub_district) {
+                params.set('sub_district', f.sub_district);
             }
 
             f.status.forEach((s) => params.append('status[]', s));
@@ -290,6 +298,10 @@ export default function DataHub({
         let count = 0;
 
         if (filters.district) {
+            count++;
+        }
+
+        if (filters.sub_district) {
             count++;
         }
 
@@ -554,6 +566,7 @@ export default function DataHub({
                                     setFilters((p) => ({
                                         ...p,
                                         district: e.target.value,
+                                        sub_district: '',
                                     }))
                                 }
                                 className={selectCls}
@@ -566,6 +579,34 @@ export default function DataHub({
                                 ))}
                             </select>
                         </div>
+
+                        {filters.district &&
+                            sub_districts[filters.district]?.length > 0 && (
+                                <div>
+                                    {sectionLabel('Sub-district')}
+                                    <select
+                                        value={filters.sub_district}
+                                        onChange={(e) =>
+                                            setFilters((p) => ({
+                                                ...p,
+                                                sub_district: e.target.value,
+                                            }))
+                                        }
+                                        className={selectCls}
+                                    >
+                                        <option value="">
+                                            All sub-districts
+                                        </option>
+                                        {sub_districts[filters.district].map(
+                                            (sd) => (
+                                                <option key={sd} value={sd}>
+                                                    {sd}
+                                                </option>
+                                            ),
+                                        )}
+                                    </select>
+                                </div>
+                            )}
 
                         <div>
                             {sectionLabel('Listed by')}
