@@ -137,6 +137,46 @@ function getSuggestedQueries(market: string) {
         ];
     }
 
+    if (market === 'tbilisi') {
+        return [
+            {
+                icon: BarChart2,
+                label: 'Median price/sqm for apartments for sale',
+                query: 'What is the median price per sqm for apartments for sale in Tbilisi?',
+            },
+            {
+                icon: Zap,
+                label: 'Vake vs Saburtalo vs Old Tbilisi',
+                query: 'Compare median price per sqm for apartments for sale across Vake-Saburtalo, Old Tbilisi, and Isani-Samgori districts.',
+            },
+            {
+                icon: Search,
+                label: 'Sub-district breakdown in Vake-Saburtalo',
+                query: 'Show me average apartment sale prices broken down by sub-district within Vake-Saburtalo.',
+            },
+            {
+                icon: PiggyBank,
+                label: 'Best rental yield districts',
+                query: 'What is the estimated rental yield per district for residential property in Tbilisi?',
+            },
+            {
+                icon: TrendingDown,
+                label: 'Price reductions this week',
+                query: 'Which districts had the most price reductions for apartments in the last 7 days?',
+            },
+            {
+                icon: List,
+                label: 'Find apartments under $150k',
+                query: 'Find 3 bedroom apartments for sale under $150,000 in Tbilisi.',
+            },
+            {
+                icon: FileSpreadsheet,
+                label: 'Export apartments to Excel',
+                query: 'Export all apartments for sale listings to Excel.',
+            },
+        ];
+    }
+
     return [
         {
             icon: BarChart2,
