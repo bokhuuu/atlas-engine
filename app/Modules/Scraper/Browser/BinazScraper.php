@@ -35,6 +35,8 @@ class BinazScraper extends BaseScraper
 {
     private Client $client;
 
+    private Client $graphqlClient;
+
     public function __construct(
         ScraperProfileInterface $profile,
         ProxyResolver $proxyResolver,
@@ -42,6 +44,15 @@ class BinazScraper extends BaseScraper
         parent::__construct($profile, $proxyResolver);
 
         $proxy = config('scraper.binaz.proxy');
+
+        $this->graphqlClient = new Client([
+            'timeout' => 30,
+            'headers' => [
+                'User-Agent' => config('scraper.user_agent'),
+                'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language' => 'ru-RU,ru;q=0.9',
+            ],
+        ]);
 
         $this->client = new Client([
             'timeout' => 30,
@@ -206,7 +217,7 @@ class BinazScraper extends BaseScraper
         }
 
         try {
-            $response = $this->client->post('https://ru.bina.az/graphql', [
+            $response = $this->graphqlClient->post('https://ru.bina.az/graphql', [
                 'json' => [
                     'operationName' => 'SearchItems',
                     'variables' => $variables,
