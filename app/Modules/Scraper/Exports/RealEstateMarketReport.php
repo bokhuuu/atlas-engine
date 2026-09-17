@@ -203,7 +203,19 @@ class AllListingsSheet implements FromArray, WithHeadings, WithTitle
         'screenshot_url',
     ];
 
-    public function __construct(private readonly array $data) {}
+    public function __construct(private readonly array $data)
+    {
+        $isLand = collect($data)->contains(
+            fn ($row) => str_contains($row['source_profile_name'] ?? '', '_land_')
+        );
+
+        if (! $isLand) {
+            $this->clientColumns = array_values(array_filter(
+                $this->clientColumns,
+                fn ($col) => ! in_array($col, ['area_sotka', 'price_per_sotka_usd'])
+            ));
+        }
+    }
 
     public function title(): string
     {
