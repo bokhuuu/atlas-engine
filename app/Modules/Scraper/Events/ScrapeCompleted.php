@@ -21,5 +21,6 @@ class ScrapeCompleted
         public readonly int $scraperRunId,
         public readonly string $source,
         public readonly int $listingCount,
+        public readonly int $encounteredCount = 0,
     ) {}
 }

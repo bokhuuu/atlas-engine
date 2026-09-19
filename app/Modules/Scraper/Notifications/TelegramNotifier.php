@@ -42,7 +42,12 @@ class TelegramNotifier implements NotifierInterface
         $message = "Atlas [{$source}] — {$status}";
 
         if ($count !== null) {
-            $message .= "\nListings saved: {$count}";
+            $encountered = $payload['encountered_count'] ?? null;
+            if ($encountered !== null && $encountered > 0 && $count === 0) {
+                $message .= "\nListings saved: {$count} ({$encountered} encountered, all existing)";
+            } else {
+                $message .= "\nListings saved: {$count}";
+            }
         }
 
         if ($error !== null) {

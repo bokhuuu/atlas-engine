@@ -67,7 +67,7 @@ class ScrapeCompletedJob implements ShouldQueue
 
         $driftDetector->check($this->scraperRunId, $this->source, $encounteredCount);
 
-        event(new ScrapeCompleted(scraperRunId: $this->scraperRunId, source: $this->source, listingCount: $savedCount));
+        event(new ScrapeCompleted(scraperRunId: $this->scraperRunId, source: $this->source, listingCount: $savedCount, encounteredCount: $encounteredCount));
     }
 
     public function failed(Throwable $exception): void

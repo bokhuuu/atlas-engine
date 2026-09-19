@@ -36,6 +36,7 @@ class SendScrapeCompletedNotification
             'source' => $event->source,
             'status' => 'completed',
             'listing_count' => $event->listingCount,
+            'encountered_count' => $event->encounteredCount,
         ];
 
         foreach ($profile->getNotifiers() as $notifierClass) {
