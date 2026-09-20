@@ -17,13 +17,13 @@ Schedule::command('scraper:clean-zombies --hours=8')->dailyAt('03:00');
 Schedule::command('atlas:fetch-exchange-rates')->dailyAt('04:00');
 
 // Yerevan
-Schedule::command('scraper:run listam_apartments_sale --pages=2')->days([1, 3, 5])->at('05:00');
-Schedule::command('scraper:run listam_apartments_rent --pages=2')->days([1, 3, 5])->at('05:45');
-Schedule::command('scraper:run listam_houses_sale --pages=1')->days([1, 3, 5])->at('07:00');
-Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5])->at('07:30');
-Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('08:00');
-Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('08:30');
-Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('09:00');
+// Schedule::command('scraper:run listam_apartments_sale --pages=2')->days([1, 3, 5])->at('05:00');
+// Schedule::command('scraper:run listam_apartments_rent --pages=2')->days([1, 3, 5])->at('05:45');
+// Schedule::command('scraper:run listam_houses_sale --pages=1')->days([1, 3, 5])->at('07:00');
+// Schedule::command('scraper:run listam_commercial_sale --pages=1')->days([1, 3, 5])->at('07:30');
+// Schedule::command('scraper:run listam_commercial_rent --pages=1')->days([1, 3, 5])->at('08:00');
+// Schedule::command('scraper:run listam_land_sale --pages=1')->days([1, 3, 5])->at('08:30');
+// Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('09:00');
 
 // Baku market - bina.az land listings
 
