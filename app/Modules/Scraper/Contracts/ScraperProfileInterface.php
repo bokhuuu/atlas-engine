@@ -138,4 +138,11 @@ interface ScraperProfileInterface
      * Required for sites where auth uses session cookies (e.g. myhome.ge).
      */
     public function supportsSessionReuse(): bool;
+
+    /**
+     * Whether this profile requires Chrome to route through proxy.
+     * list.am detail pages are blocked for VPS IP — proxy needed.
+     * myhome.ge works without proxy — no bandwidth waste.
+     */
+    public function requiresChromProxy(): bool;
 }

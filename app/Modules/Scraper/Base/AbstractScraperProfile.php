@@ -90,6 +90,14 @@ abstract class AbstractScraperProfile implements ScraperProfileInterface
     }
 
     /**
+     * HTTP-based profiles never use Chrome proxy.
+     */
+    public function requiresChromProxy(): bool
+    {
+        return false;
+    }
+
+    /**
      * Maximum pages to scrape per run.
      * Set SCRAPER_MAX_PAGES=2 locally for fast testing.
      */

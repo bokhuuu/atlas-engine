@@ -196,6 +196,14 @@ abstract class AbstractListAmProfile extends AbstractScraperProfile
     }
 
     /**
+     * list.am detail pages are blocked for VPS IP — route Chrome through proxy.
+     */
+    public function requiresChromProxy(): bool
+    {
+        return true;
+    }
+
+    /**
      * Same list.am login flow for every category - cookie restore first,
      * form login fallback. profileName scopes the cookie file per category
      * automatically, since getName() differs in each concrete subclass.

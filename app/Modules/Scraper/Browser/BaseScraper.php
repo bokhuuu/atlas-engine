@@ -72,6 +72,17 @@ abstract class BaseScraper
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
 
+        if ($this->proxyResolver->resolve() !== null && $this->profile->requiresChromProxy()) {
+            $proxy = $this->proxyResolver->resolve();
+            $parsed = parse_url($proxy);
+            $proxyHost = ($parsed['host'] ?? 'p.webshare.io').':'.($parsed['port'] ?? 80);
+            $capabilities->setCapability('proxy', [
+                'proxyType' => 'manual',
+                'httpProxy' => $proxyHost,
+                'sslProxy' => $proxyHost,
+            ]);
+        }
+
         $driver = RemoteWebDriver::create(
             config('scraper.chromedriver_url'),
             $capabilities,
@@ -100,7 +111,7 @@ abstract class BaseScraper
 
         $proxy = $this->proxyResolver->resolve();
 
-        if ($proxy !== null) {
+        if ($proxy !== null && $this->profile->requiresChromProxy()) {
             $args[] = '--proxy-server='.$proxy;
         }
 
