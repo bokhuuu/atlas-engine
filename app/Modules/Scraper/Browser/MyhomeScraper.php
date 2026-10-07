@@ -304,6 +304,8 @@ class MyhomeScraper extends BaseScraper
                 'Global-Authorization' => $accessToken,
                 'X-Website-Key' => 'myhome',
                 'Content-Type' => 'application/json',
+            ])->withOptions([
+                'proxy' => config('scraper.phone_reveal_proxy'),
             ])->post(
                 "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$statementUuid}",
                 [
