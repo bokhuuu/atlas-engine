@@ -50,4 +50,7 @@ return [
         'application_key' => env('B2_APPLICATION_KEY'),
         'bucket' => env('B2_BUCKET'),
     ],
+    'capsolver' => [
+        'api_key' => env('CAPSOLVER_API_KEY'),
+    ],
 ];
