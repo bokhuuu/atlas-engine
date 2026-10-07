@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Browser;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
-use App\Modules\Scraper\Support\CapSolverService;
-use Illuminate\Support\Facades\Http;
 use Laravel\Dusk\Browser;
 use Throwable;
 
@@ -269,13 +267,11 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Reveal the phone number via the tnet API using a CapSolver reCAPTCHA v3 token.
+     * Reveal the phone number by clicking "Show number" in the browser.
      *
-     * Flow:
-     *   1. Read the AccessToken cookie from the saved cookie file
-     *   2. Get statement_uuid from the page's __NEXT_DATA__ (already in $statement, passed in)
-     *   3. Solve reCAPTCHA v3 via CapSolver
-     *   4. POST to tnet phone reveal API
+     * myhome.ge masks the phone in __NEXT_DATA__ until the button is clicked.
+     * After the click, the phone renders as <a href="tel:+995..."> in the DOM.
+     * We observe DOM mutations and read the href once it appears.
      *
      * Returns null silently on any failure — phone is optional.
      */
@@ -286,69 +282,34 @@ class MyhomeScraper extends BaseScraper
         }
 
         try {
-            $accessToken = $this->readAccessToken();
+            $result = $this->browser->script("
+                return await new Promise((resolve) => {
+                    const btn = Array.from(document.querySelectorAll('button'))
+                        .find(b => b.textContent.includes('ნომრის ნახვა'));
 
-            if ($accessToken === null) {
-                return null;
-            }
+                    if (!btn) { resolve(null); return; }
 
-            $capsolver = new CapSolverService(
-                apiKey: config('services.capsolver.api_key'),
-                siteKey: config('scraper.myhome_recaptcha_site_key'),
-                pageUrl: 'https://www.myhome.ge',
-            );
+                    const observer = new MutationObserver(() => {
+                        const tel = document.querySelector('a[href^=\"tel:\"]');
+                        if (tel) {
+                            observer.disconnect();
+                            const phone = tel.href.replace('tel:', '').replace('+995', '').replace(/\\s+/g, '').trim();
+                            resolve(phone !== '' ? phone : null);
+                        }
+                    });
 
-            $token = $capsolver->solve();
+                    observer.observe(document.body, { childList: true, subtree: true });
+                    btn.click();
+                    setTimeout(() => { observer.disconnect(); resolve(null); }, 8000);
+                });
+            ");
 
-            $response = Http::withHeaders([
-                'Global-Authorization' => $accessToken,
-                'X-Website-Key' => 'myhome',
-                'Content-Type' => 'application/json',
-            ])->withOptions([
-                'proxy' => config('scraper.phone_reveal_proxy'),
-            ])->post(
-                "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$statementUuid}",
-                [
-                    'recaptcha_version' => 'v3',
-                    'response_token' => $token,
-                ]
-            );
-
-            $phone = $response->json('data.phones.0') ?? $response->json('data.phone') ?? null;
+            $phone = $result[0] ?? null;
 
             return $phone !== null && $phone !== '' ? (string) $phone : null;
         } catch (Throwable) {
             return null;
         }
-    }
-
-    /**
-     * Read the AccessToken cookie value from the saved cookie file.
-     *
-     * Cookie file: storage/app/scraper/cookies/{profileName}.json
-     * Returns null if file missing or AccessToken not found.
-     */
-    private function readAccessToken(): ?string
-    {
-        $path = storage_path("app/scraper/cookies/{$this->profile->getName()}.json");
-
-        if (! file_exists($path)) {
-            return null;
-        }
-
-        $cookies = json_decode(file_get_contents($path), true);
-
-        if (! is_array($cookies)) {
-            return null;
-        }
-
-        foreach ($cookies as $cookie) {
-            if (($cookie['name'] ?? '') === 'AccessToken' && ! empty($cookie['value'])) {
-                return (string) $cookie['value'];
-            }
-        }
-
-        return null;
     }
 
     /**
