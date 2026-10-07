@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Modules\Scraper\Support\CapSolverService;
 use Illuminate\Support\Facades\Http;
-use RuntimeException;
 
 beforeEach(function () {
     Http::preventStrayRequests();

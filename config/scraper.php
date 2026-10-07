@@ -518,6 +518,8 @@ return [
         'password' => env('MYHOME_PASSWORD'),
     ],
 
+    'myhome_recaptcha_site_key' => env('MYHOME_RECAPTCHA_SITE_KEY', '6LeziPEpAAAAAHuR9vWBVCrfklSbWt8zixM4jAbM'),
+
     /*
     |--------------------------------------------------------------------------
     | bina.az API Configuration

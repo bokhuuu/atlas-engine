@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Browser;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
+use App\Modules\Scraper\Support\CapSolverService;
+use Illuminate\Support\Facades\Http;
 use Laravel\Dusk\Browser;
 use Throwable;
 
@@ -130,7 +132,7 @@ class MyhomeScraper extends BaseScraper
             'building_type' => null,
             'condition' => null,
             'agency_name' => $this->extractAgencyName($statement),
-            'phone' => $this->extractPhone(),
+            'phone' => $this->extractPhone($statement['uuid'] ?? null),
             'image_urls' => $this->extractImageUrls(),
             'listing_date' => $statement['last_updated'] ?? $statement['created_at'] ?? null,
             'extras' => $this->extractExtras($statement),
@@ -267,40 +269,84 @@ class MyhomeScraper extends BaseScraper
     }
 
     /**
-     * Reveal and extract the phone number via the "Show number" button.
+     * Reveal the phone number via the tnet API using a CapSolver reCAPTCHA v3 token.
      *
-     * Requires an authenticated Chrome session — called only when the detail
-     * job has reconnected to the session saved by CrawlIndexPageJob.
-     * Clicks the last "Show number" button (owner contact, not agent),
-     * waits for the reveal, then reads the tel: link.
+     * Flow:
+     *   1. Read the AccessToken cookie from the saved cookie file
+     *   2. Get statement_uuid from the page's __NEXT_DATA__ (already in $statement, passed in)
+     *   3. Solve reCAPTCHA v3 via CapSolver
+     *   4. POST to tnet phone reveal API
+     *
      * Returns null silently on any failure — phone is optional.
      */
-    private function extractPhone(): ?string
+    private function extractPhone(?string $statementUuid): ?string
     {
-        try {
-            $clicked = $this->browser->script("
-            const btns = Array.from(document.querySelectorAll('button'))
-                .filter(b => b.textContent.includes('Show number'));
-            if (!btns.length) return false;
-            btns[btns.length - 1].click();
-            return true;
-        ");
+        if ($statementUuid === null || $statementUuid === '') {
+            return null;
+        }
 
-            if (! ($clicked[0] ?? false)) {
+        try {
+            $accessToken = $this->readAccessToken();
+
+            if ($accessToken === null) {
                 return null;
             }
 
-            sleep(10);
+            $capsolver = new CapSolverService(
+                apiKey: config('services.capsolver.api_key'),
+                siteKey: config('scraper.myhome_recaptcha_site_key'),
+                pageUrl: 'https://www.myhome.ge',
+            );
 
-            $result = $this->browser->script("
-            const el = document.querySelector('a[href^=\"tel:+\"]');
-            return el ? el.href.replace('tel:', '') : null;
-        ");
+            $token = $capsolver->solve();
 
-            return isset($result[0]) && $result[0] !== '' ? (string) $result[0] : null;
+            $response = Http::withHeaders([
+                'Global-Authorization' => $accessToken,
+                'X-Website-Key' => 'myhome',
+                'Content-Type' => 'application/json',
+            ])->post(
+                "https://api-statements.tnet.ge/v1/statements/phone/show?statement_uuid={$statementUuid}",
+                [
+                    'recaptcha_version' => 'v3',
+                    'response_token' => $token,
+                ]
+            );
+
+            $phone = $response->json('data.phones.0') ?? $response->json('data.phone') ?? null;
+
+            return $phone !== null && $phone !== '' ? (string) $phone : null;
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Read the AccessToken cookie value from the saved cookie file.
+     *
+     * Cookie file: storage/app/scraper/cookies/{profileName}.json
+     * Returns null if file missing or AccessToken not found.
+     */
+    private function readAccessToken(): ?string
+    {
+        $path = storage_path("app/scraper/cookies/{$this->profile->getName()}.json");
+
+        if (! file_exists($path)) {
+            return null;
+        }
+
+        $cookies = json_decode(file_get_contents($path), true);
+
+        if (! is_array($cookies)) {
+            return null;
+        }
+
+        foreach ($cookies as $cookie) {
+            if (($cookie['name'] ?? '') === 'AccessToken' && ! empty($cookie['value'])) {
+                return (string) $cookie['value'];
+            }
+        }
+
+        return null;
     }
 
     /**
