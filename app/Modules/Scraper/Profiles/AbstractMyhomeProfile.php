@@ -205,6 +205,17 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
     }
 
     /**
+     * Route Chrome through the rotating residential proxy.
+     *
+     * auth.tnet.ge blocks headless Chrome from VPS IPs via Cloudflare.
+     * Webshare rotating residential proxies pass as real users.
+     */
+    public function requiresChromProxy(): bool
+    {
+        return true;
+    }
+
+    /**
      * Queue config for myhome.ge profiles.
      *
      * Concurrency must be 1 — each job opens a Chrome browser session.
