@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Scraper\Browser;
 
 use App\Modules\Scraper\Contracts\ScraperProfileInterface;
+use Illuminate\Support\Facades\Log;
 use Laravel\Dusk\Browser;
 use Throwable;
 
@@ -282,32 +283,36 @@ class MyhomeScraper extends BaseScraper
         }
 
         try {
-            $result = $this->browser->script("
-                return await new Promise((resolve) => {
-                    const btn = Array.from(document.querySelectorAll('button'))
-                        .find(b => b.textContent.includes('ნომრის ნახვა'));
-
-                    if (!btn) { resolve(null); return; }
-
-                    const observer = new MutationObserver(() => {
-                        const tel = document.querySelector('a[href^=\"tel:\"]');
-                        if (tel) {
-                            observer.disconnect();
-                            const phone = tel.href.replace('tel:', '').replace('+995', '').replace(/\\s+/g, '').trim();
-                            resolve(phone !== '' ? phone : null);
-                        }
-                    });
-
-                    observer.observe(document.body, { childList: true, subtree: true });
-                    btn.click();
-                    setTimeout(() => { observer.disconnect(); resolve(null); }, 8000);
-                });
+            // Step 1: click the "Show number" button
+            $this->browser->script("
+                const btn = Array.from(document.querySelectorAll('button'))
+                    .find(b => b.textContent.includes('ნომრის ნახვა'));
+                if (btn) btn.click();
             ");
 
-            $phone = $result[0] ?? null;
+            // Step 2: poll for tel: link (Dusk executeScript is synchronous — cannot await Promise)
+            $phone = null;
+            for ($i = 0; $i < 16; $i++) {
+                usleep(500_000); // 0.5 s × 16 = 8 s max
+                $result = $this->browser->script("
+                    const tel = document.querySelector('a[href^=\"tel:\"]');
+                    return tel ? tel.href : null;
+                ");
+                $href = $result[0] ?? null;
+                if ($href !== null && $href !== '') {
+                    $phone = str_replace(['tel:', '+995'], '', $href);
+                    $phone = trim(preg_replace('/\s+/', '', $phone));
+                    break;
+                }
+            }
 
-            return $phone !== null && $phone !== '' ? (string) $phone : null;
-        } catch (Throwable) {
+            return ($phone !== null && $phone !== '') ? $phone : null;
+        } catch (Throwable $e) {
+            Log::error('MyhomeScraper extractPhone failed', [
+                'uuid' => $statementUuid,
+                'error' => $e->getMessage(),
+            ]);
+
             return null;
         }
     }
