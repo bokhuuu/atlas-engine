@@ -269,6 +269,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
             'baseUrl' => $this->getBaseUrl(),
             'authCheckSelector' => '.user-avatar, .user-menu, span.truncate',
             'loginStrategy' => $formLogin,
+            'authDomain' => 'https://auth.tnet.ge',
         ]);
     }
 }

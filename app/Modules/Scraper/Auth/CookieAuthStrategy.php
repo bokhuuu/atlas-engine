@@ -30,6 +30,7 @@ class CookieAuthStrategy implements AuthStrategyInterface
         private readonly string $baseUrl,
         private readonly string $authCheckSelector,
         private readonly FormLoginStrategy $loginStrategy,
+        private readonly ?string $authDomain = null,
     ) {}
 
     /**
@@ -127,8 +128,25 @@ class CookieAuthStrategy implements AuthStrategyInterface
             return false;
         }
 
-        // Cookies can only be set for the domain the browser is currently on.
-        // Navigate to the base URL first so the domain matches.
+        // If an SSO domain is configured, inject its cookies first while on that domain.
+        // WebDriver rejects cookies whose domain doesn't match the current page.
+        if ($this->authDomain !== null) {
+            $this->browser->visit($this->authDomain);
+
+            foreach ($cookies as $cookie) {
+                if (empty($cookie['name']) || ! array_key_exists('value', $cookie)) {
+                    continue;
+                }
+
+                try {
+                    $this->browser->driver->manage()->addCookie($cookie);
+                } catch (\Throwable) {
+                    // Skip cookies that don't belong to this domain
+                }
+            }
+        }
+
+        // Now inject all cookies on the main domain.
         $this->browser->visit($this->baseUrl);
 
         foreach ($cookies as $cookie) {
@@ -136,7 +154,11 @@ class CookieAuthStrategy implements AuthStrategyInterface
                 continue;
             }
 
-            $this->browser->driver->manage()->addCookie($cookie);
+            try {
+                $this->browser->driver->manage()->addCookie($cookie);
+            } catch (\Throwable) {
+                // Skip cookies that don't belong to this domain
+            }
         }
 
         // Reload with cookies active so the server recognizes the session
@@ -160,11 +182,29 @@ class CookieAuthStrategy implements AuthStrategyInterface
             mkdir($dir, 0755, recursive: true);
         }
 
-        $cookies = $this->browser->driver->manage()->getCookies();
-        $cookieData = array_map(fn ($cookie) => $cookie->toArray(), $cookies);
+        $mainCookies = array_map(
+            fn ($cookie) => $cookie->toArray(),
+            $this->browser->driver->manage()->getCookies(),
+        );
+
+        $ssoCookies = [];
+
+        if ($this->authDomain !== null) {
+            $this->browser->visit($this->authDomain);
+            $ssoCookies = array_map(
+                fn ($cookie) => $cookie->toArray(),
+                $this->browser->driver->manage()->getCookies(),
+            );
+        }
+
+        $merged = collect([...$mainCookies, ...$ssoCookies])
+            ->keyBy('name')
+            ->values()
+            ->toArray();
+
         file_put_contents(
             $path,
-            json_encode($cookieData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
         );
     }
 
