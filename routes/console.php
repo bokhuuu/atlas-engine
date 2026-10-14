@@ -26,28 +26,28 @@ Schedule::command('atlas:fetch-exchange-rates')->dailyAt('04:00');
 // Schedule::command('scraper:run listam_new_developments_sale --pages=1')->days([1, 3, 5])->at('09:00');
 
 // Baku market - bina.az
-Schedule::command('scraper:run binaz_land_sale --pages=1')->daily()->at('08:00');
-Schedule::command('scraper:run binaz_land_sale_sea_breeze --pages=1')->daily()->at('08:10');
-Schedule::command('scraper:run binaz_offices_sale --pages=1')->daily()->at('08:20');
-Schedule::command('scraper:run binaz_offices_rent --pages=1')->daily()->at('08:30');
-Schedule::command('scraper:run binaz_apartments_sale --pages=1')->daily()->at('09:00');
-Schedule::command('scraper:run binaz_apartments_rent --pages=1')->daily()->at('09:10');
-Schedule::command('scraper:run binaz_houses_sale --pages=1')->daily()->at('09:20');
-Schedule::command('scraper:run binaz_houses_rent --pages=1')->daily()->at('09:30');
-Schedule::command('scraper:run binaz_commercial_sale --pages=1')->daily()->at('10:00');
-Schedule::command('scraper:run binaz_commercial_rent --pages=1')->daily()->at('10:10');
+Schedule::command('scraper:run binaz_land_sale --pages=1')->days([1, 3, 5])->at('08:00');
+Schedule::command('scraper:run binaz_land_sale_sea_breeze --pages=1')->days([1, 3, 5])->at('08:10');
+Schedule::command('scraper:run binaz_offices_sale --pages=1')->days([1, 3, 5])->at('08:20');
+Schedule::command('scraper:run binaz_offices_rent --pages=1')->days([1, 3, 5])->at('08:30');
+Schedule::command('scraper:run binaz_apartments_sale --pages=1')->days([1, 3, 5])->at('09:00');
+Schedule::command('scraper:run binaz_apartments_rent --pages=1')->days([1, 3, 5])->at('09:10');
+Schedule::command('scraper:run binaz_houses_sale --pages=1')->days([1, 3, 5])->at('09:20');
+Schedule::command('scraper:run binaz_houses_rent --pages=1')->days([1, 3, 5])->at('09:30');
+Schedule::command('scraper:run binaz_commercial_sale --pages=1')->days([1, 3, 5])->at('10:00');
+Schedule::command('scraper:run binaz_commercial_rent --pages=1')->days([1, 3, 5])->at('10:10');
 
-// Baku embeddings
-Schedule::command('atlas:embed-listings --source=binaz_land_sale')->daily()->at('11:00');
-Schedule::command('atlas:embed-listings --source=binaz_land_sale_sea_breeze')->daily()->at('11:10');
-Schedule::command('atlas:embed-listings --source=binaz_offices_sale')->daily()->at('11:20');
-Schedule::command('atlas:embed-listings --source=binaz_offices_rent')->daily()->at('11:30');
-Schedule::command('atlas:embed-listings --source=binaz_apartments_sale')->daily()->at('12:00');
-Schedule::command('atlas:embed-listings --source=binaz_apartments_rent')->daily()->at('12:10');
-Schedule::command('atlas:embed-listings --source=binaz_houses_sale')->daily()->at('12:20');
-Schedule::command('atlas:embed-listings --source=binaz_houses_rent')->daily()->at('12:30');
-Schedule::command('atlas:embed-listings --source=binaz_commercial_sale')->daily()->at('13:00');
-Schedule::command('atlas:embed-listings --source=binaz_commercial_rent')->daily()->at('13:10');
+// Baku embeddings — run same days as scraper to avoid redundant re-embedding
+Schedule::command('atlas:embed-listings --source=binaz_land_sale')->days([1, 3, 5])->at('11:00');
+Schedule::command('atlas:embed-listings --source=binaz_land_sale_sea_breeze')->days([1, 3, 5])->at('11:10');
+Schedule::command('atlas:embed-listings --source=binaz_offices_sale')->days([1, 3, 5])->at('11:20');
+Schedule::command('atlas:embed-listings --source=binaz_offices_rent')->days([1, 3, 5])->at('11:30');
+Schedule::command('atlas:embed-listings --source=binaz_apartments_sale')->days([1, 3, 5])->at('12:00');
+Schedule::command('atlas:embed-listings --source=binaz_apartments_rent')->days([1, 3, 5])->at('12:10');
+Schedule::command('atlas:embed-listings --source=binaz_houses_sale')->days([1, 3, 5])->at('12:20');
+Schedule::command('atlas:embed-listings --source=binaz_houses_rent')->days([1, 3, 5])->at('12:30');
+Schedule::command('atlas:embed-listings --source=binaz_commercial_sale')->days([1, 3, 5])->at('13:00');
+Schedule::command('atlas:embed-listings --source=binaz_commercial_rent')->days([1, 3, 5])->at('13:10');
 
 // Schedule::command('atlas:capture-screenshots --market=baku')->dailyAt('15:00');
 
