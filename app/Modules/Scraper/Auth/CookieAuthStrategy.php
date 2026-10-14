@@ -164,6 +164,11 @@ class CookieAuthStrategy implements AuthStrategyInterface
         // Reload with cookies active so the server recognizes the session
         $this->browser->refresh();
 
+        // myhome.ge uses SSO via auth.tnet.ge — after page load, JS exchanges
+        // the RefreshToken for a new AccessToken and re-renders the nav.
+        // Wait for that async exchange to complete before checking auth.
+        sleep(5);
+
         return $this->isAuthenticated();
     }
 
