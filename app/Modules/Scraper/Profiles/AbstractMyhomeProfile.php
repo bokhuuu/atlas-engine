@@ -257,7 +257,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
             'emailSelector' => 'input[name="Email"]',
             'passwordSelector' => 'input[name="Password"]',
             'submitSelector' => 'button[type="submit"]',
-            'successSelector' => '.user-avatar, .user-menu, span.truncate',
+            'successSelector' => 'img[alt="auth-user"]',
             'email' => config('scraper.myhome_auth.email'),
             'password' => config('scraper.myhome_auth.password'),
             'submitText' => 'Sign in',
@@ -267,7 +267,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
             'browser' => $browser,
             'profileName' => $this->getName(),
             'baseUrl' => $this->getBaseUrl(),
-            'authCheckSelector' => '.user-avatar, .user-menu, span.truncate',
+            'authCheckSelector' => 'img[alt="auth-user"]',
             'loginStrategy' => $formLogin,
             'authDomain' => 'https://auth.tnet.ge',
         ]);
