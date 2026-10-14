@@ -212,7 +212,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
      */
     public function requiresChromProxy(): bool
     {
-        return false;
+        return true;
     }
 
     /**
