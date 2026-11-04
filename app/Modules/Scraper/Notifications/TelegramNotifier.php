@@ -25,10 +25,16 @@ class TelegramNotifier implements NotifierInterface
     /** Sends the built message to the configured Telegram chat. */
     public function notify(array $payload): void
     {
-        $this->telegram->sendMessage([
-            'chat_id' => config('services.telegram.chat_id'),
-            'text' => $this->buildMessage($payload),
-        ]);
+        try {
+            $this->telegram->sendMessage([
+                'chat_id' => config('services.telegram.chat_id'),
+                'text' => $this->buildMessage($payload),
+            ]);
+        } catch (\Throwable $e) {
+            logger()->warning('TelegramNotifier: failed to send message', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /** Turns the event payload into a short, readable Telegram message. */
