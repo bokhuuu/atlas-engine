@@ -52,7 +52,13 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Set correct permissions
 # 775 allows www-data group to write to storage and cache
 # 777 on /tmp ensures Laravel can write temporary files
-RUN chown -R www-data:www-data /var/www \
+RUN mkdir -p /var/www/storage/app/public \
+    && mkdir -p /var/www/storage/framework/cache \
+    && mkdir -p /var/www/storage/framework/sessions \
+    && mkdir -p /var/www/storage/framework/views \
+    && mkdir -p /var/www/storage/logs \
+    && mkdir -p /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage \
     && chmod -R 775 /var/www/bootstrap/cache \
     && chmod -R 777 /tmp
