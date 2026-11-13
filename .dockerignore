@@ -1,0 +1,10 @@
+storage/
+*.sql
+*.log
+.git/
+node_modules/
+.env
+docker/
+docs/
+postman/
+README.md
