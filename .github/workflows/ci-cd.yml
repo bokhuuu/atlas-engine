@@ -98,37 +98,3 @@ jobs:
           QUEUE_CONNECTION: sync
         run: php artisan test
 
-  deploy:
-    needs: ci
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: Download frontend build
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: public/build/
-
-      - name: Copy SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      - name: Sync frontend assets to server
-        run: |
-          rsync -avz --progress -e "ssh -i ~/.ssh/id_ed25519" \
-            public/build/ \
-            deploy@${{ secrets.SERVER_IP }}:/var/www/atlas/public/build/
-
-      - name: Deploy to production
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: deploy
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/atlas
-            bash scripts/deploy.sh
