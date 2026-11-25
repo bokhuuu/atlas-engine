@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "colliers/atlas",
+    "name": "bokhuuu/atlas",
     "type": "project",
-    "description": "Yerevan Real Estate Market Intelligence Platform",
+    "description": "Multi-market real estate intelligence platform (Yerevan, Baku, Tbilisi)",
     "keywords": [
         "laravel",
         "framework"

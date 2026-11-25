@@ -566,7 +566,7 @@ export default function Overview({ markets, totalListingsAllMarkets }: Props) {
                         onClick={() => {
                             navigator.clipboard.writeText(
                                 siteSettings.site_email ||
-                                    'zura.coding@gmail.com',
+                                    'admin@example.com',
                             );
                             setCopied(true);
                             setTimeout(() => setCopied(false), 2000);

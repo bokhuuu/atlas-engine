@@ -55,7 +55,7 @@ Schedule::command('atlas:embed-listings --source=binaz_commercial_rent')->daily(
 // Schedule::command('atlas:check-listings')->days([0, 2, 4, 6])->at('10:00');
 
 // Tbilisi market - myhome.ge
-// Schedules commented out pending Colliers confirmation on volume/strategy.
+// Schedules commented out pending client confirmation on volume/strategy.
 // Schedule::command('scraper:run myhome_apartments_sale --pages=2')->dailyAt('16:00');
 // Schedule::command('scraper:run myhome_apartments_rent --pages=2')->dailyAt('16:10');
 // Schedule::command('scraper:run myhome_houses_sale --pages=1')->dailyAt('16:20');

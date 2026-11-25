@@ -13,7 +13,7 @@ use Inertia\Response;
 
 /**
  * Renders the Global Dashboard - a cross-market overview for
- * Colliers management showing all configured markets side by side.
+ * Cross-market overview showing all configured markets side by side.
  *
  * No market context is needed here - this controller reads all
  * markets from MarketRegistry and aggregates stats for each.

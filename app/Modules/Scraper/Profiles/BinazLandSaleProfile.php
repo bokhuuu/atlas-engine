@@ -7,7 +7,7 @@ namespace App\Modules\Scraper\Profiles;
 /**
  * Land for Sale - bina.az category 9.
  *
- * First Baku profile - Colliers priority market.
+ * First Baku profile — land listings from bina.az.
  * Area comes in сот (sotka) - converted to m² by BinazScraper (×100).
  * hasBillOfSale stored in extras - critical for Baku land pricing.
  */

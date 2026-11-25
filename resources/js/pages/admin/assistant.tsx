@@ -54,7 +54,7 @@ interface UsageStats {
 /**
  * Returns market-specific suggested queries for the AI assistant sidebar.
  * Each market gets tailored prompts relevant to its available data.
- * Baku prompts focus on Sea Breeze development analysis per Colliers requirements.
+ * Baku prompts focus on Sea Breeze development analysis and commercial yield.
  */
 function getSuggestedQueries(market: string) {
     if (market === 'global') {

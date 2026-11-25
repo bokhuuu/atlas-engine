@@ -19,6 +19,8 @@ return [
 
     'name' => env('HORIZON_NAME'),
 
+    'auth_email' => env('HORIZON_AUTH_EMAIL'),
+
     /*
     |--------------------------------------------------------------------------
     | Horizon Domain

@@ -46,7 +46,7 @@ use Laravel\Dusk\Browser;
  * Phones:
  *   Collected via "Show number" button click — same TNet pattern as myauto.ge.
  *   Requires authenticated session. CleanPhoneStage strips formatting to digits.
- *   Rate limiting expected (~5 reveals per IP per day) — Webshare rotating
+ *   Rate limiting expected (~5 reveals per IP per day) — rotating residential
  *   residential proxies handle this, same as other markets.
  */
 abstract class AbstractMyhomeProfile extends AbstractScraperProfile
@@ -134,7 +134,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
      *
      * CleanPhoneStage included — phone numbers collected via "Show number"
      * button click in authenticated browser session. TNet rate limits phone
-     * reveals per IP — Webshare rotating proxies handle this.
+     * reveals per IP — rotating residential proxies handle this.
      */
     public function getPipelineStages(): array
     {
@@ -208,7 +208,7 @@ abstract class AbstractMyhomeProfile extends AbstractScraperProfile
      * Route Chrome through the rotating residential proxy.
      *
      * auth.tnet.ge blocks headless Chrome from VPS IPs via Cloudflare.
-     * Webshare rotating residential proxies pass as real users.
+     * Rotating residential proxies pass as real users.
      */
     public function requiresChromProxy(): bool
     {

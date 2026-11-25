@@ -464,7 +464,7 @@ class BuildingTypeAnalysisSheet implements FromArray, WithColumnWidths, WithStyl
 
 /**
  * Sheet 2 (Land) - Size range breakdown with pricing analysis.
- * Directly answers Colliers' four questions for land categories:
+ * Structures land category output into four analytical sections:
  * 1. Total listing count
  * 2. Min/max area (sqm )
  * 3. Count by size range (4 buckets)
