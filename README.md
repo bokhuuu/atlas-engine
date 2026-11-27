@@ -9,7 +9,7 @@ Yerevan · Baku · Tbilisi
 
 Atlas is a production Laravel platform that aggregates, normalises, and analyses commercial real estate listings across three South Caucasus markets. It is deployed for a multinational real estate consultancy operating across the region.
 
-- Scrapes listings from market-specific portals (myhome.ge, bina.az, list.am and others) via a modular profile system built on `spatie/crawler`
+- Scrapes listings from market-specific portals via a modular profile system built on `spatie/crawler`
 - Deduplicates and normalises listings into a unified schema across currencies, area units, and address formats
 - Runs AI-assisted valuation and market-snapshot generation via OpenAI (GPT-4o) and pgvector similarity search
 - Exports structured Excel reports per market and category (land, residential, commercial)
